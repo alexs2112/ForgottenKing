@@ -1,0 +1,127 @@
+package items;
+
+import java.util.ArrayList;
+
+public class Inventory {
+	private Item[] items;
+	public Item[] items() { return items; }
+	private int[] quantity;
+	public int[] quantity() { return quantity; }
+	
+	public ArrayList<Item> getItems() {
+		ArrayList<Item> list = new ArrayList<Item>();
+		for (int i = 0; i < items.length; i++) {
+			if (items[i] != null)
+				for (int x = 0; x < quantity[i]; x++)
+					list.add(items[i]);
+		}
+		return list;
+	}
+	public ArrayList<Item> getUniqueItems() { 
+		ArrayList<Item> list = new ArrayList<Item>();
+		for (int i = 0; i < items.length; i++) {
+			if (items[i] != null)
+				list.add(items[i]);
+		}
+		return list;
+	}
+    public Item get(int i) { return items[i]; }
+
+	public Inventory(int max) {
+		items = new Item[max];
+		quantity = new int[max];
+	}
+	public Inventory() {
+		this(20);
+	}
+	
+	public void add(Item item){
+		for (int i = 0; i < items.length; i++){
+	        if (items[i] != null && items[i].name().equals(item.name())){
+	             quantity[i] += 1;
+	             return;
+	        }
+	    }
+	    for (int i = 0; i < items.length; i++){
+	        if (items[i] == null){
+	             items[i] = item;
+	             quantity[i] += 1;
+	             return;
+	        }
+	    }
+	}
+	
+	public void remove(Item item){
+	    for (int i = 0; i < items.length; i++){
+	        if (items[i] == item){
+	        	quantity[i] -= 1;
+	        	if (quantity[i] <= 0)
+	        		items[i] = null;
+	            return;
+	        }
+	    }
+	}
+	public void removeAll(Item item){
+	    for (int i = 0; i < items.length; i++){
+	        if (items[i] == item){
+	        	quantity[i] = 0;
+	        	items[i] = null;
+	            return;
+	        }
+	    }
+	}
+	
+	public boolean contains(Item item) {
+		for (Item i : getUniqueItems())
+			if (i == item)
+				return true;
+		return false;
+	}
+	
+	public boolean isFull(){
+	    int size = 0;
+	    for (int i = 0; i < items.length; i++){
+	        if (items[i] != null)
+	             size++;
+	    }
+	    return size == items.length;
+	}
+	
+	public Item getFirstItem() {
+		for (int i = 0; i < items.length; i++){
+	        if (items[i] != null){
+	             return items[i];
+	        }
+	    }
+		return null;
+	}
+	
+	public String listOfItems() {
+		String line = "";
+		for (int i = 0; i < items.length; i++)
+			if (items[i] != null) {
+				if (quantity[i] > 1)
+					line += quantity[i] + " ";
+				line += items[i].name() + ", ";
+				if (quantity[i] > 1)
+	        		line += "s";
+			}
+		return line.substring(0,line.length()-1);
+	}
+	
+	public int numberOfItems() {
+		int x = 0;
+		for (int i = 0; i < items.length; i++)
+			if (items[i] != null)
+				x += quantity[i];
+		return x;
+	}
+	public int quantityOf(Item item) {
+		for (int i = 0; i < items.length; i++)
+			if (items[i] != null && items[i] == item) {
+				return quantity[i];
+			}
+		return 0;
+	}
+
+}

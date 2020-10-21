@@ -1,0 +1,8 @@
+Listed in order from left to right, top to bottom. 10 effects per row
+
+Healing
+Poisoned
+Burning
+Strong
+Slowed
+Glowing
