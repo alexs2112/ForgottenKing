@@ -159,6 +159,26 @@ public class Creature {
 				return getAccuracy() / 2;
 		return getBrawn() / 2;
 	}
+	public int getCurrentRangedDamageValue() {
+		int i = weapon().getRangedDamageValue() + getAccuracy() / 2;
+		if (quiver() != null)
+			i += quiver().getRangedDamageValue();
+		return  i;
+	}
+	public int[] getCurrentRangedDamage() {
+		if (weapon() == null)
+			return new int[2];
+		int[] i = new int[2];
+		i[0] = weapon().rangedDamage()[0];
+		i[1] = weapon().rangedDamage()[1];
+		if (quiver() != null) {
+			i[0] += quiver().rangedDamage()[0];
+			i[1] += quiver().rangedDamage()[1];
+		}
+		i[0] += getAccuracy()/2;
+		i[1] += getAccuracy()/2;
+		return i;
+	}
 	public int getCurrentRangedAttackValue() {
 		if (weapon() != null && weapon().rangedAttackValue() > 0)
 			return weapon().rangedAttackValue() + getAccuracy();
@@ -305,8 +325,14 @@ public class Creature {
         if (other == null) {
             ai.onEnter(mx, my, mz, world.tile(mx, my, mz));
             if (world.items(x,y,z) != null)
-            	if (world.items(x,y,z).getFirstItem() != null)
-            		notify("You see here a " + world.items(x,y,z).listOfItems());
+            	if (world.items(x,y,z).getFirstItem() != null) {
+            		String s = "You see here ";
+            		Inventory i = world.items(x,y,z);
+            		if (i.quantityOf(i.getFirstItem()) == 1)
+            			s += "a ";
+            		s += i.listOfItems();
+            		notify(s);
+            	}
         }
         else
             attack(other);
@@ -393,8 +419,8 @@ public class Creature {
 	}
 	private void throwAttack(Item item, Creature other) {
         basicAttack(other, item, getAccuracy() + getBrawn()/2 + item.thrownAttackValue(), getBrawn()/2 + getAccuracy()/2 + item.getThrownDamage(), "throw a " + item.name() + " at the " + other.name());
-        if (item.quaffEffect() != null) {
-        	Effect effect = item.quaffEffect();
+        if (item.type() == ItemType.POTION) {
+        	Effect effect = item.effect();
         	effect.setOwner(this);
         	other.addEffect(effect);
         	world.remove(item);
@@ -402,7 +428,7 @@ public class Creature {
     }
 	public void rangedWeaponAttack(Creature other){
 		modifyTime(attackDelay());
-        basicAttack(other, weapon(), getCurrentRangedAttackValue(), getDamageValue() + getAccuracy() / 2, "fire at the " + other.name());
+        basicAttack(other, quiver(), getCurrentRangedAttackValue(), getCurrentRangedDamageValue(), "fire at the " + other.name());
     }
 	
 	private void basicAttack(Creature other, Item item, int attackModifier, int damage, String action) {
@@ -463,21 +489,28 @@ public class Creature {
 		else
 			doAction("throw a " + item.name());
 	}
+	public void fireItem(Item item, int wx, int wy, int wz) {
+		Creature c = creature(wx,wy,wz);
+		putAt(item, wx, wy, wz);
+		if (c != null)
+			rangedWeaponAttack(c);
+		else
+			doAction("fire your " + weapon().name());
+	}
 	
     /**
      * Inventory Based Commands
      */
 	private Item quiver;
 	public Item quiver() { 
-		if (quiver == null) {
+		if (quiver != null && !inventory.contains(quiver))
+			quiver = null;
+		if (quiver == null || quiver.isCompatibleAmmoWith(weapon())) {
 			for (Item i : inventory.getUniqueItems())
-				if (i.type() == ItemType.AMMO) {
-					quiver = i;
+				if (i.type() != null && i.isCompatibleAmmoWith(weapon())) {
+					setQuiver(i);
 					break;
 				}
-		}
-		if (quiver == null) {
-			notify("You are out of ammo!");
 		}
 		return quiver;
 	}
@@ -498,17 +531,32 @@ public class Creature {
 			notify("Your inventory is full");
 		}
 		if (items.contains(item) && !inventory.isFull()) {
-			inventory().add(item);
-			items.remove(item);
-			doAction("pick up a " + item.name());
+			int n = 1;
+			if (!item.equippable())
+				n = items.quantityOf(item);
+			for (int i = 0; i < n; i++) {
+				inventory().add(item);
+				items.remove(item);
+			}
+			if (n == 1)
+				doAction("pick up a " + item.name());
+			else
+				doAction("pick up " + n + " "+ item.name() + "s");
 		}
 		if (items.getItems().size() == 0)
 			world.removeInventory(x,y,z);
 	}
 
 	public void drop(Item item) {
-		doAction("drop a " + item.name());
-		putAt(item, x, y, z);
+		int n = 1;
+		if (!item.equippable())
+			n = inventory.quantityOf(item);
+		for (int i = 0; i < n; i++)
+			putAt(item, x, y, z);
+		if (n == 1)
+			doAction("drop a " + item.name());
+		else
+			doAction("drop " + n + " "+ item.name() + "s");
 	}
 	private void getRidOf(Item item) {
 		unequip(item);
@@ -575,7 +623,7 @@ public class Creature {
 	
 	public void quaff(Item item){
         doAction("quaff a " + item.name());
-        addEffect(item.quaffEffect());
+        addEffect(item.effect());
         getRidOf(item);
     }
 	

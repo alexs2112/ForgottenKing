@@ -1,7 +1,5 @@
 package screens;
 
-import java.io.InputStream;
-
 import javafx.scene.image.Image;
 import tools.ImageCrop;
 
@@ -38,7 +36,9 @@ public final class Loader {
 	public static Image spellcastingIcon = ImageCrop.cropImage(statsFull, 64, 64, 32, 32);
 	
 	public static Image playerUIFull = new Image(Screen.class.getResourceAsStream("resources/player_ui.png"));
-	public static Image equipmentBox = new Image(Screen.class.getResourceAsStream("resources/equipment_box.png"));
+	private static Image equipmentBoxFull = new Image(Screen.class.getResourceAsStream("resources/equipment_box.png"));
+	public static Image equipmentBox = ImageCrop.cropImage(equipmentBoxFull, 0, 0, 240, 48);
+	public static Image equipmentBoxBlue = ImageCrop.cropImage(equipmentBoxFull, 0, 48, 240, 48);
 	public static Image effectBox = new Image(Screen.class.getResourceAsStream("resources/effect_box.png"));
 	public static Image levelUpBox = new Image(Screen.class.getResourceAsStream("resources/level_up_menu.png"));
 	public static Image levelUpOptionFull = new Image(Screen.class.getResourceAsStream("resources/level_up_option_full.png"));

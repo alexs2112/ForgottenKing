@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import creatures.Creature;
 import items.Item;
+import items.ItemTag;
 import items.ItemType;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -61,7 +62,7 @@ public class InspectScreen extends Screen {
 			return previousScreen;
 		} else if (c == 'r' && item.spells() != null) {
 			return new ReadSpellbookScreen(player, item);
-		} else if (c == 'q' && item.quaffEffect() != null) {
+		} else if (c == 'q' && item.type() == ItemType.POTION) {
 			player.quaff(item);
 			return previousScreen;
 		} else {
@@ -79,9 +80,10 @@ public class InspectScreen extends Screen {
 		}
 		if (item.spells() != null)
 			list.add("[r]: read");
-		if (item.quaffEffect() != null)
+		if (item.type() == ItemType.POTION)
 			list.add("[q]: quaff");
-		//list.add("[t]: throw");
+		if (item.type() == ItemType.POTION || item.is(ItemTag.THROWING))
+			list.add("[t]: throw");	//Other items can be thrown, only shows t on the most useful ones for throwing
 		list.add("[d]: drop");
 		return list;
 	}

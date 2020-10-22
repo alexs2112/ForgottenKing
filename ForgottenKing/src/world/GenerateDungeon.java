@@ -17,7 +17,6 @@ public class GenerateDungeon {
 	private int height;
 	private int width;
 	private ArrayList<Point> set;
-	private int yeet = 0;
 	
 	public GenerateDungeon(int[][] map) {
 		this.map = map;
@@ -33,7 +32,6 @@ public class GenerateDungeon {
 		for (int x = 1; x < width-1; x++) {
 			for (int y = 1; y < height-1; y++) {
 				if (adjacentToFloor(x,y) == 0) {
-					System.out.println(yeet++);
 					generateMaze(x,y);
 				}
 			}
@@ -56,21 +54,17 @@ public class GenerateDungeon {
 		return map;
 	}
 	
-	
-	//Sometimes results in an infinite loop, idk why
-	//Apparently is unable to loop when Im trying to get it to loop, but loops constantly otherwise
 	private void generateMaze(int sx, int sy) {
 		set.add(new Point(sx,sy,0));
 		
 		while (set.size() > 0) {
 			Point c = set.get(0);
 			set.remove(c);
-			if (adjacentToFloor(c.x,c.y) > 1 )
+			if (adjacentToFloor(c.x,c.y) > 1 || map[c.x][c.y]==0 )
 				continue;
 			map[c.x][c.y] = 0; 
 			addNeighbors(c);
 		}
-		//printMap();
 	}
 	private void generateMaze() {
 		int sx;
@@ -210,6 +204,7 @@ public class GenerateDungeon {
 
 		}
 	}
+	@SuppressWarnings("unused")
 	private void printMap() {
 		for (int y=0; y < height; y++) {
 			for (int x = 0; x < width; x++) {

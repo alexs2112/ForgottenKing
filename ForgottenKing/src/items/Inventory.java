@@ -36,16 +36,19 @@ public class Inventory {
 	}
 	
 	public void add(Item item){
+		addMany(item, 1);
+	}
+	public void addMany(Item item, int amount){
 		for (int i = 0; i < items.length; i++){
 	        if (items[i] != null && items[i].name().equals(item.name())){
-	             quantity[i] += 1;
+	             quantity[i] += amount;
 	             return;
 	        }
 	    }
 	    for (int i = 0; i < items.length; i++){
 	        if (items[i] == null){
 	             items[i] = item;
-	             quantity[i] += 1;
+	             quantity[i] += amount;
 	             return;
 	        }
 	    }
@@ -102,11 +105,12 @@ public class Inventory {
 			if (items[i] != null) {
 				if (quantity[i] > 1)
 					line += quantity[i] + " ";
-				line += items[i].name() + ", ";
+				line += items[i].name();
 				if (quantity[i] > 1)
 	        		line += "s";
+				line += ", ";
 			}
-		return line.substring(0,line.length()-1);
+		return line.substring(0,line.length()-2);
 	}
 	
 	public int numberOfItems() {

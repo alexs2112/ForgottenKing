@@ -35,13 +35,17 @@ public class World {
 		items[x][y][z].add(item); 
 	}
 	public void addAtEmptyLocation(Item item, int z) {
+		addAtEmptyLocation(item, z, 1);
+	}
+	public void addAtEmptyLocation(Item item, int z, int amount) {
 		if (z == -1)
 			return;
 	    Point n = getEmptyLocation(z);
-	    addAtEmptyLocation(item, n.x, n.y, z);
+	    addAtEmptyLocation(item, n.x, n.y, z, amount);
 	}
-	public void addAtEmptyLocation(Item item, int x, int y, int z) {
-		addItem(item, x, y, z);
+	public void addAtEmptyLocation(Item item, int x, int y, int z, int amount) {
+		for (int i = 0; i < amount; i++)
+			addItem(item, x, y, z);
 	}
 	public void remove(Item item) {
 		for (int z = 0; z < depth; z++) {

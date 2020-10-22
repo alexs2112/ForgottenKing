@@ -1,5 +1,6 @@
 package assembly;
 
+import creatures.Type;
 import items.Item;
 import items.ItemTag;
 import items.ItemType;
@@ -57,10 +58,7 @@ public class EquipmentFactory {
 	}
 
 	public Item newRock(int z) {
-		Image img = rockIconA;
-		if (Math.random() < 0.5)
-			img = rockIconB;
-		Item rock = new Item("Rock", null, img);
+		Item rock = new Item("Rock", ItemType.STONE, rockIconB);
 		rock.modifyThrownAttackValue(1);
 		rock.addTag(ItemTag.THROWING);
 		world.addAtEmptyLocation(rock,z);
@@ -72,7 +70,9 @@ public class EquipmentFactory {
 		dagger.modifyAttackValue(2);
 		dagger.setDamage(1,2);
 		dagger.modifyWeaponDelay(-2);
+		dagger.addTag(ItemTag.DAGGER);
 		dagger.addTag(ItemTag.LIGHT);
+		dagger.setDamageType(Type.PIERCING);
 		world.addAtEmptyLocation(dagger,z);
 		return dagger;
 	}
@@ -81,7 +81,9 @@ public class EquipmentFactory {
 		Item sword = new Item("Short Sword", ItemType.WEAPON, shortSwordIcon);
 		sword.modifyAttackValue(3);
 		sword.setDamage(2, 4);
+		sword.addTag(ItemTag.SWORD);
 		sword.addTag(ItemTag.LIGHT);
+		sword.setDamageType(Type.SLASHING);
 		world.addAtEmptyLocation(sword,z);
 		return sword;
 	}
@@ -91,6 +93,7 @@ public class EquipmentFactory {
 		staff.modifyAttackValue(1);
 		staff.modifyArmorValue(1);
 		staff.setDamage(1, 3);
+		staff.addTag(ItemTag.POLEARM);
 		world.addAtEmptyLocation(staff,z);
 		return staff;
 	}
@@ -98,7 +101,9 @@ public class EquipmentFactory {
 	public Item newShortbow(int z) {
 		Item bow = new Item("Shortbow", ItemType.WEAPON, shortbowIcon);
 		bow.modifyRangedAttackValue(3);
-		bow.setDamage(1, 3);
+		bow.setDamage(1, 3);			
+		bow.setRangedDamage(0, 2);		//Standard Arrows typically add 2 damage
+		bow.addTag(ItemTag.BOW);
 		world.addAtEmptyLocation(bow,z);
 		return bow;
 	}
@@ -106,7 +111,9 @@ public class EquipmentFactory {
 		Item axe = new Item("Handaxe", ItemType.WEAPON, handaxeIcon);
 		axe.modifyAttackValue(1);
 		axe.setDamage(2, 4);
+		axe.addTag(ItemTag.AXE);
 		axe.addTag(ItemTag.CLEAVING);
+		axe.setDamageType(Type.SLASHING);
 		world.addAtEmptyLocation(axe,z);
 		return axe;
 	}
@@ -136,7 +143,9 @@ public class EquipmentFactory {
 		sword.setDamage(2, 4);
 		sword.setEffectOnHit(Effects.poisoned(5, 2, 0));
 		world.addAtEmptyLocation(sword,z);
+		sword.addTag(ItemTag.SWORD);
 		sword.addTag(ItemTag.CLEAVING);
+		sword.setDamageType(Type.SLASHING);
 		return sword;
 	}
 	public Item newDevBreastplate(int z) {

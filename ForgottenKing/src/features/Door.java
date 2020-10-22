@@ -48,7 +48,7 @@ public class Door extends Feature {
 				Point n = p.neighbors8().get(0);
 				while (!world.tile(n.x, n.y, n.z).isGround())
 					n = p.neighbors8().get(0);
-				world.addAtEmptyLocation(i, n.x, n.y, n.z);
+				world.addAtEmptyLocation(i, n.x, n.y, n.z, 1);
 				if (world.items(x,y,z).getItems().size() == 0)
 					world.removeInventory(x,y,z);
 			}

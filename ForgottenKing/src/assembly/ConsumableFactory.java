@@ -33,34 +33,34 @@ public class ConsumableFactory {
 	
 	public Item newPotionOfHealing(int z){
 	    Item item = new Item("Potion of Healing", ItemType.POTION, potionOfHealingIcon);
-	    item.setQuaffEffect(Effects.health(15));
+	    item.setEffect(Effects.health(15));
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}
 	
 	public Item newPotionOfMana(int z){
 	    Item item = new Item("Potion of Mana", ItemType.POTION, potionOfManaIcon);
-	    item.setQuaffEffect(Effects.mana(15));
+	    item.setEffect(Effects.mana(15));
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}
 	
 	public Item newPotionOfPoison(int z){
 	    Item item = new Item("Poison Potion", ItemType.POTION, poisonPotionIcon);
-	    item.setQuaffEffect(Effects.poisoned(20,1, -100)); 
+	    item.setEffect(Effects.poisoned(20,1, -100)); 
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}
 	
 	public Item newPotionOfStrength(int z){
 	    Item item = new Item("Potion of Strength", ItemType.POTION, potionOfStrengthIcon);
-	    item.setQuaffEffect(Effects.strong(15,4));
+	    item.setEffect(Effects.strong(15,4));
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}
 	public Item newPotionOfCuring(int z){
 	    Item item = new Item("Potion of Curing", ItemType.POTION, potionOfCuringIcon);
-	    item.setQuaffEffect(Effects.curePoison());
+	    item.setEffect(Effects.curePoison());
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}

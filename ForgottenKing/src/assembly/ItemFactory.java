@@ -11,10 +11,12 @@ public class ItemFactory {
 	private EquipmentFactory equipment;
 	private BookFactory book;
 	private TrinketFactory trinket;
+	private AmmoFactory ammo;
 	public ConsumableFactory consumable() { return consumable; }
 	public EquipmentFactory equipment() { return equipment; }
 	public BookFactory book() { return book; }
 	public TrinketFactory trinket() { return trinket; }
+	public AmmoFactory ammo() { return ammo; }
 
 	public ItemFactory(World world) {
 		this.world = world;
@@ -22,6 +24,7 @@ public class ItemFactory {
 		equipment = new EquipmentFactory(world);
 		book = new BookFactory(world);
 		trinket = new TrinketFactory(world);
+		ammo = new AmmoFactory(world);
 	}
 	
 	public Item newRandomWeapon(int z) { return equipment.newRandomWeapon(z); }

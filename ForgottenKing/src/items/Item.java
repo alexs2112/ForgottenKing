@@ -20,7 +20,8 @@ public class Item {
 	public String description() { return description; }
 	public void setDescription(String x) { description = x; }
 	private Type damageType;
-	public Type damageType() { return damageType;	}
+	public Type damageType() { return damageType; }
+	public void setDamageType(Type damageType) { this.damageType = damageType; }
 	private boolean equippable;
 	public boolean equippable() { return equippable; }
 	
@@ -31,12 +32,12 @@ public class Item {
 		damage = new int[2];
 		thrownDamage = new int[2];
 		if (type == ItemType.ARMOR ||
-			type == ItemType.WEAPON ||
 			type == ItemType.RING ||
 			type == ItemType.AMULET ||
 			type == ItemType.BOOTS ||
 			type == ItemType.CLOAK ||
-			type == ItemType.GLOVES)
+			type == ItemType.GLOVES ||
+			type == ItemType.WEAPON)
 			equippable = true;
 		if (type == ItemType.BOOK)
 			newSpellList();
@@ -62,6 +63,14 @@ public class Item {
 		return Math.max(((int)(Math.random() * (thrownDamage[1] - thrownDamage[0])) + thrownDamage[0]),0);
 	}
 	
+	public boolean isCompatibleAmmoWith(Item i) {
+		if (i == null)
+			return false;
+		return (type() == ItemType.ARROW && i.is(ItemTag.BOW)) ||
+			   (type() == ItemType.BOLT && i.is(ItemTag.CROSSBOW)) ||
+			   (type() == ItemType.STONE && i.is(ItemTag.SLING));
+	}
+	
 	private int rangedAttackValue;
 	public int rangedAttackValue() { return rangedAttackValue; }
 	public void modifyRangedAttackValue(int amount) { rangedAttackValue += amount; }
@@ -80,12 +89,24 @@ public class Item {
 	public int weaponDelay() { return weaponDelay; }
 	public void modifyWeaponDelay(int x) { weaponDelay += x; }
 	
+	private int[] rangedDamage;
+	public int[] rangedDamage() { return rangedDamage; }
+	public void setRangedDamage(int min, int max) {
+		if (rangedDamage == null)
+			rangedDamage = new int[2];
+		rangedDamage[0] = min; 
+		rangedDamage[1] = max; 
+	}
+	public int getRangedDamageValue() {
+		return (int)(Math.random()*(rangedDamage[1]-rangedDamage[0]+1)) + rangedDamage[0];
+	}
+	
 	/**
 	 * Effect Methods
 	 */
-	private Effect quaffEffect;
-	public Effect quaffEffect() { return quaffEffect; }
-	public void setQuaffEffect(Effect x) { quaffEffect = x; }
+	private Effect effect;
+	public Effect effect() { return effect; }
+	public void setEffect(Effect x) { effect = x; }
 	private Effect effectOnHit;
 	public Effect effectOnHit() { return effectOnHit; }
 	public void setEffectOnHit(Effect x) { effectOnHit = x; }
@@ -113,6 +134,9 @@ public class Item {
 	public boolean is(ItemTag t) {
 		return (tags != null && tags.contains(t));
 	}
+	public boolean isRanged() {
+		return is(ItemTag.BOW) || is(ItemTag.CROSSBOW) || is(ItemTag.SLING);
+	}
 	
 	/**
 	 * Resistances
@@ -136,13 +160,24 @@ public class Item {
 	 */
 	public String shortDesc() {
 		String x = "";
-		if (attackValue != 0)
-			x += "+" + attackValue;
-		if (minDamage() != 0 && maxDamage() != 0)
-			x += " (" + minDamage() + "-" + maxDamage() + ") ";
+		if (isRanged() || type.isAmmo()) {
+			if (rangedAttackValue != 0)
+				x += "+" + rangedAttackValue;
+			if (rangedDamage != null) {
+				if (rangedDamage[0] != rangedDamage[1])
+					x += " (" + rangedDamage[0] + "-" + rangedDamage[1] + ") ";
+				else
+					x += " (" + rangedDamage[0] + ")";
+			}
+		} else {
+			if (attackValue != 0)
+				x += "+" + attackValue;
+			if (minDamage() != 0 && maxDamage() != 0)
+				x += " (" + minDamage() + "-" + maxDamage() + ") ";
+		}
 		if (armorValue != 0)
-			x += "AC+" + armorValue;
-		return x;
+			x += " AC+" + armorValue;
+		return x.trim();
 	}
 
 }

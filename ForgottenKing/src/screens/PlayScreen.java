@@ -9,6 +9,7 @@ import creatures.Creature;
 import creatures.Tag;
 import features.Feature;
 import items.Item;
+import items.ItemTag;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -32,7 +33,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = false;
+    private boolean devMode = true;
 
     public PlayScreen(){
         screenWidth = 32;
@@ -47,7 +48,6 @@ public class PlayScreen extends Screen {
     }
     private void createWorld(){
         world = new WorldBuilder(90, 31, 5)
-              //.makeCaves()
         	  .makeDungeon()
               .build();
     }
@@ -59,12 +59,17 @@ public class PlayScreen extends Screen {
         player.addEquipment(itemFactory.equipment().newLeatherArmor(-1));
         player.fillMana();
         if (devMode) {
+        	/*
         	player.addEquipment(itemFactory.trinket().newDevRing(-1));
         	player.addEquipment(itemFactory.equipment().newDevSword(-1));
         	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));
-        	player.addItemToInventory(itemFactory.book().newBookOfFlames(-1));
-        	player.addItemToInventory(itemFactory.book().newBookOfVitality(-1));
-        	player.setMana(30, 30);
+        	*/
+        	player.addItemToInventory(itemFactory.consumable().newPotionOfStrength(-1));
+        	player.addItemToInventory(itemFactory.consumable().newPotionOfPoison(-1));
+        	player.addEquipment(itemFactory.equipment().newShortbow(-1));
+        	for (int i = 0; i < 10; i++) {
+        		player.addItemToInventory(itemFactory.ammo().newArrow(-1));
+        	}
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -164,7 +169,7 @@ public class PlayScreen extends Screen {
     		else if (c == 'n' || code.equals(KeyCode.NUMPAD3)) { player.moveBy(1,1,0); }
     		else if (c == 'g') {
     			if (world.items(player.x,player.y, player.z) != null) {
-    				if(world.items(player.x,player.y, player.z).getItems().size() > 1)
+    				if(world.items(player.x,player.y, player.z).getUniqueItems().size() > 1)
     					subscreen = new PickUpScreen(world, player);
     				else
     					player.pickup();
@@ -174,8 +179,12 @@ public class PlayScreen extends Screen {
     		} else if (c == '.' && !key.isShiftDown()) { /*Wait 1 turn*/ } 
     		else if (c == 'd')
     			subscreen = new DropScreen(player);
-    		else if (c == 'q')
+    		else if (c == 'q' && !key.isShiftDown()) {
+    			endAfterUserInput = false;
     			subscreen = new QuaffScreen(player);
+    		}
+    		else if (c == 'q' && key.isShiftDown())
+    			subscreen = new QuiverScreen(player);
     		else if (c == 'i')
     			subscreen = new InventoryScreen(player);
     		else if (c == 'w')
@@ -203,6 +212,7 @@ public class PlayScreen extends Screen {
     					world.feature(player.x,player.y, player.z).interact(player, world, player.x, player.y, player.z);
     			}
     		} else if (c == 'x') {
+    			endAfterUserInput = false;
     			subscreen = new ExamineScreen(root, player, "Looking", 
     					getScrollX(),
     					getScrollY());
@@ -215,7 +225,10 @@ public class PlayScreen extends Screen {
     			if (player.weapon() == null || player.weapon().rangedAttackValue() == 0) {
     				player.notify("You don't have a ranged weapon equipped");
     				endAfterUserInput = false;
-    			} else 
+    			} else  if (player.quiver() == null) {
+    				player.notify("You are out of ammo");
+    				endAfterUserInput = false;
+    			} else
     				subscreen = new FireWeaponScreen(root, player,
     						getScrollX(),
     						getScrollY());
@@ -291,8 +304,19 @@ public class PlayScreen extends Screen {
         if (player.armorValue() > 99)
         	x -= 6;
         write(root, ""+player.armorValue(), x, y, statFontS, Color.WHITE);
-        write(root, "+" + player.getCurrentAttackValue() + " [" + (player.getMinDamage()+player.getCurrentDamageMod()) + "-" + (player.getMaxDamage()+player.getCurrentDamageMod()) + "]", 
-        		1096, y += 48, statFontS, Color.WHITE);
+        
+        if (player.weapon() != null && player.weapon().isRanged())
+        	write(root, "+" + player.getCurrentRangedAttackValue() + " [" + (player.getCurrentRangedDamage()[0]) + "-" + (player.getCurrentRangedDamage()[1]) + "]", 
+                	1096, y += 48, statFontS, Color.WHITE);
+        else
+        	write(root, "+" + player.getCurrentAttackValue() + " [" + (player.getMinDamage()+player.getCurrentDamageMod()) + "-" + (player.getMaxDamage()+player.getCurrentDamageMod()) + "]", 
+        			1096, y += 48, statFontS, Color.WHITE);
+        
+        if (player.weapon() != null)
+        	for (ItemTag t : player.weapon().tags())
+        		if (t.isWeapon() && t.icon() != null)
+        			draw(root, t.icon(), 1049, 224);
+        	
         
         y = 302;
         x = 1142;
@@ -310,6 +334,12 @@ public class PlayScreen extends Screen {
         	draw(root, i.image(), 1049, 417 + 48*num);
         	write(root, i.shortDesc(), 1090, 441 + 48*num, statFontS, Color.ANTIQUEWHITE);
         	num++;
+        	if (player.quiver() != null && i.isRanged()) {
+        		draw(root, Loader.equipmentBoxBlue, 1040, 408 + 48*num);
+            	draw(root, player.quiver().image(), 1049, 417 + 48*num);
+            	write(root, "[" + player.inventory().quantityOf(player.quiver()) + "] " + player.quiver().shortDesc(), 1090, 441 + 48*num, statFontS, Color.ANTIQUEWHITE);
+            	num++;
+        	}
         }
         num = 0;
         int modX = 0;
@@ -385,6 +415,9 @@ public class PlayScreen extends Screen {
 			}
 			for (int i = 0; i < 2; i++) {
 				itemFactory.book().newRandomBook(z);
+			}
+			for (int i = 0; i < 3; i++) {
+				itemFactory.ammo().newArrow(z);
 			}
 		}
 		itemFactory.newVictoryItem(world.depth()-1);
