@@ -244,7 +244,7 @@ public class PlayScreen extends Screen {
 		if (endAfterUserInput && subscreen == null) {
 			player.update();
 			if (player.time() <= 0)	//A failsafe
-				player.modifyTime(player.movementDelay());
+				player.modifyTime(player.getMovementDelay());
 			while (player.time() > 0) {
 				world.update(player.z);
 				player.modifyTime(-1);

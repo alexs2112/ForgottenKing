@@ -131,7 +131,7 @@ public class World {
 	    		if (creature.time() <= 0) {
 	    			creature.update();
 	    			if (creature.time() <= 0)
-	    				creature.modifyTime(creature.movementDelay());
+	    				creature.modifyTime(creature.getMovementDelay());
 	    		}
 	    	}
 	    }

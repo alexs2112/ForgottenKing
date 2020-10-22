@@ -12,7 +12,6 @@ import creatures.Creature;
  *
  */
 
-
 public class PathFinder {
 	private Creature creature;
 	private Point start;

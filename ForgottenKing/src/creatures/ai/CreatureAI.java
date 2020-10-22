@@ -64,15 +64,10 @@ public class CreatureAI {
     }
     
     public void moveTo(int x, int y) {
-		//List<Point> points = new Path(creature, x, y).points();
     	List<Point> points = new PathFinder(creature, new Point(x,y,creature.z)).getPoints();
 		
 		if (points == null || points.size() == 0)
 			return;
-//		int mx = points.get(0).x - creature.x;
-//		int my = points.get(0).y - creature.y;
-//
-//		creature.moveBy(mx, my, 0);
 		int mx = points.get(0).x;
 		int my = points.get(0).y;
 		creature.moveTo(mx, my, creature.z);
