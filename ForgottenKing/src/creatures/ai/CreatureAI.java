@@ -6,6 +6,8 @@ import creatures.Creature;
 import features.Feature;
 import items.Item;
 import items.ItemTag;
+import spells.Spell;
+import spells.TargetType;
 import tools.Line;
 import tools.Path;
 import tools.Point;
@@ -76,11 +78,12 @@ public class CreatureAI {
     
     protected boolean canRangedWeaponAttack(Creature target) {
 		return creature.weapon() != null 
-				&& creature.weapon().rangedAttackValue() > 0
-				&& creature.canSee(target.x, target.y, target.z);
+				&& creature.weapon().isRanged()
+				&& creature.quiver() != null
+				&& canDrawLine(target.x, target.y, target.z);
 	}
 	protected boolean canThrowAt(Creature target) {
-		return creature.canSee(target.x, target.y, target.z)
+		return canDrawLine(target.x, target.y, target.z)
 				&& getWeaponToThrow() != null;
 	}
 	protected Item getWeaponToThrow() {
@@ -93,6 +96,34 @@ public class CreatureAI {
 		return null;
 	}
     
+	protected boolean canDrawLine(int x, int y, int z) {
+		if (!creature.canSee(x,y,z))
+			return false;
+		for (Point p : new Line(creature.x, creature.y, x, y)) {
+			if (!creature.realTile(p.x, p.y, z).isGround() ||
+				(creature.world().feature(p.x, p.y, z) != null && creature.world().feature(p.x, p.y, z).blockMovement()) ||
+				(creature.creature(p.x, p.y, z) != null && p.x != x && p.y != y && creature.creature(p.x, p.y, z) != creature)) 
+				return false;
+		}
+		return true;
+	}
+	protected boolean canCastSpell(Spell spell, int x, int y, int z) {
+		if (spell.cost() > creature.mana() || !inRange(spell.range(), x, y))
+			return false;
+		if (spell.targetType() == TargetType.PROJECTILE ||
+			spell.targetType() == TargetType.BEAM) {
+			return canDrawLine(x,y,z);
+		} else {
+			return creature.canSee(x, y, z);
+		}
+	}
+	
+	protected boolean inRange(int range, int wx, int wy) {
+		if (range == 0)
+			return true;
+		return new Line(creature.x, creature.y, wx, wy).getPoints().size() <= range;
+	}
+	
     public void onUpdate() { }
     
     public void onNotify(String s) { }

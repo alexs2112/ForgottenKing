@@ -27,6 +27,7 @@ public class TargetBasedScreen extends Screen {
 	protected List<Creature> creatures;
 	protected TargetType targetType;
 	protected int spellRadius;
+	protected int range;
 
 	public TargetBasedScreen(Group root, Creature player, String caption, int sx, int sy){
         this.player = player;
@@ -56,31 +57,44 @@ public class TargetBasedScreen extends Screen {
 	private void handleProjectile() {
 		targets = new ArrayList<Point>();
 		creatures = new ArrayList<Creature>();
-		for (Point p : new Line(player.x, player.y, player.x + x, player.y + y)) {
+		Line line = new Line(player.x, player.y, player.x + x, player.y + y);
+		for (Point p : line) {
 			if (!player.realTile(p.x, p.y, player.z).isGround() 
 				|| (player.world().feature(p.x, p.y, player.z)!= null && player.world().feature(p.x, p.y, player.z).blockMovement())
-				|| !(player.canSee(p.x, p.y, player.z)))
+				|| !(player.canSee(p.x, p.y, player.z))
+				|| !inRange(p, line))
 	        	break;
 			targets.add(p);
 			Creature c = player.creature(p.x, p.y, player.z);
-			if (c != null && c != player) {
-				creatures.add(c);
-				break;
+			if (c != null) {
+				System.out.println(creatures.size());
+				if (c != player && !creatures.contains(c))
+					creatures.add(c);
+				else if (line.getPoints().size() == 1)
+					creatures.add(c);
 			}
 		}
 	}
 	private void handleBeam() {
 		targets = new ArrayList<Point>();
 		creatures = new ArrayList<Creature>();
-		for (Point p : new Line(player.x, player.y, player.x + x, player.y + y)) {
+		Line line = new Line(player.x, player.y, player.x + x, player.y + y);
+		for (Point p : line) {
 			if (!player.realTile(p.x, p.y, player.z).isGround() 
 				|| (player.world().feature(p.x, p.y, player.z)!= null && player.world().feature(p.x, p.y, player.z).blockMovement())
-				|| !(player.canSee(p.x, p.y, player.z)))
+				|| !player.canSee(p.x, p.y, player.z)
+				|| !inRange(p, line))
 	        	break;
 			addTarget(p);
 		}
 		creatures.remove(player);
 	}
+	private boolean inRange(Point p, Line line) {
+		if (range == 0)
+			return true;
+		return line.getPoints().indexOf(p) <= range;
+	}
+	
 	private void displayTargets() {
 		for (Point p : targets) {
 			draw(root, Loader.targetBox, (p.x - sx)*32, (p.y - sy)*32);
@@ -107,11 +121,17 @@ public class TargetBasedScreen extends Screen {
 				targets.add(n);
 				
 				Creature c = player.creature(wx+p.x, wy+p.y, p.z);
-				if (c != null && c != player && !creatures.contains(c)) {
-					creatures.add(c);
+				if (c != null && creatures.size() > 0 && c != player && !creatures.contains(c)) {
+						creatures.add(c);
 				}
 			}
 		}
+	}
+	public List<Point> getCreatureLocations() {
+		List<Point> p = new ArrayList<Point>();
+		for (Creature c : creatures)
+			p.add(new Point(c.x,c.y,c.z));
+		return p;
 	}
 	
 	public Screen respondToUserInput(KeyEvent key) {

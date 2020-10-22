@@ -488,14 +488,6 @@ public class Creature {
 		return Math.max((int)Math.round(Math.max(((double)damage)*0.8 - ((double)armorValue() * 0.8),0) + ((double)(damage)*0.2)),1);
 	}
 	public void throwItem(Item item, int wx, int wy, int wz) {
-		Point end = new Point(x, y, 0);
-		for (Point p : new Line(x, y, wx, wy)) {
-			if (!realTile(p.x, p.y, wz).isGround()) 
-				break;
-			end = p;
-		}
-		wx = end.x;
-		wy = end.y;
 		Creature c = creature(wx,wy,wz);
 		putAt(item, wx, wy, wz);
 		if (c != null)

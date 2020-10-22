@@ -118,12 +118,12 @@ public class CreatureFactory {
 	}
 	public Creature newGoblin(int z) {
 		Creature goblin = new Creature(world, "Goblin",2,60, 15, 8, 0, 1, 1, 3, goblinIcon);
+		new BasicAI(goblin, player);
 		goblin.setAttributes(2, 1, 1);
 		goblin.setStats(2, 2, 2, 3, 1, 2);
 		world.addAtEmptyLocation(goblin, z);
-		for (int i = 0; i < (int)(Math.random()*3)+1; i++)
+		for (int i = 0; i < (int)(Math.random()*10)+1; i++)
 			goblin.addItemToInventory(itemFactory.equipment().newRock(-1));
-		new BasicAI(goblin, player);
 		return goblin;
 	}
 	public Creature newGiantAnt(int z) {

@@ -12,10 +12,11 @@ public class CastSpellScreen extends TargetBasedScreen {
 		this.spell = spell;
 		this.targetType = spell.targetType();
 		this.spellRadius = spell.radius();
+		this.range = spell.range();
 	}
 	
 	public void selectWorldCoordinate(){
-        player.castSpell(spell, this.targets);
+        player.castSpell(spell, getCreatureLocations());
     }
 
 }

@@ -22,7 +22,7 @@ public class BasicAI extends CreatureAI {
 			return;
 		}
 		if (canRangedWeaponAttack(player))
-			creature.rangedWeaponAttack(player);
+			creature.fireItem(creature.quiver(),player.x, player.y, player.z);
 		else if (canThrowAt(player))
 			creature.throwItem(getWeaponToThrow(), player.x, player.y, player.z);
 		else if (creature.canSee(player.x, player.y, player.z))

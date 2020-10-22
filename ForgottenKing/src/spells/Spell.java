@@ -63,6 +63,11 @@ public class Spell {
 	public int radius() { return radius; }
 	public void setRadius(int x) { radius = x; }
 	
+	//If range == 0, it can target anything in sight
+	private int range;
+	public int range() { return range; }
+	public void setRange(int x) { range = x; }
+	
 	private String useText;
 	public String useText() { return useText; }
 	public void setUseText(String x) { useText = x; }

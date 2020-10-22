@@ -13,6 +13,7 @@ public final class Spells {
 		s.setType(Type.FIRE);
 		s.setDamage(2, 5);
 		s.setTargetType(TargetType.PROJECTILE);
+		s.setRange(4);
 		return s;
 	}
 	public static Spell moltenFire() {

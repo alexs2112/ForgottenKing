@@ -56,7 +56,8 @@ public class SelectSpellScreen extends Screen {
     		c = key.getText().charAt(0);
     	ArrayList<Spell> spells = player.spells();
     	if (letters.indexOf(c) > -1
-    			&& spells.size() > letters.indexOf(c)) {
+    		&& spells != null
+    		&& spells.size() > letters.indexOf(c)) {
     		Spell spell = spells.get(letters.indexOf(c));
     		return new CastSpellScreen(playRoot, player, "Cast " + spell.name(), sx, sy, spell);
     	} else if (key.getCode().equals(KeyCode.ESCAPE)) {
