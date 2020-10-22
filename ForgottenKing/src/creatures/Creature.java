@@ -58,7 +58,7 @@ public class Creature {
     private int mana;
     public int mana() { return mana; }
     private int maxMana;
-    public int maxMana() { return maxMana + level*getWill(); }
+    public int maxMana() { return maxMana + (level*getWill())/2; }
     public void fillMana() { mana = maxMana(); }
     public void modifyMana(int x) { mana = Math.min(maxMana(), mana + x); }
     public void setMana(int current, int max) { maxMana = max; mana = current; }
@@ -125,7 +125,7 @@ public class Creature {
     
     /**
      * Combat Stats
-     */
+     */ 
     private int attackValue;
 	public int attackValue() { 
 		int value = attackValue;
@@ -181,10 +181,23 @@ public class Creature {
 	}
 	public int getCurrentRangedAttackValue() {
 		if (weapon() != null && weapon().rangedAttackValue() > 0)
-			return weapon().rangedAttackValue() + getAccuracy();
+			return weapon().rangedAttackValue() + getAccuracy() + getAccuracy() / 4;
 		else
 			return 0;
 	}
+	private Creature lastAttacked;
+    public Creature lastAttacked() { return lastAttacked; }
+    public void setLastAttacked(Creature x) { lastAttacked = x; }
+    public Point getAutoTarget() {
+    	if (lastAttacked != null) {
+    		if (creature(lastAttacked.x, lastAttacked.y, lastAttacked.z) == lastAttacked)
+    			return new Point(lastAttacked.x, lastAttacked.y, lastAttacked.z);
+    		else
+    			lastAttacked = null;
+    	}
+    	return new Point(x,y,z);
+    }
+    
 	public void modifyArmorValue(int x) { armorValue += x; }
 	private HashMap<Type, Integer> resistances;
 	public void setResistance(Type type, int n) {
@@ -251,7 +264,7 @@ public class Creature {
 	public int time() { return time; }
 	public void modifyTime(int x) { time += x; }
 	private int movementDelay;
-	public int movementDelay() { return Math.max(movementDelay - getAgility()/8,5); }
+	public int movementDelay() { return Math.max(movementDelay - getAgility()/6,5); }
 	public void modifyMovementDelay(int x) { movementDelay += x; }
 	private int attackDelay;
 	public int attackDelay() {
@@ -466,6 +479,7 @@ public class Creature {
 				action += " but misses";
 			doAction(action);
 		}
+		setLastAttacked(other);
 	}
 	/**
 	 * Returns the damage reduced 1 for 1 by armor, to a maximum of 80% reduction
@@ -816,12 +830,12 @@ public class Creature {
 	private int manaRegenTimer;
 	private int healthTimePerTurn() {
 		if (is(Tag.PLAYER))
-			return 100 + (level + getToughness()) * 2;
+			return 100 + (level + getToughness()) * 10;
 		return 50;
 	}
 	private int manaTimePerTurn() {
 		if (is(Tag.PLAYER))
-			return 100 + (level + getWill()) * 2;
+			return 100 + (level + getWill()) * 10;
 		return 50;
 	}
 	private void regenerate() {

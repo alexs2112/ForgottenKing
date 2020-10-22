@@ -20,8 +20,8 @@ public class TargetBasedScreen extends Screen {
 	protected String caption;
 	private int sx;
 	private int sy;
-	private int x;
-	private int y;
+	protected int x;
+	protected int y;
 	private Group baseRoot;
 	protected List<Point> targets;
 	protected List<Creature> creatures;

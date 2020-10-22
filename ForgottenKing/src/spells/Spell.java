@@ -89,7 +89,7 @@ public class Spell {
 		int roll = (int)(Math.random()*10 + Math.random()*10 + 2);
 		roll += owner.getSpellcasting() + owner.magic().get(type) + attackValue;
 		if (roll >= target.evasion()) {
-			int damage = (int)(Math.random() * (this.damage[1] - this.damage[0]) + 1 + owner.magic().get(type));
+			int damage = (int)(Math.random() * (this.damage[1] - this.damage[0]) + 1 + owner.magic().get(type) + owner.getSpellcasting()/2);
 			if (damageType().physical())
 				damage = target.reduceDamageByArmor(damage);
 			damage = target.getDamageReceived(damage, damageType);

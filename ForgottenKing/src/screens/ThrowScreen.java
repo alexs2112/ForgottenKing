@@ -3,6 +3,7 @@ package screens;
 import creatures.Creature;
 import items.Item;
 import javafx.scene.Group;
+import tools.Point;
 
 public class ThrowScreen extends InventoryBasedScreen {
 	private int sx;
@@ -28,7 +29,7 @@ public class ThrowScreen extends InventoryBasedScreen {
 
 	@Override
 	protected Screen use(Item item) {
-		return new ThrowAtScreen(root, player, sx, sy, item);
+		return new ThrowAtScreen(root, player, sx, sy, item, player.getAutoTarget());
 	}
 
 }

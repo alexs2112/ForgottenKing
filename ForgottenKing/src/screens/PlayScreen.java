@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import spells.Effect;
 import tools.FieldOfView;
+import tools.Point;
 import world.World;
 import world.WorldBuilder;
 
@@ -228,10 +229,13 @@ public class PlayScreen extends Screen {
     			} else  if (player.quiver() == null) {
     				player.notify("You are out of ammo");
     				endAfterUserInput = false;
-    			} else
+    			} else {
+    				Point p = player.getAutoTarget();
     				subscreen = new FireWeaponScreen(root, player,
     						getScrollX(),
-    						getScrollY());
+    						getScrollY(),
+    						p);
+    			}
     		}
     		else if (c == '0' && devMode)
     			player.fillHP();
