@@ -141,5 +141,5 @@ public class World {
 		features[x][y][0] = new Entrance(x,y,0);
 		tiles[x][y][0] = Tile.DUNGEON_FLOOR_CENTER;
 	}
-
+	
 }

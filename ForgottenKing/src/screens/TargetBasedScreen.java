@@ -67,7 +67,6 @@ public class TargetBasedScreen extends Screen {
 			targets.add(p);
 			Creature c = player.creature(p.x, p.y, player.z);
 			if (c != null) {
-				System.out.println(creatures.size());
 				if (c != player && !creatures.contains(c))
 					creatures.add(c);
 				else if (line.getPoints().size() == 1)

@@ -675,7 +675,8 @@ public class Creature {
     }
     
     public boolean canEnter(int mx, int my, int mz) {
-    	return (world.tile(mx, my, mz).isGround() && world.creature(mx, my, mz) == null);
+    	return (world.tile(mx, my, mz).isGround() && world.creature(mx, my, mz) == null &&
+    			!(world.feature(mx,my,mz) != null && world.feature(mx, my, mz).blockMovement()));
     }
     
     /**
