@@ -264,7 +264,7 @@ public class Creature {
 	public int time() { return time; }
 	public void modifyTime(int x) { time += x; }
 	private int movementDelay;
-	public int movementDelay() { return Math.max(movementDelay - getAgility()/6,5) + randomTimeChange(); }
+	public int movementDelay() { return Math.max(movementDelay - getAgility()/6,5); }
 	public int getMovementDelay() { return movementDelay() + randomTimeChange(); }
 	public void modifyMovementDelay(int x) { movementDelay += x; }
 	private int randomTimeChange() {

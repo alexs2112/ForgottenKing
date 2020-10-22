@@ -102,7 +102,7 @@ public class EquipmentFactory {
 		Item bow = new Item("Shortbow", ItemType.WEAPON, shortbowIcon);
 		bow.modifyRangedAttackValue(3);
 		bow.setDamage(1, 3);			
-		bow.setRangedDamage(0, 2);		//Standard Arrows typically add 2 damage
+		bow.setRangedDamage(2, 4);		//Standard Arrows typically add 2 damage
 		bow.addTag(ItemTag.BOW);
 		world.addAtEmptyLocation(bow,z);
 		return bow;

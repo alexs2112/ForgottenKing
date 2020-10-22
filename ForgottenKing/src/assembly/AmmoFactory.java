@@ -21,7 +21,7 @@ public class AmmoFactory {
 		Item item = new Item("arrow", ItemType.ARROW, arrowImage);
 		item.setDamageType(Type.PIERCING);
 		item.setRangedDamage(2, 2);
-		int amount = (int)(Math.random()*5 + 3);
+		int amount = (int)(Math.random()*5 + 2);
 		world.addAtEmptyLocation(item, z, amount);
 		return item;
 	}

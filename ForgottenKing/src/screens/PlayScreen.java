@@ -64,6 +64,10 @@ public class PlayScreen extends Screen {
         	player.addEquipment(itemFactory.equipment().newDevSword(-1));
         	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));
         	player.addItemToInventory(itemFactory.book().newBookOfFlames(-1));
+        	player.addEquipment(itemFactory.equipment().newShortbow(-1));
+        	for (int i = 0; i < 10; i++) {
+        		player.addItemToInventory(itemFactory.ammo().newArrow(-1));
+        	}
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
