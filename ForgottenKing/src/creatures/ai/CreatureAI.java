@@ -9,7 +9,7 @@ import items.ItemTag;
 import spells.Spell;
 import spells.TargetType;
 import tools.Line;
-//import tools.Path;
+import tools.Path;
 import tools.PathFinder;
 import tools.Point;
 import world.Tile;
@@ -64,13 +64,16 @@ public class CreatureAI {
     }
     
     public void moveTo(int x, int y) {
-    	List<Point> points = new PathFinder(creature, new Point(x,y,creature.z)).getPoints();
-		
+    	//List<Point> points = new PathFinder(creature, new Point(x,y,creature.z)).getPoints();
+    	List<Point> points = new Path(creature, x, y).points();
 		if (points == null || points.size() == 0)
 			return;
-		int mx = points.get(0).x;
-		int my = points.get(0).y;
-		creature.moveTo(mx, my, creature.z);
+//		int mx = points.get(0).x;
+//		int my = points.get(0).y;
+//		creature.moveTo(mx, my, creature.z);
+		int mx = points.get(0).x - creature.x;
+		int my = points.get(0).y - creature.y;
+		creature.moveBy(mx, my, 0);
 	}
     
     public Tile rememberedTile(int wx, int wy, int wz) {
