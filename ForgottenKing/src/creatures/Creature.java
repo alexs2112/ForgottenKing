@@ -530,6 +530,12 @@ public class Creature {
 		return quiver;
 	}
 	public void setQuiver(Item i) { quiver = i; }
+	private Item lastWielded;
+	public Item lastWielded() {
+		if (!inventory.contains(lastWielded))
+			lastWielded = null;
+		return lastWielded; 
+	}
     public void pickup() {
 		Inventory items = world.items(x, y, z);
 		pickup(items.getFirstItem());
@@ -586,9 +592,10 @@ public class Creature {
 			return;
 		if (equipment.containsValue(item)) {
 			if (hp > 0) {//To prevent the game stating an unequip when things die
-				if (item.type() == ItemType.WEAPON)
+				if (item.type() == ItemType.WEAPON) {
 					doAction("unwield a " + item.name());
-				else
+					lastWielded = item;
+				} else
 					doAction("take off a " + item.name());
 			}
 			equipment.remove(item.type());
@@ -615,7 +622,7 @@ public class Creature {
 		if (item == null || item.type() == null)
 			return;
 		if (equipment.containsKey(item.type())) {
-			unequip(item);
+			unequip(equipment.get(item.type()));
 		}
 		if (item.type() == ItemType.WEAPON)
 			doAction("wield a " + item.name());

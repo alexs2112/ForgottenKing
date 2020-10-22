@@ -63,6 +63,10 @@ public abstract class InventoryBasedScreen extends Screen {
             	line += " (Quivered)";
             	equipColour = Color.DEEPSKYBLUE;
             }
+            if (player != null && player.lastWielded()==item) {
+            	line += " (Tab)";
+            	equipColour = Color.FORESTGREEN;
+            }
             draw(root, item.image(), x-44, 32*num + y + 4);
         	write(root, line, x, 32*num + y + 32, font, equipColour);
         	num++;

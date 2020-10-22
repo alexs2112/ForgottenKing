@@ -187,6 +187,10 @@ public class PlayScreen extends Screen {
     			subscreen = new InventoryScreen(player);
     		else if (c == 'w')
     			subscreen = new EquipScreen(player);
+    		else if (code.equals(KeyCode.TAB)) {
+    			if (player.lastWielded() != null && player.inventory().contains(player.lastWielded()))
+    				player.equip(player.lastWielded());
+    		}
     		else if (c == 'r')
     			subscreen = new ReadScreen(player);
     		else if (c == 's')

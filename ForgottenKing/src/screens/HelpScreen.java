@@ -34,6 +34,7 @@ public class HelpScreen extends Screen {
 		write(root, "[x] to eXamine your surroundings", x, y+=32, font, Color.WHITE);
 		write(root, "[t] to Throw an item", x, y+=32, font, Color.WHITE);
 		write(root, "[f] to Fire an equipped ranged weapon", x, y+=32, font, Color.WHITE);
+		write(root, "[tab] to swap to your last used weapon", x, y+=32, font, Color.WHITE);
 		write(root, "[q] to Quaff a potion", x, y+=32, font, Color.WHITE);
 		write(root, "[r] to Read a book or scroll", x, y+=32, font, Color.WHITE);
 		write(root, "[z] to Zap a memorized spell", x, y+=32, font, Color.WHITE);
