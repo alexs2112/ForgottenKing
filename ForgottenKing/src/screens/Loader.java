@@ -70,4 +70,11 @@ public final class Loader {
 	public static Image minusIcon = ImageCrop.cropImage(plusMinusIcon, 32, 0, 32, 32);
 	public static Image magicTypeBox = new Image(Screen.class.getResourceAsStream("resources/magic_type_box.png"));
 	public static Image spellPointsBox = new Image(Screen.class.getResourceAsStream("resources/spell_points_box.png"));
+	
+	public static Image characterSelectionBackground = new Image(Screen.class.getResourceAsStream("resources/character_selection_screen.png"));
+	private static Image characterSelectionFull = new Image(Screen.class.getResourceAsStream("resources/character_selection_full.png"));
+	public static Image characterSelectionBox = ImageCrop.cropImage(characterSelectionFull, 0, 0, 104, 104);
+	public static Image characterSelectionUpArrow = ImageCrop.cropImage(characterSelectionFull, 104, 0, 104, 52);
+	public static Image characterSelectionDownArrow = ImageCrop.cropImage(characterSelectionFull, 104, 52, 104, 52);
+	
 }

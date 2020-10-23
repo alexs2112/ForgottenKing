@@ -47,14 +47,21 @@ public abstract class Screen {
     	write(root, s, x, y, f, colour);
     }
     public static void write(Group root, String s, int x, int y, Font font, Color colour) {
+    	writeWrapped(root, s, x, y, 0, font, colour);
+    }
+    public static void write(Group root, String s, int x, int y, Font font) {
+    	write(root, s, x, y, font, Color.WHITE);
+    }
+    public static void writeWrapped(Group root, String s, int x, int y, int width, Font font, Color colour) {
     	Text text = new Text();
     	text.setText(s);
     	text.setX(x);
     	text.setY(y);
     	text.setFont(font);
     	text.setFill(colour);
+    	if (width != 0)
+    		text.setWrappingWidth(width);
     	root.getChildren().add(text);
     }
-    
 
 }

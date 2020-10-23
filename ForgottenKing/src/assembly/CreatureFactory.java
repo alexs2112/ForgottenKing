@@ -2,6 +2,7 @@ package assembly;
 
 import java.util.List;
 
+import creatures.ClassSelection;
 import creatures.Creature;
 import creatures.Type;
 import creatures.Tag;
@@ -58,12 +59,13 @@ public class CreatureFactory {
 		return newGoblin(z);
 	}
 	
-	public Creature newPlayer(List<String> messages, int z, FieldOfView fov){
-	    Creature player = new Creature(world, "Player", 1, 0, 22, 10, 0, 0, 1, 2, playerIcon);
-	    player.setAttributes(1,1,1);
-	    player.setStats(2,2,2,2,2,2);
+	public Creature newPlayer(List<String> messages, int z, FieldOfView fov, ClassSelection c){
+	    Creature player = new Creature(world, "Player", 1, 0, c.hp, c.evasion, c.armor, c.attack, c.damageMin, c.damageMax, playerIcon);
+	    player.setAttributes(c.strength,c.dexterity,c.intelligence);
+	    player.setStats(c.toughness,c.brawn,c.agility,c.accuracy,c.will,c.spellcasting);
 	    world.addAtEmptyLocation(player, z);
 	    player.addTag(Tag.PLAYER);
+	    player.addTag(c.title);
 	    new PlayerAI(player, messages, fov);
 	    return player;
 	}

@@ -1,5 +1,7 @@
 package assembly;
 
+import creatures.Creature;
+import creatures.Tag;
 import items.Item;
 import items.ItemTag;
 import items.ItemType;
@@ -36,6 +38,24 @@ public class ItemFactory {
 		item.addTag(ItemTag.VICTORYITEM);
 		world.addAtEmptyLocation(item, z);
 		return item;
+	}
+	
+	public void equipPlayer(Creature player) {
+		if (player.is(Tag.FIGHTER)) {
+			player.addEquipment(equipment().newHandaxe(-1));
+			player.addEquipment(equipment().newLeatherArmor(-1));
+		}
+		else if (player.is(Tag.RANGER)) {
+			player.addEquipment(equipment().newDagger(-1));
+			player.addEquipment(equipment().newShortbow(-1));
+			for (int i = 0; i < 8; i++)
+				player.addItemToInventory(ammo().newArrow(-1));
+		}
+		else {
+			player.addEquipment(equipment().newDagger(-1));
+			player.addEquipment(equipment().newLeatherArmor(-1));
+			player.addItemToInventory(consumable().newPotionOfHealing(-1));
+		}
 	}
 
 }

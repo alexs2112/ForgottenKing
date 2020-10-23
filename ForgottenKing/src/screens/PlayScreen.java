@@ -5,6 +5,7 @@ import java.util.List;
 
 import assembly.CreatureFactory;
 import assembly.ItemFactory;
+import creatures.ClassSelection;
 import creatures.Creature;
 import creatures.Tag;
 import features.Feature;
@@ -34,9 +35,9 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = true;
+    private boolean devMode = false;
 
-    public PlayScreen(){
+    public PlayScreen(ClassSelection character){
         screenWidth = 32;
         screenHeight = 22;
         messages = new ArrayList<String>();
@@ -44,8 +45,8 @@ public class PlayScreen extends Screen {
         fov = new FieldOfView(world);
         itemFactory = new ItemFactory(world);
         creatureFactory = new CreatureFactory(world, itemFactory);
+        setUpPlayer(character);
         populate();
-        setUpPlayer();
     }
     private void createWorld(){
         world = new WorldBuilder(90, 31, 5)
@@ -53,12 +54,12 @@ public class PlayScreen extends Screen {
               .build();
     }
     
-	private void setUpPlayer() {
+	private void setUpPlayer(ClassSelection character) {
+		player = creatureFactory.newPlayer(messages, 0, fov, character);
+		creatureFactory.setPlayer(player);
 		world.setEntrance(player.x, player.y);
     	player.setMagic();
-        player.addEquipment(itemFactory.equipment().newDagger(-1));
-        player.addEquipment(itemFactory.equipment().newLeatherArmor(-1));
-        player.fillMana();
+        itemFactory.equipPlayer(player);
         if (devMode) {
         	player.addEquipment(itemFactory.trinket().newDevRing(-1));
         	player.addEquipment(itemFactory.equipment().newDevSword(-1));
@@ -72,6 +73,7 @@ public class PlayScreen extends Screen {
         messages.clear();
         player.notify("Welcome to the Dungeon!");
         player.notify("I hope you enjoy your stay");
+        
     }
     
 	public void displayOutput(Stage stage) {
@@ -401,8 +403,6 @@ public class PlayScreen extends Screen {
     }
 	
 	private void populate() {
-		player = creatureFactory.newPlayer(messages, 0, fov);
-		creatureFactory.setPlayer(player);
 		for (int z = 0; z < world.depth(); z++) {
 			for (int i = 0; i < 20; i++)
 				creatureFactory.newRandomCreature(z, 1);

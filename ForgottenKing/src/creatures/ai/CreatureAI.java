@@ -10,7 +10,6 @@ import spells.Spell;
 import spells.TargetType;
 import tools.Line;
 import tools.Path;
-import tools.PathFinder;
 import tools.Point;
 import world.Tile;
 

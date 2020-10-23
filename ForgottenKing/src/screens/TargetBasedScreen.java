@@ -8,7 +8,6 @@ import java.util.List;
 
 import creatures.Creature;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;

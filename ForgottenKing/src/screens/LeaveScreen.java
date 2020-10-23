@@ -30,7 +30,7 @@ public class LeaveScreen extends Screen {
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
 		if (key.getCode().equals(KeyCode.ENTER))
-			return new PlayScreen();
+			return new StartScreen();
     	return this;
     }
 	

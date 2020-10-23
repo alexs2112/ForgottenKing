@@ -19,7 +19,7 @@ public class StartScreen extends Screen {
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
 		if (key.getCode().equals(KeyCode.ENTER))
-			return new PlayScreen();
+			return new CharacterSelectionScreen();
     	return this;
     }
 }
