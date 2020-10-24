@@ -34,6 +34,7 @@ public class ConsumableFactory {
 	public Item newPotionOfHealing(int z){
 	    Item item = new Item("Potion of Healing", ItemType.POTION, potionOfHealingIcon);
 	    item.setEffect(Effects.health(15));
+	    item.setDescription("Upon quaffing this potion you immediately heal 15 points of health.");
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}
@@ -41,13 +42,15 @@ public class ConsumableFactory {
 	public Item newPotionOfMana(int z){
 	    Item item = new Item("Potion of Mana", ItemType.POTION, potionOfManaIcon);
 	    item.setEffect(Effects.mana(15));
+	    item.setDescription("Upon quaffing this potion you immediately regenerate 15 points of mana.");
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}
 	
 	public Item newPotionOfPoison(int z){
 	    Item item = new Item("Poison Potion", ItemType.POTION, poisonPotionIcon);
-	    item.setEffect(Effects.poisoned(20,1, -100)); 
+	    item.setEffect(Effects.poisoned(20,1, -100));
+	    item.setDescription("Upon quaffing this potion you become poisoned for 20 turns, taking 1 damage per turn.");
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}
@@ -55,12 +58,14 @@ public class ConsumableFactory {
 	public Item newPotionOfStrength(int z){
 	    Item item = new Item("Potion of Strength", ItemType.POTION, potionOfStrengthIcon);
 	    item.setEffect(Effects.strong(15,4));
+	    item.setDescription("Upon quaffing this potion your strength increases by 4 for 15 turns.");
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}
 	public Item newPotionOfCuring(int z){
 	    Item item = new Item("Potion of Curing", ItemType.POTION, potionOfCuringIcon);
 	    item.setEffect(Effects.curePoison());
+	    item.setDescription("Quaffing this potion cures all toxic poisons currently effecting you.");
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}

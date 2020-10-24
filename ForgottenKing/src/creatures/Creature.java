@@ -138,7 +138,7 @@ public class Creature {
 		int value = attackValue;
 		for (Item i : equipment.values())
 			value += i.attackValue();
-		return value;
+		return value - getArmorDebuff();
 	}
 	public void modifyAttackValue(int x) { attackValue += x; }
 	private int armorValue;
@@ -188,7 +188,7 @@ public class Creature {
 	}
 	public int getCurrentRangedAttackValue() {
 		if (weapon() != null && weapon().rangedAttackValue() > 0)
-			return weapon().rangedAttackValue() + getAccuracy() + getAccuracy() / 4;
+			return weapon().rangedAttackValue() + getAccuracy() + getAccuracy() / 4 - getArmorDebuff();
 		else
 			return 0;
 	}
@@ -237,7 +237,11 @@ public class Creature {
 	}
 	private int evasion;
 	public int evasion() { 
-		return evasion + getAgility(); 
+		int i = evasion + getAgility();
+		for (Item item : equipment.values())
+			if (item.is(ItemTag.LIGHTARMOR) && is(Tag.LIGHT_ARMOR_PROFICIENCY))
+				i+=2;
+		return  i - getArmorDebuff();
 	}
 	public void modifyEvasion(int x) { evasion += x; }
 	private int[] damage;
@@ -263,6 +267,19 @@ public class Creature {
 		damage[0] = min;
 		damage[1] = max;
 	}
+	public int getArmorDebuff() {
+		int value = 0;
+		for (Item i : equipment.values()) {
+			if (i.is(ItemTag.MEDIUMARMOR) && !is(Tag.MEDIUM_ARMOR_SKILL) && getBrawn() < 5)
+				value+=2;
+			if (i.is(ItemTag.HEAVYARMOR) && !is(Tag.HEAVY_ARMOR_SKILL) && getBrawn() < 8) {
+				value += 3;
+				if (getBrawn() < 5)
+					value += 2;
+			}
+		}
+		return value;
+	}
 	
 	/**
 	 * Speed and Delay
@@ -271,7 +288,7 @@ public class Creature {
 	public int time() { return time; }
 	public void modifyTime(int x) { time += x; }
 	private int movementDelay;
-	public int movementDelay() { return Math.max(movementDelay - getAgility()/6,5); }
+	public int movementDelay() { return Math.max(movementDelay - getAgility()/6,5) + getArmorDebuff(); }
 	public int getMovementDelay() { return movementDelay() + randomTimeChange(); }
 	public void modifyMovementDelay(int x) { movementDelay += x; }
 	private int randomTimeChange() {
@@ -287,7 +304,7 @@ public class Creature {
 		int mod = 0;
 		if (weapon() != null)
 			mod += weapon().weaponDelay();
-		return Math.max(attackDelay + mod, 4); 
+		return Math.max(attackDelay + mod, 4) + getArmorDebuff(); 
 	}
 	public void modifyAttackDelay(int x) { attackDelay += x; }
     

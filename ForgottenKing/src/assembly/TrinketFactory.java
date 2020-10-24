@@ -18,10 +18,11 @@ public class TrinketFactory {
 	}
 	
 	public Item newRingOfPoisonResistance(int z) {
-		Item ring = new Item("Ring of Poison Resistance", ItemType.RING, poisonResistanceRingIcon);
-		ring.addResistance(Type.POISON, 1);
-		world.addAtEmptyLocation(ring, z);
-		return ring;
+		Item item = new Item("Ring of Poison Resistance", ItemType.RING, poisonResistanceRingIcon);
+		item.addResistance(Type.POISON, 1);
+		item.setDescription("A small brass ring, it is etched with a serpentine design and glows a slight green.");
+		world.addAtEmptyLocation(item, z);
+		return item;
 	}
 	
 	public Item newDevRing(int z) {

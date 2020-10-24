@@ -36,6 +36,7 @@ public class ItemFactory {
 	public Item newVictoryItem(int z) {
 		Item item = new Item("Glowing Runestone", ItemType.RUNESTONE, Loader.victoryItemIcon);
 		item.addTag(ItemTag.VICTORYITEM);
+		item.setDescription("What you need to complete your quest. All that you have to do now is return it to the surface");
 		world.addAtEmptyLocation(item, z);
 		return item;
 	}

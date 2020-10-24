@@ -49,17 +49,19 @@ public class PerkScreen extends Screen {
 		int y = 50;
 		write(root, "Available Perk Points: [" + player.perkPoints() + "]", 48, y, font,  Color.WHITE);
 		y+=12;
-		for (int i = 0; i < perks.size(); i++) {
+		int top = Math.max(0, select-2);
+		int bot = Math.min(top+5, perks.size());
+		for (int i = top; i < bot; i++) {
 			Tag t = perks.get(i);
 			if (player.tags().contains(t))
-				draw(root, Loader.perkBoxBlue, x, y + 124*i);
+				draw(root, Loader.perkBoxBlue, x, y + 124*(i-top));
 			else
-				draw(root, Loader.perkBox, x, y + 124*i);
+				draw(root, Loader.perkBox, x, y + 124*(i-top));
 			if (select == i)
-				draw(root, Loader.perkBoxGreen, x, y + 124*i);
+				draw(root, Loader.perkBoxSelection, x, y + 124*(i-top));
 			if (t.icon() != null)
-				draw(root, t.icon(), x+20, y+124*i+20);
-			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42 + 124*i, 432, fontS, Color.ANTIQUEWHITE);
+				draw(root, t.icon(), x+20, y+124*(i-top)+20);
+			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42 + 124*(i-top), 632, fontS, Color.ANTIQUEWHITE);
 		}
 	}
 	

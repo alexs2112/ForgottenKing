@@ -1,8 +1,10 @@
 package screens;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import creatures.Creature;
+import creatures.Type;
 import items.Item;
 import items.ItemTag;
 import items.ItemType;
@@ -34,16 +36,37 @@ public class InspectScreen extends Screen {
     	draw(root, Loader.screenBorder, 0, 0);
     	Font titleFont = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 24);
     	Font font = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 20);
+    	Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
     	
-    	write(root, item.name(), 48, 48, titleFont, Color.WHITE);
-    	write(root, item.description(), 48, 80, font, Color.ANTIQUEWHITE);
-    	draw(root, new Image(this.getClass().getResourceAsStream("resources/icon_box.png")), 592, 40);
-    	draw(root, item.image(), 600, 48);
+    	int y = 64;
+    	write(root, item.name(), 96, y, titleFont, Color.WHITE);
+    	draw(root, new Image(this.getClass().getResourceAsStream("resources/icon_box.png")), 40, y-36);
+    	draw(root, item.image(), 48, y-28);
+    	y += 48;
+    	writeWrapped(root, item.description(), 48, y, 1184, font, Color.ANTIQUEWHITE);
+    	y += 64;
+    	for (String s : getStatDescription())
+    		write(root, s, 48, y+=20, fontS, Color.WHITE);
     	
-    	ArrayList<String> texts = useTexts();
-    	for (int i = 0; i < texts.size(); i++) {
-    		write(root, texts.get(i), 48, 112+i*32, font, Color.WHITE);
-    	}
+    	
+    	y += 48;
+    	int x = 275;
+    	if (item.tags() != null)
+    		for (ItemTag t : item.tags()) {
+    			if (t.description().length() <= 1)
+    				continue;
+    			draw(root, Loader.itemTagBox, 275, y);
+    			if (t.icon() != null)
+    				draw(root, t.icon(), x+20, y+20);
+    			Font f = fontS;
+    			if (t.description().length() < 100)
+    				f = font;
+    			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42, 632, f, Color.ANTIQUEWHITE);
+    			y+=122;
+    		}
+    	y+=48;
+    	write(root, useTexts(), 48, y, font, Color.WHITE);
+    	
     }
 	public Screen respondToUserInput(KeyEvent key) {
 		if (key.getCode().equals(KeyCode.ESCAPE))
@@ -70,22 +93,56 @@ public class InspectScreen extends Screen {
 		}
 	}
 	
-	public ArrayList<String> useTexts() {
-		ArrayList<String> list = new ArrayList<String>();
+	private String useTexts() {
+		String text = "";
 		if (item.equippable()) {
 			if (item.type() == ItemType.WEAPON)
-				list.add("[w]: wield");
+				text += ("[w]: wield   ");
 			else
-				list.add("[w]: wear");
+				text +=("[w]: wear   ");
 		}
 		if (item.spells() != null)
-			list.add("[r]: read");
+			text +=("[r]: read   ");
 		if (item.type() == ItemType.POTION)
-			list.add("[q]: quaff");
+			text +=("[q]: quaff   ");
 		if (item.type() == ItemType.POTION || item.is(ItemTag.THROWING))
-			list.add("[t]: throw");	//Other items can be thrown, only shows t on the most useful ones for throwing
-		list.add("[d]: drop");
-		return list;
+			text +=("[t]: throw   ");	//Other items can be thrown, only shows t on the most useful ones for throwing
+		text +=("[d]: drop");
+		return text;
+	}
+	private List<String> getStatDescription() {
+		List<String> text = new ArrayList<String>();
+		if (item.isRanged())
+			text.add("It can be fired with [f] if you have suitable ammo quivered.");
+		if (item.attackValue() != 0)
+			text.add("It increases your melee attack by " + item.attackValue() + ".");
+		if (item.rangedAttackValue() != 0)
+			text.add("It increases your ranged attack by " + item.rangedAttackValue() + ".");
+		if (item.minDamage() != 0 && item.maxDamage() != 0) {
+			String t = "";
+			t += "It increases your melee damage by " + item.minDamage() + "-" + item.maxDamage();
+			if (item.damageType() != null)
+				t += ", dealing " + item.damageType().text() + " damage";
+			t += ".";
+			text.add(t);
+		}
+		if (item.rangedDamage() != null)
+			text.add("It increases your ranged damage by " + item.rangedDamage()[0] + "-" + item.rangedDamage()[1] + ".");
+		if (item.armorValue() != 0)
+			text.add("It increases your armor value by " + item.armorValue() + ".");
+		if (item.weaponDelay() < 0)
+			text.add("It reduces your attack delay by " + Math.abs(item.weaponDelay()) + ".");
+		else if (item.weaponDelay() > 0)
+			text.add("It increases your attack delay by " + item.weaponDelay() + ".");
+		if (item.effectOnHit() != null)
+			text.add("It applies the effect [" + item.effectOnHit().name() + "] on successful hits.");
+		if (item.spells() != null)
+			text.add("You can learn spells by [r]eading it.");
+		if (item.resistances() != null) {
+			for (Type t : item.resistances().keySet())
+				text.add("It increases your resistance to " + t.text() + " by " + item.getResistance(t) + ".");
+		}
+		return text;
 	}
 
 }

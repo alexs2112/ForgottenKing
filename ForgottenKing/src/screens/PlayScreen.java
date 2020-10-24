@@ -68,11 +68,9 @@ public class PlayScreen extends Screen {
         	player.addEquipment(itemFactory.equipment().newDevSword(-1));
         	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));
         	*/
-        	player.addItemToInventory(itemFactory.consumable().newPotionOfPoison(-1));
-        	player.addItemToInventory(itemFactory.consumable().newPotionOfPoison(-1));
-        	player.addItemToInventory(itemFactory.consumable().newPotionOfCuring(-1));
-        	player.addItemToInventory(itemFactory.book().newBookOfVitality(-1));
-        	player.addItemToInventory(itemFactory.book().newBookOfFlames(-1));
+        	player.addEquipment(itemFactory.equipment().newCopperBreastplate(-1));
+        	player.addEquipment(itemFactory.equipment().newLeatherArmor(-1));
+        	player.addEquipment(itemFactory.equipment().newStuddedLeatherArmor(-1));
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -259,7 +257,7 @@ public class PlayScreen extends Screen {
 		
 		if (endAfterUserInput && subscreen == null) {
 			player.update();
-			if (player.time() <= 0)	//A failsafe
+			if (player.time() <= 0) //If the players action did not modify their time, set their time to their movement delay
 				player.modifyTime(player.getMovementDelay());
 			while (player.time() > 0) {
 				world.update(player.z);
@@ -429,7 +427,7 @@ public class PlayScreen extends Screen {
 			for (int i = 0; i < 10; i++)
 				creatureFactory.newRandomCreature(z, 2);
 			for (int i = 0; i < 10; i++){
-	            itemFactory.equipment().newRock(z);
+	            itemFactory.ammo().newRock(z);
 	        }
 			for (int i = 0; i < 5; i++){
 				itemFactory.newRandomArmor(z);

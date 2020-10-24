@@ -31,6 +31,9 @@ public enum Tag {
 	IMPROVED_CRITICAL("Improved Critical", "Your critical chance is increased by 10%.", Loader.improvedCriticalIcon), 		//Starting perk for the ranger
 	DEADLY_CRITICAL("Deadly Critical", "You deal an additional DEX-Accuracy damage on critical hits.", Loader.deadlyCriticalIcon),
 	STRONG_ARROWS("Strong Arrows", "The chance for your fired arrows to break is reduced by 12%.", Loader.strongArrowsIcon),
+	LIGHT_ARMOR_PROFICIENCY("Light Armor Proficiency", "Equipping items with the Light Armor property increases your evasion by 2.", Loader.lightArmorProficiencyIcon),
+	MEDIUM_ARMOR_SKILL("Medium Armor Skill", "You can equip items with the Medium Armor property without penalty.", Loader.mediumArmorSkillIcon),
+	HEAVY_ARMOR_SKILL("Heavy Armor Skill", "You can equip items with the Heavy Armor property without penalty.", Loader.heavyArmorSkillIcon),
 	;
 	
 	private String text;
@@ -50,7 +53,7 @@ public enum Tag {
 	}
 	
 	public static List<Tag> listOfPerks() {
-		return new ArrayList<Tag>(EnumSet.range(QUICK_LEARNER, STRONG_ARROWS));
+		return new ArrayList<Tag>(EnumSet.range(QUICK_LEARNER, HEAVY_ARMOR_SKILL));
 	}
 	
 	public boolean isPerk() {

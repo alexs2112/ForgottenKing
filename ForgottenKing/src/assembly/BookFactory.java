@@ -30,6 +30,7 @@ public class BookFactory {
 		item.addSpell(Spells.curePoison());
 		item.addSpell(Spells.regenerateHealth());
 		item.addSpell(Spells.heroism());
+		item.setDescription("A plain, leather-bound book describing simple light spells of healing and strength.");
 		world.addAtEmptyLocation(item, z);
 		return item;
 	}
@@ -38,6 +39,7 @@ public class BookFactory {
 		item.addSpell(Spells.embers());
 		item.addSpell(Spells.innerGlow());
 		item.addSpell(Spells.moltenFire());
+		item.setDescription("A large dark book, the cover is coated in ash and the pages feel brittle to the touch.");
 		world.addAtEmptyLocation(item, z);
 		return item;
 	}

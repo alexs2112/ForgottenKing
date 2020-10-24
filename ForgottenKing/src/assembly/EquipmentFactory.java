@@ -11,10 +11,6 @@ public class EquipmentFactory {
 	private World world;
 	
 	//Images
-	private Image rocksIconFull = new Image(this.getClass().getResourceAsStream("resources/items/rocks_full.png"));
-	private Image rockIconA = tools.ImageCrop.cropImage(rocksIconFull, 32, 32, 32, 32);
-	private Image rockIconB = tools.ImageCrop.cropImage(rocksIconFull, 96, 0, 32, 32);
-	
 	private Image shortWeaponFull = new Image(this.getClass().getResourceAsStream("resources/items/short_weapon_full.png"));
 	private Image daggerIcon = tools.ImageCrop.cropImage(shortWeaponFull, 0, 0, 32, 32);
 	
@@ -57,84 +53,90 @@ public class EquipmentFactory {
 		}
 	}
 
-	public Item newRock(int z) {
-		Item rock = new Item("Rock", ItemType.STONE, rockIconB);
-		rock.modifyThrownAttackValue(1);
-		rock.addTag(ItemTag.THROWING);
-		world.addAtEmptyLocation(rock,z);
-		return rock;
-	}
+	
 	
 	public Item newDagger(int z) {
-		Item dagger = new Item("Dagger", ItemType.WEAPON, daggerIcon);
-		dagger.modifyAttackValue(2);
-		dagger.setDamage(1,2);
-		dagger.modifyWeaponDelay(-2);
-		dagger.addTag(ItemTag.DAGGER);
-		dagger.addTag(ItemTag.LIGHT);
-		dagger.setDamageType(Type.PIERCING);
-		world.addAtEmptyLocation(dagger,z);
-		return dagger;
+		Item item = new Item("Dagger", ItemType.WEAPON, daggerIcon);
+		item.modifyAttackValue(2);
+		item.setDamage(1,2);
+		item.modifyWeaponDelay(-2);
+		item.addTag(ItemTag.DAGGER);
+		item.addTag(ItemTag.LIGHT);
+		item.setDamageType(Type.PIERCING);
+		item.setDescription("A short double-edged fighting knife with a sharp point. Ideal for quick strikes or stabbing unaware foes.");
+		world.addAtEmptyLocation(item,z);
+		return item;
 	}
 	
 	public Item newShortSword(int z) {
-		Item sword = new Item("Short Sword", ItemType.WEAPON, shortSwordIcon);
-		sword.modifyAttackValue(3);
-		sword.setDamage(2, 4);
-		sword.addTag(ItemTag.SWORD);
-		sword.addTag(ItemTag.LIGHT);
-		sword.setDamageType(Type.SLASHING);
-		world.addAtEmptyLocation(sword,z);
-		return sword;
+		Item item = new Item("Short Sword", ItemType.WEAPON, shortSwordIcon);
+		item.modifyAttackValue(3);
+		item.setDamage(2, 4);
+		item.addTag(ItemTag.SWORD);
+		item.addTag(ItemTag.LIGHT);
+		item.setDamageType(Type.SLASHING);
+		item.setDescription("A short and light blade. Perfect for your off hand, or for slashing an enemy.");
+		world.addAtEmptyLocation(item,z);
+		return item;
 	}
 	
+	//To be removed or changed in the future
 	public Item newStaff(int z) {
-		Item staff = new Item("Staff", ItemType.WEAPON, staffIcon);
-		staff.modifyAttackValue(1);
-		staff.modifyArmorValue(1);
-		staff.setDamage(1, 3);
-		staff.addTag(ItemTag.POLEARM);
-		world.addAtEmptyLocation(staff,z);
-		return staff;
+		Item item = new Item("Staff", ItemType.WEAPON, staffIcon);
+		item.modifyAttackValue(1);
+		item.modifyArmorValue(1);
+		item.setDamage(1, 3);
+		item.addTag(ItemTag.POLEARM);
+		item.setDescription("A stout walking stick.");
+		world.addAtEmptyLocation(item,z);
+		return item;
 	}
 	
 	public Item newShortbow(int z) {
-		Item bow = new Item("Shortbow", ItemType.WEAPON, shortbowIcon);
-		bow.modifyRangedAttackValue(3);
-		bow.setDamage(1, 3);			
-		bow.setRangedDamage(2, 4);		//Standard Arrows typically add 2 damage
-		bow.addTag(ItemTag.BOW);
-		world.addAtEmptyLocation(bow,z);
-		return bow;
+		Item item = new Item("Shortbow", ItemType.WEAPON, shortbowIcon);
+		item.modifyRangedAttackValue(3);
+		item.setDamage(1, 3);			
+		item.setRangedDamage(2, 4);		//Standard Arrows typically add 2 damage
+		item.addTag(ItemTag.BOW);
+		item.setDescription("A short piece of rope attached to curved wood designed to fire arrows.");
+		world.addAtEmptyLocation(item,z);
+		return item;
 	}
 	public Item newHandaxe(int z) {
-		Item axe = new Item("Handaxe", ItemType.WEAPON, handaxeIcon);
-		axe.modifyAttackValue(1);
-		axe.setDamage(2, 4);
-		axe.addTag(ItemTag.AXE);
-		axe.addTag(ItemTag.CLEAVING);
-		axe.setDamageType(Type.SLASHING);
-		world.addAtEmptyLocation(axe,z);
-		return axe;
+		Item item = new Item("Handaxe", ItemType.WEAPON, handaxeIcon);
+		item.modifyAttackValue(1);
+		item.setDamage(2, 4);
+		item.addTag(ItemTag.AXE);
+		item.addTag(ItemTag.CLEAVING);
+		item.setDamageType(Type.SLASHING);
+		item.setDescription("A small and mundane axe, it is still perfectly serviceable for cleaving enemies in two.");
+		world.addAtEmptyLocation(item,z);
+		return item;
 	}
 	
 	public Item newLeatherArmor(int z) {
-		Item armor = new Item("Leather Armor", ItemType.ARMOR, leatherArmorIcon);
-		armor.modifyArmorValue(1);
-		world.addAtEmptyLocation(armor,z);
-		return armor;
+		Item item = new Item("Leather Armor", ItemType.ARMOR, leatherArmorIcon);
+		item.modifyArmorValue(2);
+		item.addTag(ItemTag.LIGHTARMOR);
+		item.setDescription("A suit made from layers of tanned animal hide, this light armour provides basic protection with almost no hindrance to movement.");
+		world.addAtEmptyLocation(item,z);
+		return item;
 	}
 	public Item newStuddedLeatherArmor(int z) {
-		Item armor = new Item("Studded Leather Armor", ItemType.ARMOR, studdedLeatherArmorIcon);
-		armor.modifyArmorValue(2);
-		world.addAtEmptyLocation(armor,z);
-		return armor;
+		Item item = new Item("Studded Leather Armor", ItemType.ARMOR, studdedLeatherArmorIcon);
+		item.modifyArmorValue(3);
+		item.addTag(ItemTag.MEDIUMARMOR);
+		item.setDescription("A set of leather armor enhanced with metal studs providing additional defense, at the sake of swift movement.");
+		world.addAtEmptyLocation(item,z);
+		return item;
 	}
 	public Item newCopperBreastplate(int z) {
-		Item armor = new Item("Copper Breastplate", ItemType.ARMOR, copperBreastplateIcon);
-		armor.modifyArmorValue(3);
-		world.addAtEmptyLocation(armor,z);
-		return armor;
+		Item item = new Item("Copper Breastplate", ItemType.ARMOR, copperBreastplateIcon);
+		item.modifyArmorValue(5);
+		item.addTag(ItemTag.HEAVYARMOR);
+		item.setDescription("A set of interlocking copper plates. It is decent armor for the critters of the dungeon, if a bit heavy.");
+		world.addAtEmptyLocation(item,z);
+		return item;
 	}
 	
 	public Item newDevSword(int z) {

@@ -85,7 +85,7 @@ public class CharacterSelectionScreen extends Screen {
 		
 		for (int i = 0; i < c.tags().size(); i++) {
 			Tag t = c.tags().get(i);
-			draw(root, Loader.perkBox, 440, 374 + 122*i);
+			draw(root, Loader.perkBoxSmall, 440, 374 + 122*i);
 			if (t.icon() != null)
 				draw(root, t.icon(), 460, 394+122*i);
 			writeWrapped(root, t.text() + ": " + t.description(), 512, 416 + 122*i, 432, fontS, Color.ANTIQUEWHITE);
