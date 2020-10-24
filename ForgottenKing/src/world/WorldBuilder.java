@@ -42,7 +42,10 @@ public class WorldBuilder {
 				int sy = (int)(Math.random() * height - 5);
 				
 				//This is only partially working right now, pretty broken by dead ends removing tiles from prefabs
-				if (Math.random() < 0.3) {
+				double chanceToLoad = 0.3;
+				if (!loader.canLoad())
+					chanceToLoad = 0;
+				if (Math.random() < chanceToLoad) {
 					Prefab n = loader.getRandomPrefab();
 					int successes = 0;
 					for (int x = 0; x < n.width(); x++)

@@ -28,7 +28,7 @@ public class BasicAI extends CreatureAI {
 		}
 		
 		//Erratic creatures randomly wander on their turn 40% of the time
-		if (creature.is(Tag.ERRATIC) && Math.random() < 40) {
+		if (creature.is(Tag.ERRATIC) && Math.random()*100 < 40) {
 			wander();
 			return;
 		}

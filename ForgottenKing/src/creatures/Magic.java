@@ -11,7 +11,7 @@ public class Magic {
 	private HashMap<Type, Integer> set;
 	public HashMap<Type, Integer> set() { return set; }
 	private int totalPoints;
-	public int totalPoints() { return totalPoints + user.getSpellcasting()/3; }
+	public int totalPoints() { return totalPoints + user.getSpellcasting()/2; }
 	public int floatingPoints() { return totalPoints() - pointsInUse(); }
 	
 	public Magic(Creature user) {

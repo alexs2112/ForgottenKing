@@ -15,6 +15,8 @@ public class PrefabLoader {
 	public ArrayList<Prefab> prefabs() { return prefabs; }
 	private ArrayList<char[][]> charSheets;
 	private String type;
+	private boolean canLoad;
+	public boolean canLoad() { return canLoad; }
 	
 	/**
 	 * Prefabs must be written as
@@ -35,15 +37,16 @@ public class PrefabLoader {
 		prefabs = new ArrayList<Prefab>();
 		charSheets = new ArrayList<char[][]>();
 		this.type = type;
-		load();
-		loadRoomsPrefabs();
+		canLoad = load();
+		if (canLoad)
+			loadRoomsPrefabs();
 	}
 	
 	/**
 	 * Reads the resource file and sets up a bunch of char[][] arrays of prefabs
 	 * These chars are later loaded and turned into tiles based on specific chars
 	 */
-	private void load() {
+	private boolean load() {
 		try {
 			file = new File(Prefab.class.getResource("resources/rooms.prefab").getPath());
 			System.out.println(file.getAbsolutePath());
@@ -71,8 +74,11 @@ public class PrefabLoader {
 		        }
 		        
 		      }
+			return true;
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Cannot load prefabs: file not found");
+			return false;
 		}
 	}
 	

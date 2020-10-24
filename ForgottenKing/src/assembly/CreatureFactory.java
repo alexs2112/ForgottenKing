@@ -18,7 +18,6 @@ public class CreatureFactory {
 	private Creature player;
 	
 	private Image plantIconsFull = new Image(this.getClass().getResourceAsStream("resources/creatures/plants_full.png"));
-	private Image playerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/player.gif"));
 	private Image goblinIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/goblin.gif"));
 	private Image fungusIcon = ImageCrop.cropImage(plantIconsFull, 0, 224, 32, 32);
 	private Image batIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/bat.gif"));
@@ -60,7 +59,7 @@ public class CreatureFactory {
 	}
 	
 	public Creature newPlayer(List<String> messages, int z, FieldOfView fov, ClassSelection c){
-	    Creature player = new Creature(world, "Player", 1, 0, c.hp, c.evasion, c.armor, c.attack, c.damageMin, c.damageMax, playerIcon);
+	    Creature player = new Creature(world, "Player", 1, 0, c.hp, c.evasion, c.armor, c.attack, c.damageMin, c.damageMax, c.icon);
 	    player.setAttributes(c.strength,c.dexterity,c.intelligence);
 	    player.setStats(c.toughness,c.brawn,c.agility,c.accuracy,c.will,c.spellcasting);
 	    world.addAtEmptyLocation(player, z);

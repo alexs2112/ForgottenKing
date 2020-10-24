@@ -5,7 +5,6 @@ import creatures.Creature;
 import creatures.Stat;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -121,5 +120,7 @@ public class LevelUpScreen extends Screen {
 		int x = (int)(Math.random() * 6) + 1;
 		player.modifyMaxHP(x);
 		player.modifyHP(x);
+		if (player.level() % 4 == 0)
+			player.modifyPerkPoints(1);
 	}
 }

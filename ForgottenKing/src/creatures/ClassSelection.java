@@ -1,9 +1,13 @@
 package creatures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.image.Image;
 
 //A really clunky way to do it, really only calls it once, hence all the public variables
 public class ClassSelection {
+	public Image largeIcon;
 	public Image icon;
 	public Tag title;
     public int hp;
@@ -22,13 +26,18 @@ public class ClassSelection {
     public int will;
     public int spellcasting;
     public String descriptionText;
+    private List<Tag> tags;
+    public List<Tag> tags() { return tags; }
+    public void addTag(Tag t) { tags.add(t); }
+    
     
     /**
      * All that this is used for is to transition all of the starting stats from character selection to playscreen
      * Starting equipment is handled in playscreen by tag
      */
-    public ClassSelection(Tag title, Image icon, int hp, int ev, int armor, int attack, int damageMin, int damageMax) {
+    public ClassSelection(Tag title, Image largeIcon, Image icon, int hp, int ev, int armor, int attack, int damageMin, int damageMax) {
     	this.title = title;
+    	this.largeIcon = largeIcon;
     	this.icon = icon;
     	this.hp = hp;
     	this.evasion = ev;
@@ -36,6 +45,7 @@ public class ClassSelection {
     	this.attack = attack;
     	this.damageMin = damageMin;
     	this.damageMax = damageMax;
+    	tags = new ArrayList<Tag>();
     }
     
     public void setAttributes(int STR, int DEX, int INT) {

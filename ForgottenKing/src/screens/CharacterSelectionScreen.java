@@ -21,7 +21,12 @@ public class CharacterSelectionScreen extends Screen {
 	private Font fontL;
 	private Font fontS;
 	private List<ClassSelection> classes;
-	private Image adventurerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/player96.gif"));
+	private Image adventurerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer-96.gif"));
+	private Image fighterIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter-96.gif"));
+	private Image rangerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger-96.gif"));
+	private Image adventurerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer.gif"));
+	private Image fighterIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter.gif"));
+	private Image rangerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger.gif"));
 	
 	public CharacterSelectionScreen() {
 		font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
@@ -43,7 +48,7 @@ public class CharacterSelectionScreen extends Screen {
 				if (i != 0)
 					darken = -0.7;
 				draw(root, Loader.characterSelectionBox, x, y + i*124);
-				draw(root, classes.get(i+selection).icon, x+4, y + i*124, darken);
+				draw(root, classes.get(i+selection).largeIcon, x+4, y + i*124, darken);
 			}
 		}
 		if (selection-2 >= 0)
@@ -78,14 +83,19 @@ public class CharacterSelectionScreen extends Screen {
 		
 		writeWrapped(root, c.descriptionText, 426, 160, 520, font, Color.ANTIQUEWHITE);
 		
+		for (int i = 0; i < c.tags().size(); i++) {
+			Tag t = c.tags().get(i);
+			draw(root, Loader.perkBox, 440, 374 + 122*i);
+			if (t.icon() != null)
+				draw(root, t.icon(), 460, 394+122*i);
+			writeWrapped(root, t.text() + ": " + t.description(), 512, 416 + 122*i, 432, fontS, Color.ANTIQUEWHITE);
+		}
+		
 		stage.setScene(scene);
 		stage.show();
 	}
 	
 	public Screen respondToUserInput(KeyEvent key) {
-		char c = '/';
-    	if (key.getText().length() > 0)
-    		c = key.getText().charAt(0);
     	if (key.getCode().equals(KeyCode.DOWN))
     		selection = Math.min(2, selection+1);
     	if (key.getCode().equals(KeyCode.UP))
@@ -102,24 +112,27 @@ public class CharacterSelectionScreen extends Screen {
 		classes.add(ranger());
 	}
 	private ClassSelection adventurer() {
-		ClassSelection c = new ClassSelection(Tag.ADVENTURER, adventurerIcon, 22, 10, 0, 0, 1, 2);
+		ClassSelection c = new ClassSelection(Tag.ADVENTURER, adventurerIconLarge, adventurerIcon, 22, 10, 0, 0, 1, 2);
 		c.setAttributes(1, 1, 1);
 		c.setStats(2, 2, 2, 2, 2, 2);
 		c.descriptionText = "A brave adventurer. Well rounded for the unexpected perils and treasures of the dungeon. Equipped with a dagger and a leather armor with the most balanced stats, this character is prepared for anything.";
+		c.addTag(Tag.QUICK_LEARNER);
 		return c;
 	}
 	private ClassSelection fighter() {
-		ClassSelection c = new ClassSelection(Tag.FIGHTER, adventurerIcon, 24, 10, 0, 0, 1, 2);
+		ClassSelection c = new ClassSelection(Tag.FIGHTER, fighterIconLarge, fighterIcon, 24, 10, 0, 0, 1, 2);
 		c.setAttributes(2, 1, 0);
 		c.setStats(2, 3, 1, 2, 2, 1);
 		c.descriptionText = "An experienced fighter. Entering the dungeon with a hand axe and leather armor, this character is ready to do one thing and one thing only. Cleave enemies to pieces.";
+		c.addTag(Tag.FASTENED_ARMOR);
 		return c;
 	}
 	private ClassSelection ranger() {
-		ClassSelection c = new ClassSelection(Tag.RANGER, adventurerIcon, 18, 10, 0, 0, 1, 2);
+		ClassSelection c = new ClassSelection(Tag.RANGER, rangerIconLarge, rangerIcon, 18, 10, 0, 0, 1, 2);
 		c.setAttributes(0, 2, 1);
 		c.setStats(1, 1, 2, 3, 2, 2);
 		c.descriptionText = "An accomplished ranger. Equipped with a dagger and shortbow, along with a small quiver of arrows, this character is quick on their toes with a marksmans eye.";
+		c.addTag(Tag.IMPROVED_CRITICAL);
 		return c;
 	}
 	

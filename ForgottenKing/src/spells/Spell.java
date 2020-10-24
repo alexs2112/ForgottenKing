@@ -85,9 +85,7 @@ public class Spell {
 	 * @return A boolean if the attack succeeded or not
 	 */
 	public boolean effectSuccess(Creature owner, Creature target) {
-		if (target.getWill()*8 + (int)(Math.random()*100) + 1 > owner.magic().get(type)*8 + effectChance)
-			return false;
-		return true;
+		return (target.getWill()*8 + (int)(Math.random()*100) + 1 < owner.magic().get(type)*8 + effectChance);
 	}
 	
 	public void physicalAttack(Creature owner, Creature target) {

@@ -122,8 +122,8 @@ public class TargetBasedScreen extends Screen {
 				targets.add(n);
 				
 				Creature c = player.creature(wx+p.x, wy+p.y, p.z);
-				if (c != null && creatures.size() > 0 && c != player && !creatures.contains(c)) {
-						creatures.add(c);
+				if (c != null && !creatures.contains(c)) {
+					creatures.add(c);
 				}
 			}
 		}

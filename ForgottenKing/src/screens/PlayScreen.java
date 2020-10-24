@@ -35,7 +35,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = false;
+    private boolean devMode = true;
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
@@ -60,15 +60,19 @@ public class PlayScreen extends Screen {
 		world.setEntrance(player.x, player.y);
     	player.setMagic();
         itemFactory.equipPlayer(player);
+        for (Tag t : character.tags())
+        	player.addTag(t);
         if (devMode) {
+        	/*
         	player.addEquipment(itemFactory.trinket().newDevRing(-1));
         	player.addEquipment(itemFactory.equipment().newDevSword(-1));
         	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));
+        	*/
+        	player.addItemToInventory(itemFactory.consumable().newPotionOfPoison(-1));
+        	player.addItemToInventory(itemFactory.consumable().newPotionOfPoison(-1));
+        	player.addItemToInventory(itemFactory.consumable().newPotionOfCuring(-1));
+        	player.addItemToInventory(itemFactory.book().newBookOfVitality(-1));
         	player.addItemToInventory(itemFactory.book().newBookOfFlames(-1));
-        	player.addEquipment(itemFactory.equipment().newShortbow(-1));
-        	for (int i = 0; i < 10; i++) {
-        		player.addItemToInventory(itemFactory.ammo().newArrow(-1));
-        	}
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -199,6 +203,8 @@ public class PlayScreen extends Screen {
     			subscreen = new StatsScreen(player);
     		else if (c == 'm')
     			subscreen = new MagicScreen(player);
+    		else if (c == 'p')
+    			subscreen = new PerkScreen(player);
     		else if (c == 'z')
     			subscreen = new SelectSpellScreen(root, player, getScrollX(), getScrollY());
     		else if (c == 'c') {
@@ -359,6 +365,20 @@ public class PlayScreen extends Screen {
         		modX = -9;
         	write(root, "" + e.duration(), 1008 + modX, num*48 + 34, statFontS, Color.WHITE);
         	num++;
+        }
+        int notificationY = 0;
+        if (player.magic().floatingPoints() > 0) {
+        	String s = "("+player.magic().floatingPoints()+") Free Spell Point";
+        	if (player.magic().floatingPoints() > 1)
+        		s += "s";
+        	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
+        }
+        if (player.perkPoints() > 0) {
+        	String s = "("+player.magic().floatingPoints()+") Perk Point";
+        	if (player.magic().floatingPoints() > 1)
+        		s += "s";
+        	s += " Available!";
+        	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
         }
     }
     

@@ -47,7 +47,14 @@ public class Creature {
     public void modifyLevel(int x) { level += x; }
     private int xp;
     public int xp() { return xp; }
-    public void modifyXP(int x) { xp += x; }
+    public void modifyXP(int x) {
+    	if (is(Tag.QUICK_LEARNER) && x > 0)
+    		x += x/10;
+    	xp += x; 
+    }
+    private int perkPoints;
+    public int perkPoints() { return perkPoints; }
+    public void modifyPerkPoints(int x) { perkPoints += x; }
     public int nextLevelXP() { return (int)(Math.pow((double)level(),1.2) * 750); }
     private int hp;
     public int hp() { return hp; }
@@ -419,7 +426,7 @@ public class Creature {
 	}
 	public int critChance() {
 		int critChance = accuracy();
-		if (weapon() != null && weapon().is(ItemTag.HIGHCRIT))
+		if ((weapon() != null && weapon().is(ItemTag.HIGHCRIT)) || is(Tag.IMPROVED_CRITICAL))
 			critChance += 10;
 		return critChance;
 	}
@@ -448,9 +455,9 @@ public class Creature {
         	world.remove(item);
         }
     }
-	public void rangedWeaponAttack(Creature other){
+	public void rangedWeaponAttack(Item item, Creature other){
 		modifyTime(attackDelay());
-        basicAttack(other, quiver(), getCurrentRangedAttackValue(), getCurrentRangedDamageValue(), "fire at the " + other.name());
+        basicAttack(other, item, getCurrentRangedAttackValue(), getCurrentRangedDamageValue(), "fire at the " + other.name());
     }
 	
 	private void basicAttack(Creature other, Item item, int attackModifier, int damage, String action) {
@@ -494,7 +501,11 @@ public class Creature {
 	 * Returns the damage reduced 1 for 1 by armor, to a maximum of 80% reduction
 	 */
 	public int reduceDamageByArmor(int damage) {
-		return Math.max((int)Math.round(Math.max(((double)damage)*0.8 - ((double)armorValue() * 0.8),0) + ((double)(damage)*0.2)),1);
+		double maxReduce = 0.8;
+		if (is(Tag.FASTENED_ARMOR))
+			maxReduce = 0.88;
+		double remaining = 1 - maxReduce;
+		return Math.max((int)Math.round(Math.max(((double)damage)*maxReduce - ((double)armorValue() * maxReduce),0) + ((double)(damage)*remaining)),1);
 	}
 	public void throwItem(Item item, int wx, int wy, int wz) {
 		Creature c = creature(wx,wy,wz);
@@ -507,9 +518,17 @@ public class Creature {
 	public void fireItem(Item item, int wx, int wy, int wz) {
 		Creature c = creature(wx,wy,wz);
 		putAt(item, wx, wy, wz);
-		if (c != null)
-			rangedWeaponAttack(c);
-		else
+		Item i = quiver();
+		if (c != null) {
+			rangedWeaponAttack(i, c);
+			//20% chance the fired object breaks, 8% if you have the STRONG_ARROWS perk
+	        int breakChance = 20;
+	        if (is(Tag.STRONG_ARROWS))
+	        	breakChance = 8;
+	        if (Math.random()*100 < breakChance) {
+	        	world.remove(i);
+	        }
+		} else
 			doAction("fire your " + weapon().name());
 	}
 	

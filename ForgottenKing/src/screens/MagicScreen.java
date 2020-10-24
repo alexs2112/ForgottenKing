@@ -74,7 +74,7 @@ public class MagicScreen extends Screen {
     	if (key.getText().length() > 0)
     		c = key.getText().charAt(0);
     	
-		if (key.getCode().equals(KeyCode.ESCAPE))
+		if (key.getCode().equals(KeyCode.ESCAPE) || key.getCode().equals(KeyCode.ENTER))
             return null;
 		if (key.getCode().equals(KeyCode.DOWN)) {
 			int i = letters.indexOf(selection);

@@ -76,5 +76,18 @@ public final class Loader {
 	public static Image characterSelectionBox = ImageCrop.cropImage(characterSelectionFull, 0, 0, 104, 104);
 	public static Image characterSelectionUpArrow = ImageCrop.cropImage(characterSelectionFull, 104, 0, 104, 52);
 	public static Image characterSelectionDownArrow = ImageCrop.cropImage(characterSelectionFull, 104, 52, 104, 52);
+	private static Image perkBoxFull = new Image(Screen.class.getResourceAsStream("resources/perk_box.png"));
+	public static Image perkBox = ImageCrop.cropImage(perkBoxFull, 0, 0, 530, 122);
+	public static Image perkBoxGreen = ImageCrop.cropImage(perkBoxFull, 0, 122, 530, 122);
+	public static Image perkBoxBlue = ImageCrop.cropImage(perkBoxFull, 0, 244, 530, 122);
 	
+	/**
+	 * TAGS
+	 */
+	private static Image tagsFull = new Image(Screen.class.getResourceAsStream("resources/tags_full.png"));
+	public static Image quickLearnerIcon = ImageCrop.cropImage(tagsFull, 0, 0, 32, 32);
+	public static Image fastenArmorIcon = ImageCrop.cropImage(tagsFull, 32, 0, 32, 32);
+	public static Image improvedCriticalIcon = ImageCrop.cropImage(tagsFull, 64, 0, 32, 32);
+	public static Image deadlyCriticalIcon = ImageCrop.cropImage(tagsFull, 96, 0, 32, 32);
+	public static Image strongArrowsIcon = ImageCrop.cropImage(tagsFull, 128, 0, 32, 32);
 }
