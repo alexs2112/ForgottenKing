@@ -14,9 +14,10 @@ public class FireWeaponScreen extends TargetBasedScreen {
 		this.targetType = TargetType.PROJECTILE;
 	}
 
-    public void selectWorldCoordinate(){
+    public Screen selectWorldCoordinate(){
         if (targets != null && targets.size() > 0)
     		player.fireItem(player.quiver(), targets.get(targets.size()-1).x, targets.get(targets.size()-1).y, player.z);
+        return null;
     }
 
 }

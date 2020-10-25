@@ -22,7 +22,7 @@ public class InventoryScreen extends InventoryBasedScreen {
 
 	@Override
 	protected Screen use(Item item) {
-		return new InspectScreen(player, item, this);
+		return new InspectItemScreen(player, item, this);
 	}
 
 }

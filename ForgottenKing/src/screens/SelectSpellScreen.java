@@ -45,7 +45,7 @@ public class SelectSpellScreen extends Screen {
         }
         for (int i = 0; i < spells.size(); i++) {
         	Spell spell = spells.get(i);
-        	String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.cost() + ")";
+        	String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.cost() + " Mana)";
         	write(root, line, x, 32*i + y + 32, font, Color.ANTIQUEWHITE);
         }
     }

@@ -78,23 +78,27 @@ public final class Loader {
 	public static Image characterSelectionDownArrow = ImageCrop.cropImage(characterSelectionFull, 104, 52, 104, 52);
 	private static Image tagBoxFull = new Image(Screen.class.getResourceAsStream("resources/tag_box_full.png"));
 	public static Image perkBoxSmall = ImageCrop.cropImage(tagBoxFull, 0, 0, 530, 122);
-	public static Image perkBoxSmallSelection = ImageCrop.cropImage(tagBoxFull, 0, 122, 530, 122);
-	public static Image perkBoxSmallBlue = ImageCrop.cropImage(tagBoxFull, 0, 244, 530, 122);
-	public static Image perkBox = ImageCrop.cropImage(tagBoxFull, 0, 366, 730, 122);
-	public static Image perkBoxSelection = ImageCrop.cropImage(tagBoxFull, 0, 488, 730, 122);
-	public static Image perkBoxBlue = ImageCrop.cropImage(tagBoxFull, 0, 610, 730, 122);
-	public static Image itemTagBox = ImageCrop.cropImage(tagBoxFull, 0, 732, 730, 122);
+	public static Image perkBox = ImageCrop.cropImage(tagBoxFull, 0, 122, 730, 122);
+	public static Image perkBoxSelection = ImageCrop.cropImage(tagBoxFull, 0, 244, 730, 122);
+	public static Image perkBoxBlue = ImageCrop.cropImage(tagBoxFull, 0, 366, 730, 122);
+	public static Image itemTagBox = ImageCrop.cropImage(tagBoxFull, 0, 488, 730, 122);
 	
 	/**
 	 * TAGS
 	 */
-	private static Image tagsFull = new Image(Screen.class.getResourceAsStream("resources/tags_full.png"));
-	public static Image quickLearnerIcon = ImageCrop.cropImage(tagsFull, 0, 0, 32, 32);
-	public static Image fastenArmorIcon = ImageCrop.cropImage(tagsFull, 32, 0, 32, 32);
-	public static Image improvedCriticalIcon = ImageCrop.cropImage(tagsFull, 64, 0, 32, 32);
-	public static Image deadlyCriticalIcon = ImageCrop.cropImage(tagsFull, 96, 0, 32, 32);
-	public static Image strongArrowsIcon = ImageCrop.cropImage(tagsFull, 128, 0, 32, 32);
-	public static Image lightArmorProficiencyIcon = ImageCrop.cropImage(tagsFull, 160, 0, 32, 32);
-	public static Image mediumArmorSkillIcon = ImageCrop.cropImage(tagsFull, 192, 0, 32, 32);
-	public static Image heavyArmorSkillIcon = ImageCrop.cropImage(tagsFull, 224, 0, 32, 32);
+	private static Image perksFull = new Image(Screen.class.getResourceAsStream("resources/perks_full.png"));
+	public static Image quickLearnerIcon = ImageCrop.cropImage(perksFull, 0, 0, 32, 32);
+	public static Image fastenArmorIcon = ImageCrop.cropImage(perksFull, 32, 0, 32, 32);
+	public static Image improvedCriticalIcon = ImageCrop.cropImage(perksFull, 64, 0, 32, 32);
+	public static Image deadlyCriticalIcon = ImageCrop.cropImage(perksFull, 96, 0, 32, 32);
+	public static Image strongArrowsIcon = ImageCrop.cropImage(perksFull, 128, 0, 32, 32);
+	public static Image lightArmorProficiencyIcon = ImageCrop.cropImage(perksFull, 160, 0, 32, 32);
+	public static Image mediumArmorSkillIcon = ImageCrop.cropImage(perksFull, 192, 0, 32, 32);
+	public static Image heavyArmorSkillIcon = ImageCrop.cropImage(perksFull, 224, 0, 32, 32);
+	
+	private static Image tagsFull = new Image(Screen.class.getResourceAsStream("resources/creature_tags_full.png"));
+	public static Image spellcasterIcon = ImageCrop.cropImage(tagsFull, 0, 0, 32, 32);
+	public static Image erraticIcon = ImageCrop.cropImage(tagsFull, 32, 0, 32, 32);
+	public static Image venomousIcon = ImageCrop.cropImage(tagsFull, 64, 0, 32, 32);
+	public static Image undeadIcon = ImageCrop.cropImage(tagsFull, 96, 0, 32, 32);
 }

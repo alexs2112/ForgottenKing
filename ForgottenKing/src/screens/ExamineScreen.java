@@ -28,4 +28,12 @@ public class ExamineScreen extends TargetBasedScreen {
         Tile tile = player.tile(x, y, player.z);
         caption = tile.type() + " " + tile.desc();
     }
+    
+    public Screen selectWorldCoordinate() {
+    	if (creatures.size() > 0 && creatures.get(0) != player)
+    		return new InspectCreatureScreen(creatures.get(0));
+    	if (player.items(player.x + x, player.y + y, player.z) != null)
+    		return new InspectItemScreen(player.world().items(player.x + x, player.y + y, player.z).getFirstItem());
+    	return null;
+    }
 }

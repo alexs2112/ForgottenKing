@@ -35,7 +35,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = true;
+    private boolean devMode = false;
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
@@ -366,13 +366,13 @@ public class PlayScreen extends Screen {
         }
         int notificationY = 0;
         if (player.magic().floatingPoints() > 0) {
-        	String s = "("+player.magic().floatingPoints()+") Free Spell Point";
+        	String s = "[m]: "+player.magic().floatingPoints()+" Free Spell Point";
         	if (player.magic().floatingPoints() > 1)
         		s += "s";
         	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
         }
         if (player.perkPoints() > 0) {
-        	String s = "("+player.magic().floatingPoints()+") Perk Point";
+        	String s = "[p]: "+player.magic().floatingPoints()+" Perk Point";
         	if (player.magic().floatingPoints() > 1)
         		s += "s";
         	s += " Available!";

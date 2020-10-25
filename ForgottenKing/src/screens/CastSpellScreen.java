@@ -15,8 +15,9 @@ public class CastSpellScreen extends TargetBasedScreen {
 		this.range = spell.range();
 	}
 	
-	public void selectWorldCoordinate(){
+	public Screen selectWorldCoordinate(){
         player.castSpell(spell, getCreatureLocations());
+        return null;
     }
 
 }

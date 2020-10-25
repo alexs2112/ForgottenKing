@@ -2,6 +2,7 @@ package assembly;
 
 import creatures.Creature;
 import items.Item;
+import items.ItemTag;
 import items.ItemType;
 import javafx.scene.image.Image;
 import spells.Effect;
@@ -51,6 +52,7 @@ public class ConsumableFactory {
 	    Item item = new Item("Poison Potion", ItemType.POTION, poisonPotionIcon);
 	    item.setEffect(Effects.poisoned(20,1, -100));
 	    item.setDescription("Upon quaffing this potion you become poisoned for 20 turns, taking 1 damage per turn.");
+	    item.addTag(ItemTag.THROWING);
 	    world.addAtEmptyLocation(item, z);
 	    return item;
 	}

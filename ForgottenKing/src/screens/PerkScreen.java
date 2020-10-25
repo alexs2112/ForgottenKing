@@ -47,10 +47,10 @@ public class PerkScreen extends Screen {
 
 		int x = 64;
 		int y = 50;
-		write(root, "Available Perk Points: [" + player.perkPoints() + "]", 48, y, font,  Color.WHITE);
+		write(root, "Available Perk Points: [" + player.perkPoints() + "]               Prerequisites:", 48, y, font,  Color.WHITE);
 		y+=12;
-		int top = Math.max(0, select-2);
-		int bot = Math.min(top+5, perks.size());
+		int top = Math.min(Math.max(0, select-2), perks.size()-5);
+		int bot = top+5;
 		for (int i = top; i < bot; i++) {
 			Tag t = perks.get(i);
 			if (player.tags().contains(t))
@@ -63,6 +63,10 @@ public class PerkScreen extends Screen {
 				draw(root, t.icon(), x+20, y+124*(i-top)+20);
 			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42 + 124*(i-top), 632, fontS, Color.ANTIQUEWHITE);
 		}
+		if (top + 5 < perks.size())
+			draw(root, Loader.arrowDown, 20, y+662);
+		if (top > 0)
+			draw(root, Loader.arrowUp, 20, 62);
 	}
 	
 	public Screen respondToUserInput(KeyEvent key) {

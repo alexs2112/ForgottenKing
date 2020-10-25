@@ -17,17 +17,17 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import screens.Screen;
 
-public class InspectScreen extends Screen {
+public class InspectItemScreen extends Screen {
 	private Item item;
 	private Screen previousScreen;
 	private Creature player;
 
-	public InspectScreen(Creature player, Item item, Screen previousScreen) {
+	public InspectItemScreen(Creature player, Item item, Screen previousScreen) {
 		this.player = player;
 		this.item = item;
 		this.previousScreen = previousScreen;
 	}
-	public InspectScreen(Item item) {
+	public InspectItemScreen(Item item) {
 		this.item = item;
 	}
 	
@@ -65,7 +65,8 @@ public class InspectScreen extends Screen {
     			y+=122;
     		}
     	y+=48;
-    	write(root, useTexts(), 48, y, font, Color.WHITE);
+    	if (player != null)
+    		write(root, useTexts(), 48, y, font, Color.WHITE);
     	
     }
 	public Screen respondToUserInput(KeyEvent key) {
@@ -126,8 +127,12 @@ public class InspectScreen extends Screen {
 			t += ".";
 			text.add(t);
 		}
-		if (item.rangedDamage() != null)
-			text.add("It increases your ranged damage by " + item.rangedDamage()[0] + "-" + item.rangedDamage()[1] + ".");
+		if (item.rangedDamage() != null) {
+			String s = "It increases your ranged damage by " + item.rangedDamage()[0];
+			if (item.rangedDamage()[0] != item.rangedDamage()[1])
+				s += "-" + item.rangedDamage()[1];
+			text.add(s + ".");
+		}
 		if (item.armorValue() != 0)
 			text.add("It increases your armor value by " + item.armorValue() + ".");
 		if (item.weaponDelay() < 0)

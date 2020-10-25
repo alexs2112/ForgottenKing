@@ -149,8 +149,7 @@ public class TargetBasedScreen extends Screen {
     	else if (c == 'b' || code.equals(KeyCode.NUMPAD1)) { x--; y++; }
     	else if (c == 'n' || code.equals(KeyCode.NUMPAD3)) { x++; y++; }
     	else if (code.equals(KeyCode.ENTER)) { 
-    		selectWorldCoordinate(); 
-    		return null; 
+    		return selectWorldCoordinate(); 
     	}
     	else if (code.equals(KeyCode.ESCAPE)) { return null; } 
         enterWorldCoordinate(player.x + x, player.y + y, sx + x, sy + y);
@@ -160,7 +159,8 @@ public class TargetBasedScreen extends Screen {
 	public void enterWorldCoordinate(int x, int y, int screenX, int screenY) {
     }
 	
-	public void selectWorldCoordinate(){
+	public Screen selectWorldCoordinate(){
+		return null;
     }
 	
 	

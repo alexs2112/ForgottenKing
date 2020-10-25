@@ -17,9 +17,10 @@ public class ThrowAtScreen extends TargetBasedScreen {
 		this.targetType = TargetType.PROJECTILE;
 	}
 
-    public void selectWorldCoordinate(){
+    public Screen selectWorldCoordinate(){
     	if (targets != null && targets.size() > 0)
     		player.throwItem(item, targets.get(targets.size()-1).x, targets.get(targets.size()-1).y, player.z);
+    	return null;
     }
 
 }

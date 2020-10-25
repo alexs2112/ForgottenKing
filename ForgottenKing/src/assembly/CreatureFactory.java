@@ -24,7 +24,7 @@ public class CreatureFactory {
 	private Image zombieIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/zombie.gif"));
 	private Image ratIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/rat.gif"));
 	private Image koboldIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/kobold.gif"));
-	private Image giantAntIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/giant_ant.gif"));
+	private Image soldierAntIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/giant_ant.gif"));
 	private Image homunculusIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/homunculus.gif"));
 	
 	public CreatureFactory(World world, ItemFactory itemFactory) {
@@ -51,7 +51,7 @@ public class CreatureFactory {
 			else if (c == 1)
 				return newZombie(z);
 			else if (c == 2)
-				return newGiantAnt(z);
+				return newSoldierAnt(z);
 			else if (c == 3)
 				return newHomunculus(z);
 		}
@@ -83,6 +83,7 @@ public class CreatureFactory {
 	    bat.modifyMovementDelay(-5);
 	    bat.modifyAttackDelay(-5);
 	    bat.addTag(Tag.ERRATIC);
+	    bat.setDescription("A large grey bat that, despite being herbivorous, is quite aggressive. It is myopic and uses echolocation to navigate.");//*
 	    world.addAtEmptyLocation(bat, z);
 	    new BasicAI(bat, player);
 	    return bat;
@@ -92,6 +93,7 @@ public class CreatureFactory {
 		rat.setAttributes(1,1,1);
 	    rat.setStats(1,1,1,2,1,0);
 	    rat.modifyMovementDelay(-1);
+	    rat.setDescription("A dirty rodent that has grown large and aggressive in the dungeon environment."); //*
 	    world.addAtEmptyLocation(rat, z);
 	    new BasicAI(rat, player);
 	    return rat;
@@ -100,6 +102,7 @@ public class CreatureFactory {
 		Creature kobold = new Creature(world, "Kobold",1,30, 11, 9, 0, 2, 1, 3, koboldIcon);
 		kobold.setAttributes(1,1,1);
 	    kobold.setStats(1,2,2,2,1,1);
+	    kobold.setDescription("Kobolds are small, greyish creatures with the looks and temperaments of feral dogs. No one knows for sure where kobolds come from, but ancient demon-gods, evil spirits, and meddling wizards have all been suggested as culprits.");//*
 	    world.addAtEmptyLocation(kobold, z);
 	    new BasicAI(kobold, player);
 	    return kobold;
@@ -113,6 +116,8 @@ public class CreatureFactory {
 		zombie.setResistance(Type.FIRE, -1);
 		zombie.modifyAttackDelay(3);
 		zombie.modifyMovementDelay(3);
+		zombie.addTag(Tag.UNDEAD);
+		zombie.setDescription("The dead have risen. It is slow and resilient, although its rotting flesh is vulnerable to fire.");
 		world.addAtEmptyLocation(zombie,z);
 		new BasicAI(zombie, player);
 		return zombie;
@@ -122,19 +127,22 @@ public class CreatureFactory {
 		new BasicAI(goblin, player);
 		goblin.setAttributes(2, 1, 1);
 		goblin.setStats(2, 2, 2, 3, 1, 2);
+		goblin.setDescription("A short and ugly humanoid, they make up for their lack of intelligence with their stupidity.");
 		world.addAtEmptyLocation(goblin, z);
 		for (int i = 0; i < (int)(Math.random()*10)+1; i++)
 			goblin.addItemToInventory(itemFactory.ammo().newRock(-1));
 		return goblin;
 	}
-	public Creature newGiantAnt(int z) {
-		Creature giantAnt = new Creature(world, "Giant Ant",2,70, 10, 8, 2, 1, 0, 2, giantAntIcon);
-		giantAnt.setAttributes(2, 1, 0);
-		giantAnt.setStats(3,2,2,2,0,0);
-		giantAnt.addEffectOnHit(Effects.poisoned(3, 1, 50));
-		world.addAtEmptyLocation(giantAnt, z);
-		new BasicAI(giantAnt, player);
-		return giantAnt;
+	public Creature newSoldierAnt(int z) {
+		Creature soldierAnt = new Creature(world, "Soldier Ant",2,70, 10, 8, 2, 1, 0, 2, soldierAntIcon);
+		soldierAnt.setAttributes(2, 1, 0);
+		soldierAnt.setStats(3,2,2,2,0,0);
+		soldierAnt.addEffectOnHit(Effects.poisoned(3, 1, 50));
+		soldierAnt.addTag(Tag.VENOMOUS);
+		soldierAnt.setDescription("An ant that has grown the size of a small cow. Its razor sharp mandibles drip with poison.");
+		world.addAtEmptyLocation(soldierAnt, z);
+		new BasicAI(soldierAnt, player);
+		return soldierAnt;
 	}
 	public Creature newHomunculus(int z) {
 		Creature homunculus = new Creature(world, "Homunculus",2,60, 14,8,1,1,1,3, homunculusIcon);
@@ -144,6 +152,7 @@ public class CreatureFactory {
 	    homunculus.setStats(1,1,3,2,2,3);
 	    homunculus.addTag(Tag.SPELLCASTER);
 	    homunculus.addSpell(Spells.homunculiSlow());
+	    homunculus.setDescription("The creation of a wizard, it wanders the dungeon for a purpose. Its bright blue eyes seem to cloud your vision and drain your energy.");
 	    world.addAtEmptyLocation(homunculus, z);
 	    return homunculus;
 	}

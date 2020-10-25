@@ -1,6 +1,5 @@
 package creatures;
 
-import tools.Line;
 import tools.Point;
 
 import java.util.ArrayList;
@@ -38,6 +37,9 @@ public class Creature {
     public Image image() { return image; }
     private CreatureAI ai;
     public void setCreatureAI(CreatureAI ai) { this.ai = ai; }
+    private String description;
+    public String description() { return description; }
+    public void setDescription(String desc) { description = desc; }
     
     /**
      * Basic Stats
@@ -501,7 +503,7 @@ public class Creature {
 			doAction(action);
 			other.modifyHP(-damage, this);
 			
-			if (effectsOnHit() != null)
+			if (effectsOnHit() != null && item == weapon())
 				for (Effect e : effectsOnHit()) {
 					other.addEffect(e);
 				}

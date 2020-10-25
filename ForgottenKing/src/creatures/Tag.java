@@ -22,8 +22,10 @@ public enum Tag {
 	SUPPORT("Support", ""),*/
 	
 	//Creature Behaviour Tags
-	SPELLCASTER("Spellcaster", "This creature is capable of casting spells."),
-	ERRATIC("Erratic", "This creature moves in a random direction 40% of the time."),
+	SPELLCASTER("Spellcaster", "This creature is capable of casting spells against you.", Loader.spellcasterIcon),
+	ERRATIC("Erratic", "This creature moves in a random direction 40% of the time.", Loader.erraticIcon),
+	VENOMOUS("Venomous", "This creature has a chance to poison you when they hit you.", Loader.venomousIcon),
+	UNDEAD("Undead", "This creature heals when inflicted with poison damage.", Loader.undeadIcon),
 	
 	//Perks
 	QUICK_LEARNER("Quick Learner", "You gain an additional 10% experience from all actions.", Loader.quickLearnerIcon),	//Starting perk for the adventurer
