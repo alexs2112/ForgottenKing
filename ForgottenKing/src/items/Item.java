@@ -62,6 +62,11 @@ public class Item {
 	public int getThrownDamage() {
 		return Math.max(((int)(Math.random() * (thrownDamage[1] - thrownDamage[0])) + thrownDamage[0]),0);
 	}
+	public void setThrownDamage(int min, int max) {
+		thrownDamage = new int[2];
+		thrownDamage[0] = min;
+		thrownDamage[1] = max;
+	}
 	
 	public boolean isCompatibleAmmoWith(Item i) {
 		if (i == null)

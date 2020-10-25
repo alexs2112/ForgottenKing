@@ -1,12 +1,12 @@
 package screens;
 
-import creatures.Creature;
+import creatures.Player;
 import items.Item;
 import screens.Screen;
 
 public class QuiverScreen extends InventoryBasedScreen {
 
-	public QuiverScreen(Creature player) {
+	public QuiverScreen(Player player) {
 		super(player);
 	}
 

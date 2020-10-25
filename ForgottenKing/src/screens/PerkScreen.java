@@ -3,7 +3,7 @@ package screens;
 import java.util.ArrayList;
 import java.util.List;
 
-import creatures.Creature;
+import creatures.Player;
 import creatures.Tag;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
@@ -11,15 +11,14 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import spells.Spell;
 
 public class PerkScreen extends Screen {
-	private Creature player;
+	private Player player;
 	private List<Tag> allPerks;
 	private List<Tag> perks;
 	private int select;
 	
-	public PerkScreen(Creature player) {
+	public PerkScreen(Player player) {
 		this.select = 0;
 		this.player = player;
 		this.allPerks = Tag.listOfPerks();

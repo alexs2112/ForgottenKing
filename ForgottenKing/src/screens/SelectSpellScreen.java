@@ -3,6 +3,7 @@ package screens;
 import java.util.ArrayList;
 
 import creatures.Creature;
+import creatures.Tag;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -45,8 +46,12 @@ public class SelectSpellScreen extends Screen {
         }
         for (int i = 0; i < spells.size(); i++) {
         	Spell spell = spells.get(i);
-        	String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.cost() + " Mana)";
-        	write(root, line, x, 32*i + y + 32, font, Color.ANTIQUEWHITE);
+        	String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.cost() + " Mana) [" + spell.type().text() + ":" + spell.level() + "]";
+        	Color c = Color.WHITE;
+        	if (player.magic().get(spell.type()) < spell.level() ||
+        			player.mana() < spell.cost())
+        		c = Color.DARKGREY;
+        	write(root, line, x, 32*i + y + 32, font, c);
         }
     }
     
@@ -59,6 +64,13 @@ public class SelectSpellScreen extends Screen {
     		&& spells != null
     		&& spells.size() > letters.indexOf(c)) {
     		Spell spell = spells.get(letters.indexOf(c));
+    		if (spell.level() > player.magic().get(spell.type())) {
+    			player.notify("Your " + spell.type().text() + " skill is not high enough to cast " + spell.name());
+    			return null;
+    		} if (spell.cost() > player.mana()) {
+    			player.notify("You don't have enough mana to cast " + spell.name());
+    			return null;
+    		}
     		return new CastSpellScreen(playRoot, player, "Cast " + spell.name(), sx, sy, spell);
     	} else if (key.getCode().equals(KeyCode.ESCAPE)) {
             return null;

@@ -48,15 +48,18 @@ public class World {
 			addItem(item, x, y, z);
 	}
 	public void remove(Item item) {
-		for (int z = 0; z < depth; z++) {
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
+		for (int z = 0; z < depth; z++)
+			for (int x = 0; x < width; x++)
+				for (int y = 0; y < height; y++)
 					if (items(x,y,z) != null && items(x,y,z).contains(item)) {
 						items(x,y,z).remove(item);
 						return;
 					}
-				}
-			}
+	}
+	public void remove(Item item, int x, int y, int z) {
+		if (items(x,y,z) != null && items(x,y,z).contains(item)) {
+			items(x,y,z).remove(item);
+			return;
 		}
 	}
 	public void removeInventory(int wx, int wy, int wz) {
@@ -140,6 +143,27 @@ public class World {
 	public void setEntrance(int x, int y) {
 		features[x][y][0] = new Entrance(x,y,0);
 		tiles[x][y][0] = Tile.DUNGEON_FLOOR_CENTER;
+	}
+	
+	/**
+	 * A method similar to the doAction method in creatures. Each creature that can see the spot is notified
+	 */
+	public void notify(int x, int y, int z, String message) {
+		int r = 9;
+    	for (int ox = -r; ox < r+1; ox++){
+    		for (int oy = -r; oy < r+1; oy++){
+    			if (ox*ox + oy*oy > r*r)
+    				continue;
+
+    			Creature other = creature(x+ox, y+oy, z);
+
+    			if (other == null)
+    				continue;
+
+    			if (other.canSee(x, y, z))
+    				other.notify(message);
+    		}
+    	}
 	}
 	
 }

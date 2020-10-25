@@ -52,10 +52,11 @@ public class ItemFactory {
 			for (int i = 0; i < 8; i++)
 				player.addItemToInventory(ammo().newArrow(-1));
 		}
-		else {
+		else {	//Adventurer
 			player.addEquipment(equipment().newDagger(-1));
 			player.addEquipment(equipment().newLeatherArmor(-1));
-			player.addItemToInventory(consumable().newPotionOfHealing(-1));
+			for (int i = 0; i < 5; i++)
+				player.addItemToInventory(ammo().newDart(-1));
 		}
 	}
 

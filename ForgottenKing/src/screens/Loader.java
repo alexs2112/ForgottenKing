@@ -83,6 +83,13 @@ public final class Loader {
 	public static Image perkBoxBlue = ImageCrop.cropImage(tagBoxFull, 0, 366, 730, 122);
 	public static Image itemTagBox = ImageCrop.cropImage(tagBoxFull, 0, 488, 730, 122);
 	
+	private static Image inventoryBoxFull = new Image(Screen.class.getResourceAsStream("resources/inventory_box_full.png"));
+	public static Image inventoryBox = ImageCrop.cropImage(inventoryBoxFull, 0, 0, 892, 64);
+	public static Image inventoryBoxBlue = ImageCrop.cropImage(inventoryBoxFull, 0, 64, 892, 64);
+	public static Image inventoryBoxYellow = ImageCrop.cropImage(inventoryBoxFull, 0, 128, 892, 64);
+	public static Image inventoryBoxGreen = ImageCrop.cropImage(inventoryBoxFull, 0, 192, 892, 64);
+	public static Image inventoryBoxDarkGreen = ImageCrop.cropImage(inventoryBoxFull, 0, 256, 892, 64);
+	
 	/**
 	 * TAGS
 	 */

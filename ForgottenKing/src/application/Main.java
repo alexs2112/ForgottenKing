@@ -1,5 +1,6 @@
 package application;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import screens.Screen;
@@ -15,6 +16,7 @@ public class Main extends Application {
 			this.primaryStage = primaryStage;
 			primaryStage.setTitle("Forgotten King");
 			primaryStage.setResizable(false);
+			primaryStage.getIcons().add(new Image(Screen.class.getResourceAsStream("resources/icon.png")));
 			screen = new StartScreen();
 			screen.displayOutput(primaryStage);
 			addKeyHandler(screen);

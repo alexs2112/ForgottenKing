@@ -55,9 +55,6 @@ public class Creature {
     		x += x/10;
     	xp += x; 
     }
-    private int perkPoints;
-    public int perkPoints() { return perkPoints; }
-    public void modifyPerkPoints(int x) { perkPoints += x; }
     public int nextLevelXP() { return (int)(Math.pow((double)level(),1.2) * 750); }
     private int hp;
     public int hp() { return hp; }
@@ -195,18 +192,6 @@ public class Creature {
 		else
 			return 0;
 	}
-	private Creature lastAttacked;
-    public Creature lastAttacked() { return lastAttacked; }
-    public void setLastAttacked(Creature x) { lastAttacked = x; }
-    public Point getAutoTarget() {
-    	if (lastAttacked != null) {
-    		if (creature(lastAttacked.x, lastAttacked.y, lastAttacked.z) == lastAttacked)
-    			return new Point(lastAttacked.x, lastAttacked.y, lastAttacked.z);
-    		else
-    			lastAttacked = null;
-    	}
-    	return new Point(x,y,z);
-    }
     
 	public void modifyArmorValue(int x) { armorValue += x; }
 	private HashMap<Type, Integer> resistances;
@@ -453,6 +438,18 @@ public class Creature {
 			critChance += 10;
 		return critChance;
 	}
+	private Creature lastAttacked;
+	public Creature lastAttacked() { return lastAttacked; }
+	public void setLastAttacked(Creature x) { lastAttacked = x; }
+	public Point getAutoTarget() {
+		if (lastAttacked != null) {
+			if (creature(lastAttacked.x, lastAttacked.y, lastAttacked.z) == lastAttacked)
+				return new Point(lastAttacked.x, lastAttacked.y, lastAttacked.z);
+			else
+				lastAttacked = null;
+		}
+		return new Point(x,y,z);
+	}
 	public void attack(Creature other) {
 		modifyTime(attackDelay());
 		basicAttack(other, weapon(), getCurrentAttackValue(), getDamageValue() + getCurrentDamageMod(), "attack the " + other.name());
@@ -533,9 +530,13 @@ public class Creature {
 	public void throwItem(Item item, int wx, int wy, int wz) {
 		Creature c = creature(wx,wy,wz);
 		putAt(item, wx, wy, wz);
-		if (c != null)
+		if (c != null) {
 			throwAttack(item, c);
-		else
+	        if (Math.random()*100 < 20) {
+	        	world.remove(item, wx, wy, wz);
+	        	world.notify(wx,wy,wz,"The " + item.name() + " broke!");
+	        }
+		} else
 			doAction("throw a " + item.name());
 	}
 	public void fireItem(Item item, int wx, int wy, int wz) {
@@ -549,7 +550,8 @@ public class Creature {
 	        if (is(Tag.STRONG_ARROWS))
 	        	breakChance = 8;
 	        if (Math.random()*100 < breakChance) {
-	        	world.remove(i);
+	        	world.remove(i, wx, wy, wz);
+	        	world.notify(wx,wy,wz,"The " + quiver.name() + " broke!");
 	        }
 		} else
 			doAction("fire your " + weapon().name());
@@ -572,12 +574,7 @@ public class Creature {
 		return quiver;
 	}
 	public void setQuiver(Item i) { quiver = i; }
-	private Item lastWielded;
-	public Item lastWielded() {
-		if (!inventory.contains(lastWielded))
-			lastWielded = null;
-		return lastWielded; 
-	}
+	
     public void pickup() {
 		Inventory items = world.items(x, y, z);
 		pickup(items.getFirstItem());
@@ -690,6 +687,12 @@ public class Creature {
         addEffect(item.effect());
         getRidOf(item);
     }
+	private Item lastWielded;
+	public Item lastWielded() {
+		if (!inventory.contains(lastWielded))
+			lastWielded = null;
+		return lastWielded; 
+	}
 	
     /**
      * Notifications
@@ -902,24 +905,6 @@ public class Creature {
 		}
 	}
 	
-	/**
-	 * AUTOPILOT
-	 */
-	private boolean resting;
-    public boolean resting() { return resting; }
-    public void setResting(boolean x) { resting = x; }
-    
-    //Horribly inefficient, fix this later
-    public boolean creatureInSight() {
-    	for (int x = 0; x < world.width(); x++) {
-    		for (int y = 0; y < world.height(); y++) {
-    			if (creature(x, y, z) != null && creature(x,y,z) != this)
-    				return true;
-    		}
-    	}
-    	return false;
-    }
-	
     /**
      * MISCELLANEOUS
      */
@@ -927,10 +912,10 @@ public class Creature {
         world.dig(wx, wy, wz);
     }
     public String desc() {
-    	String hp = " HP: " + this.hp + "/" + this.maxHP();
-    	String damage = " (" + (getMinDamage()+getCurrentDamageMod()) + " - " + (getMaxDamage()+getCurrentDamageMod()) + ")]";
-    	String attack = " [+" + getCurrentAttackValue();
-    	return hp + attack + damage;
+    	String s = "";
+    	if (weapon() != null)
+    		s += " Wielding a " + weapon().name();
+    	return s;
     }
 	
 }

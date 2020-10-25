@@ -4,6 +4,7 @@ import java.util.List;
 
 import creatures.ClassSelection;
 import creatures.Creature;
+import creatures.Player;
 import creatures.Type;
 import creatures.Tag;
 import creatures.ai.*;
@@ -58,8 +59,8 @@ public class CreatureFactory {
 		return newGoblin(z);
 	}
 	
-	public Creature newPlayer(List<String> messages, int z, FieldOfView fov, ClassSelection c){
-	    Creature player = new Creature(world, "Player", 1, 0, c.hp, c.evasion, c.armor, c.attack, c.damageMin, c.damageMax, c.icon);
+	public Player newPlayer(List<String> messages, int z, FieldOfView fov, ClassSelection c){
+	    Player player = new Player(world, "Player", 1, 0, c.hp, c.evasion, c.armor, c.attack, c.damageMin, c.damageMax, c.icon);
 	    player.setAttributes(c.strength,c.dexterity,c.intelligence);
 	    player.setStats(c.toughness,c.brawn,c.agility,c.accuracy,c.will,c.spellcasting);
 	    world.addAtEmptyLocation(player, z);
@@ -100,11 +101,15 @@ public class CreatureFactory {
 	}
 	public Creature newKobold(int z) {
 		Creature kobold = new Creature(world, "Kobold",1,30, 11, 9, 0, 2, 1, 3, koboldIcon);
+		new BasicAI(kobold, player);
 		kobold.setAttributes(1,1,1);
 	    kobold.setStats(1,2,2,2,1,1);
-	    kobold.setDescription("Kobolds are small, lizardfolk with the brains to match. No one knows for sure where kobolds come from, but ancient demon-gods, evil spirits, and meddling wizards have all been suggested as culprits.");//*
+	    kobold.setDescription("Kobolds are small lizardfolk with the brains to match. No one knows for sure where kobolds come from, but ancient demon-gods, evil spirits, and meddling wizards have all been suggested as culprits.");//*
 	    world.addAtEmptyLocation(kobold, z);
-	    new BasicAI(kobold, player);
+	    if (Math.random() * 100 < 60)
+	    	kobold.addItemToInventory(itemFactory.ammo().newDart(-1));
+	    if (z > 0 && Math.random()*100 < 20*z)
+	    	kobold.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
 	    return kobold;
 	}
 
@@ -131,6 +136,8 @@ public class CreatureFactory {
 		world.addAtEmptyLocation(goblin, z);
 		for (int i = 0; i < (int)(Math.random()*10)+1; i++)
 			goblin.addItemToInventory(itemFactory.ammo().newRock(-1));
+		if (z > 0 && Math.random()*100 < 20*z)
+	    	goblin.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
 		return goblin;
 	}
 	public Creature newSoldierAnt(int z) {
@@ -153,6 +160,8 @@ public class CreatureFactory {
 	    homunculus.addTag(Tag.SPELLCASTER);
 	    homunculus.addSpell(Spells.homunculiSlow());
 	    homunculus.setDescription("The creation of a wizard, it wanders the dungeon for a purpose. Its bright blue eyes seem to cloud your vision and drain your energy.");
+	    if (z > 0 && Math.random()*100 < 40)
+	    	homunculus.addEquipment(itemFactory.equipment().newStaff(-1));
 	    world.addAtEmptyLocation(homunculus, z);
 	    return homunculus;
 	}

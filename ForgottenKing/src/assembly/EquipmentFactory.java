@@ -36,6 +36,15 @@ public class EquipmentFactory {
 		this.world = world;
 	}
 	
+	public Item newRandomMeleeWeapon(int z) {
+		switch((int)(Math.random()*4)) {
+		case 0: return newDagger(z);
+		case 1: return newShortSword(z);
+		case 3: return newHandaxe(z);
+		default: return newStaff(z);
+		}
+	}
+	
 	public Item newRandomWeapon(int z) {
 		switch((int)(Math.random()*5)) {
 		case 0: return newDagger(z);
@@ -124,7 +133,7 @@ public class EquipmentFactory {
 	}
 	public Item newStuddedLeatherArmor(int z) {
 		Item item = new Item("Studded Leather Armor", ItemType.ARMOR, studdedLeatherArmorIcon);
-		item.modifyArmorValue(3);
+		item.modifyArmorValue(4);
 		item.addTag(ItemTag.MEDIUMARMOR);
 		item.setDescription("A set of leather armor enhanced with metal studs providing additional defense, at the sake of swift movement.");
 		world.addAtEmptyLocation(item,z);
@@ -132,9 +141,9 @@ public class EquipmentFactory {
 	}
 	public Item newCopperBreastplate(int z) {
 		Item item = new Item("Copper Breastplate", ItemType.ARMOR, copperBreastplateIcon);
-		item.modifyArmorValue(5);
+		item.modifyArmorValue(6);
 		item.addTag(ItemTag.HEAVYARMOR);
-		item.setDescription("A set of interlocking copper plates. It is decent armor for the critters of the dungeon, if a bit heavy.");
+		item.setDescription("A set of interlocking copper plates. It is decent armor for the dungeon, if a bit heavy.");
 		world.addAtEmptyLocation(item,z);
 		return item;
 	}

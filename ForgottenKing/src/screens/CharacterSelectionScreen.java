@@ -115,7 +115,7 @@ public class CharacterSelectionScreen extends Screen {
 		ClassSelection c = new ClassSelection(Tag.ADVENTURER, adventurerIconLarge, adventurerIcon, 22, 10, 0, 0, 1, 2);
 		c.setAttributes(1, 1, 1);
 		c.setStats(2, 2, 2, 2, 2, 2);
-		c.descriptionText = "A brave adventurer. Well rounded for the unexpected perils and treasures of the dungeon. Equipped with a dagger and a leather armor with the most balanced stats, this character is prepared for anything.";
+		c.descriptionText = "A brave adventurer. Well rounded for the unexpected perils and treasures of the dungeon. Equipped with a dagger, leather armor and a handful of darts, this character is prepared for anything.";
 		c.addTag(Tag.QUICK_LEARNER);
 		return c;
 	}

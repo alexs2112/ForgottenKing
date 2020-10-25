@@ -1,12 +1,12 @@
 package screens;
 
-import creatures.Creature;
+import creatures.Player;
 import items.Item;
 import items.ItemType;
 
 public class QuaffScreen extends InventoryBasedScreen {
 
-	public QuaffScreen(Creature player) {
+	public QuaffScreen(Player player) {
 		super(player);
 	}
 

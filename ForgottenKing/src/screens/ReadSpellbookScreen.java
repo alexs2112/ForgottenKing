@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import creatures.Creature;
 import items.Item;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -38,7 +37,7 @@ public class ReadSpellbookScreen extends Screen {
         write(root, "What would you like to memorize?", 48, y, font,  Color.WHITE);
         for (int i = 0; i < spells.size(); i++) {
         	Spell spell = spells.get(i);
-        	String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.cost() + ")";
+        	String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.cost() + ") [" + spell.type().text() + ":" + spell.level() + "]";
         	write(root, line, x, 32*i + y + 32, font, Color.ANTIQUEWHITE);
         }
     }

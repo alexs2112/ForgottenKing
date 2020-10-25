@@ -7,6 +7,7 @@ import assembly.CreatureFactory;
 import assembly.ItemFactory;
 import creatures.ClassSelection;
 import creatures.Creature;
+import creatures.Player;
 import creatures.Tag;
 import features.Feature;
 import items.Item;
@@ -30,7 +31,7 @@ public class PlayScreen extends Screen {
     private int screenHeight;
     private World world;
     private List<String> messages;
-    private Creature player;
+    private Player player;
     private CreatureFactory creatureFactory;
     private ItemFactory itemFactory;
     private FieldOfView fov;
@@ -150,6 +151,8 @@ public class PlayScreen extends Screen {
 	
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
+		if (player.hp() < 1)
+		    return new LoseScreen(root);
 		KeyCode code = key.getCode();
     	boolean endAfterUserInput = true;
     	char c = '-';
@@ -192,10 +195,10 @@ public class PlayScreen extends Screen {
     			if (player.lastWielded() != null && player.inventory().contains(player.lastWielded()))
     				player.equip(player.lastWielded());
     		}
-    		else if (c == '5') {
+    		else if (c == 'r' && key.isShiftDown()) {
     			player.setResting(true);
     			playerRest();
-    		} else if (c == 'r')
+    		} else if (c == 'r' && !key.isShiftDown())
     			subscreen = new ReadScreen(player);
     		else if (c == 's')
     			subscreen = new StatsScreen(player);
@@ -203,11 +206,11 @@ public class PlayScreen extends Screen {
     			subscreen = new MagicScreen(player);
     		else if (c == 'p')
     			subscreen = new PerkScreen(player);
-    		else if (c == 'z')
-    			subscreen = new SelectSpellScreen(root, player, getScrollX(), getScrollY());
-    		else if (c == 'c') {
+    		else if (c == 'c' && key.isShiftDown())
      			closeDoor();
-    		} else if (key.isShiftDown() && c == '/') {
+    		else if (c == 'c' && !key.isShiftDown())
+    			subscreen = new SelectSpellScreen(root, player, getScrollX(), getScrollY());
+    		else if (key.isShiftDown() && c == '/') {
     			subscreen = new HelpScreen();
     		} else if (key.isShiftDown() && code.equals(KeyCode.PERIOD)) {
     			if (world.feature(player.x, player.y, player.z) != null && world.feature(player.x, player.y, player.z).type().equals("DownStair"))
@@ -250,7 +253,6 @@ public class PlayScreen extends Screen {
     			player.modifyXP(player.nextLevelXP());
     		else if (c == '8' && devMode)
     			player.modifyArmorValue(player.armorValue() * 10);
-    		
     		else
     			endAfterUserInput = false;
     	}
@@ -266,13 +268,13 @@ public class PlayScreen extends Screen {
 				player.modifyTime(-1);
 			}
 		}
-    	if (player.hp() < 1)
-		    return new LoseScreen(root);
-		
+
 		if (player.xp() >= player.nextLevelXP()) {
 			player.notify("You leveled up!");
 			return new LevelUpScreen(player, this);
 		}
+		if (player.hp() <= 0)
+			repeatKeyPress = true;	//Repeats the players last keypress to force them into the lose screen immediately
     	return this;
     }
 	

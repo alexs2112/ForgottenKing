@@ -1,7 +1,7 @@
 package screens;
 
 import creatures.Attribute;
-import creatures.Creature;
+import creatures.Player;
 import creatures.Stat;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -12,10 +12,10 @@ import javafx.stage.Stage;
 
 public class LevelUpScreen extends Screen {
 	private Group baseRoot;
-	private Creature player;
+	private Player player;
 	private Screen returnScreen;
 
-	public LevelUpScreen(Creature player, Screen returnScreen) {
+	public LevelUpScreen(Player player, Screen returnScreen) {
 		this.baseRoot = new Group(returnScreen.root());
 		this.player = player;
 		this.returnScreen = returnScreen;

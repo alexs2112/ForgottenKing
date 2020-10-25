@@ -1,6 +1,6 @@
 package screens;
 
-import creatures.Creature;
+import creatures.Player;
 import items.Inventory;
 import items.Item;
 import javafx.scene.Group;
@@ -12,23 +12,30 @@ import javafx.stage.Stage;
 import screens.Screen;
 
 public abstract class InventoryBasedScreen extends Screen {
-	protected Creature player;
+	protected Player player;
 	protected Inventory inventory;
 	private String letters;
-	
-	private int[] quantities;
-
+	private int select;
+	protected Item startAt;
 	protected abstract String getVerb();
     protected abstract boolean isAcceptable(Item item);
     protected abstract Screen use(Item item);
 
-    public InventoryBasedScreen(Creature player){
+    public InventoryBasedScreen(Player player){
         this.player = player;
-        this.letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        this.inventory = player.inventory();
+        init();
     }
     public InventoryBasedScreen(Inventory inventory){
         this.inventory = inventory;
-        this.letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        init();
+    }
+    private void init() {
+    	this.letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    	if (startAt != null) {
+    		select = inventory.indexOf(startAt);
+    	} else
+    		select = -1;
     }
     
     public void displayOutput(Stage stage) {
@@ -38,22 +45,24 @@ public abstract class InventoryBasedScreen extends Screen {
 	    Item[] items = getItems();
     	
 	    Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
+	    Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
 	    
-        int x = 64;
+        int x = 104;
         int y = 50;
-        int num = 0;
         write(root, "What would you like to " + getVerb() + "?", 48, y, font,  Color.WHITE);
+        int num = 0;
         for (int i = 0; i < items.length; i++) {
         	Item item = items[i];
         	if (item == null)
         		continue;
-        	String line = letters.charAt(i) + " - ";
-        	if (quantities[i] > 1)
-        		line += quantities[i] + " ";
+        	String line = letters.charAt(i) + "-";
+        	
+        	if (inventory.quantityOf(item) > 1)
+        		line += inventory.quantityOf(item) + " ";
         	line += item.name();
-        	if (quantities[i] > 1)
+        	if (inventory.quantityOf(item) > 1)
         		line += "s";
-        	Color equipColour = Color.ANTIQUEWHITE;
+        	Color equipColour = Color.WHITE;
             if (player != null && player.hasEquipped(item)) {
             	line += " (Equipped)";
             	equipColour = Color.LAWNGREEN;
@@ -67,28 +76,22 @@ public abstract class InventoryBasedScreen extends Screen {
             	equipColour = Color.FORESTGREEN;
             }
             draw(root, item.image(), x-44, 32*num + y + 4);
-        	write(root, line, x, 32*num + y + 32, font, equipColour);
+        	write(root, line, x, 32*num + y + 32, fontS, equipColour);
+        	if (select == i) {
+        		draw(root, Loader.arrowRight, 20, 32*num+y+4);
+        	}
         	num++;
         }
     }
     private Item[] getItems() {
     	Item[] items = null;
-    	int[] quant = null;
-    	if (player == null) {
-    		items = inventory.items();
-    		quant = inventory.quantity();
-    	} else {
-    		items = player.inventory().items();
-    		quant = player.inventory().quantity();
-    	}
+    	items = inventory.items();
     	Item[] list = new Item[items.length];
-    	quantities = new int[items.length];
     	for (int i = 0; i < items.length; i++) {
     		Item item = items[i];
     		if (item == null || !isAcceptable(item))
     			continue;
     		list[i] = item;
-    		quantities[i] = quant[i];
     	}
     	return list;
     }
@@ -103,16 +106,39 @@ public abstract class InventoryBasedScreen extends Screen {
     		items = inventory.items();
     	else
     		items = player.inventory().items();
-    
-        if (letters.indexOf(c) > -1
+    	
+    	if (key.getCode().equals(KeyCode.DOWN)) {
+    		select = getNextIndex(items);
+    		return this;
+    	} else if (key.getCode().equals(KeyCode.UP)) {
+    		select = getPrevIndex(items);
+    		return this;
+    	} else if (letters.indexOf(c) > -1
              && items.length > letters.indexOf(c)
              && items[letters.indexOf(c)] != null
-             && isAcceptable(items[letters.indexOf(c)]))
-            return use(items[letters.indexOf(c)]);
+             && isAcceptable(items[letters.indexOf(c)])) {
+    		return use(items[letters.indexOf(c)]);
+    	} else if (key.getCode().equals(KeyCode.ENTER))
+            return use(items[select]);
         else if (key.getCode().equals(KeyCode.ESCAPE))
             return null;
         else
             return this;
+    }
+    
+    private int getNextIndex(Item[] items) {
+    	for (int i = select+1; i<items.length; i++) {
+    		if (items[i] != null && isAcceptable(items[i]))
+    			return i;
+    	}
+    	return select;
+    }
+    private int getPrevIndex(Item[] items) {
+    	for (int i = select-1; i>=0; i--) {
+    		if (items[i] != null && isAcceptable(items[i]))
+    			return i;
+    	}
+    	return select;
     }
 
 }

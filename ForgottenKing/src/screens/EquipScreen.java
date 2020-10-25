@@ -1,12 +1,12 @@
 package screens;
 
-import creatures.Creature;
+import creatures.Player;
 import items.Item;
 import screens.Screen;
 
 public class EquipScreen extends InventoryBasedScreen {
 
-	public EquipScreen(Creature player) {
+	public EquipScreen(Player player) {
 		super(player);
 	}
 

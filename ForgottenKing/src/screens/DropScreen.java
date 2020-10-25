@@ -1,12 +1,12 @@
 package screens;
 
-import creatures.Creature;
+import creatures.Player;
 import items.Item;
 import screens.Screen;
 
 public class DropScreen extends InventoryBasedScreen {
 
-	public DropScreen(Creature player) {
+	public DropScreen(Player player) {
 		super(player);
 	}
 
