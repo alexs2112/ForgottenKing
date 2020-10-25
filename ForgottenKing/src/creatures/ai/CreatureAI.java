@@ -57,9 +57,14 @@ public class CreatureAI {
     }
     
     public void wander(){
-        int mx = (int)(Math.random() * 3) - 1;
-        int my = (int)(Math.random() * 3) - 1;
-        creature.moveBy(mx, my, 0);
+    	for (int i = 0; i < 10; i++) {
+    		int mx = (int)(Math.random() * 3) - 1;
+    		int my = (int)(Math.random() * 3) - 1;
+    		if (creature.canEnter(creature.x+mx,creature.y+my,creature.z)) {
+    			creature.moveBy(mx, my, 0);
+    			return;
+    		}
+    	}
     }
     
     public void moveTo(int x, int y) {

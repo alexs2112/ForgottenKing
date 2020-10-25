@@ -82,6 +82,17 @@ public class InspectCreatureScreen extends Screen {
     	else
     		t += "nearly dead.";
 		text.add(t);
+		if (creature.movementDelay() >= 13) {
+			if (creature.movementDelay() >= 15)
+				text.add("It is very slow.");
+			else
+				text.add("It is slow.");
+		} if (creature.movementDelay() <= 7) {
+			if (creature.movementDelay() <= 5)
+				text.add("It is very fast.");
+			else
+				text.add("It is fast.");
+		}
 		if (creature.equipment().size() > 0) {
 			t = "It is the following equipment: ";
 			for (Item i : creature.equipment().values()) {

@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.effect.ColorAdjust;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -14,6 +15,8 @@ public abstract class Screen {
 	public Scene scene;
 	protected Group root;
 	public Group root() { return root; }
+	
+	public boolean repeatKeyPress = false;
 
 	public void displayOutput(Stage stage) {
 		stage.setScene(scene);

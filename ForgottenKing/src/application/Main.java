@@ -34,10 +34,13 @@ public class Main extends Application {
 
 	public void keyPressed(KeyEvent key) {
 		Screen sc2 = screen.respondToUserInput(key); 
-		//System.out.println(key);
 		screen = sc2;
 		repaint();
 		addKeyHandler(screen);
+		if (screen.repeatKeyPress) {
+			screen.repeatKeyPress = false;
+			keyPressed(key);
+		}
 	}
 
 	private void addKeyHandler(Screen screen) {

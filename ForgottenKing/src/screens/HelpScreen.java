@@ -40,6 +40,7 @@ public class HelpScreen extends Screen {
 		write(root, "[m] to allocate Magic points", x, y+=32, font, Color.WHITE);
 		write(root, "[p] to open the Perk menu", x, y+=32, font, Color.WHITE);
 		write(root, "[c] to Close an open door next to you", x, y+=32, font, Color.WHITE);
+		write(root, "[5] to rest and recuperate for a time", x, y+=32, font, Color.WHITE);
 		write(root, "[<] or [>] to move up or down a staircase", x, y+=32, font, Color.WHITE);
 	}
 	

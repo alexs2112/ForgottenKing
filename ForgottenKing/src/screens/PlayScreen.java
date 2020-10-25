@@ -150,9 +150,6 @@ public class PlayScreen extends Screen {
 	
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
-		if (player.hp() < 1)
-		    return new LoseScreen(root);
-
 		KeyCode code = key.getCode();
     	boolean endAfterUserInput = true;
     	char c = '-';
@@ -195,7 +192,10 @@ public class PlayScreen extends Screen {
     			if (player.lastWielded() != null && player.inventory().contains(player.lastWielded()))
     				player.equip(player.lastWielded());
     		}
-    		else if (c == 'r')
+    		else if (c == '5') {
+    			player.setResting(true);
+    			playerRest();
+    		} else if (c == 'r')
     			subscreen = new ReadScreen(player);
     		else if (c == 's')
     			subscreen = new StatsScreen(player);
@@ -254,6 +254,8 @@ public class PlayScreen extends Screen {
     		else
     			endAfterUserInput = false;
     	}
+    	
+    	
 		
 		if (endAfterUserInput && subscreen == null) {
 			player.update();
@@ -264,6 +266,8 @@ public class PlayScreen extends Screen {
 				player.modifyTime(-1);
 			}
 		}
+    	if (player.hp() < 1)
+		    return new LoseScreen(root);
 		
 		if (player.xp() >= player.nextLevelXP()) {
 			player.notify("You leveled up!");
@@ -448,6 +452,23 @@ public class PlayScreen extends Screen {
 			c.fillHP();
 			c.fillMana();
 		}
+	}
+	
+	//A method that repeats the last key press (5) until the player is done resting
+	private void playerRest() {
+		if (player.resting() && !player.creatureInSight() && (player.hp() < player.maxHP()||player.mana() < player.maxMana()))
+    		repeatKeyPress = true;
+    	else if (player.resting()) {
+    		player.setResting(false);
+    		if (player.creatureInSight())
+    			player.notify("There are creatures in view");
+    		else {
+    			if (player.hp() >= player.maxHP())
+    				player.notify("Health Restored");
+    			if (player.mana() >= player.maxMana())
+    				player.notify("Mana Restored");
+    		}
+    	}
 	}
 	
 }

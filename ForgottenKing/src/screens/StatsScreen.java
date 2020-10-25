@@ -4,7 +4,6 @@ import creatures.Creature;
 import creatures.Stat;
 import creatures.Type;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;

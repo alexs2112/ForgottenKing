@@ -102,7 +102,7 @@ public class CreatureFactory {
 		Creature kobold = new Creature(world, "Kobold",1,30, 11, 9, 0, 2, 1, 3, koboldIcon);
 		kobold.setAttributes(1,1,1);
 	    kobold.setStats(1,2,2,2,1,1);
-	    kobold.setDescription("Kobolds are small, greyish creatures with the looks and temperaments of feral dogs. No one knows for sure where kobolds come from, but ancient demon-gods, evil spirits, and meddling wizards have all been suggested as culprits.");//*
+	    kobold.setDescription("Kobolds are small, lizardfolk with the brains to match. No one knows for sure where kobolds come from, but ancient demon-gods, evil spirits, and meddling wizards have all been suggested as culprits.");//*
 	    world.addAtEmptyLocation(kobold, z);
 	    new BasicAI(kobold, player);
 	    return kobold;

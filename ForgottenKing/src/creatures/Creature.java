@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import creatures.ai.CreatureAI;
+import features.Feature;
 import items.Inventory;
 import items.Item;
 import items.ItemType;
@@ -409,6 +410,9 @@ public class Creature {
     }
     public Tile realTile(int wx, int wy, int wz) {
     	return world.tile(wx, wy, wz);
+    }
+    public Feature feature(int wx, int wy, int wz) {
+    	return world.feature(wx, wy, wz);
     }
     public Inventory items(int wx, int wy, int wz) {
     	if (canSee(wx,wy,wz))
@@ -898,8 +902,26 @@ public class Creature {
 		}
 	}
 	
+	/**
+	 * AUTOPILOT
+	 */
+	private boolean resting;
+    public boolean resting() { return resting; }
+    public void setResting(boolean x) { resting = x; }
+    
+    //Horribly inefficient, fix this later
+    public boolean creatureInSight() {
+    	for (int x = 0; x < world.width(); x++) {
+    		for (int y = 0; y < world.height(); y++) {
+    			if (creature(x, y, z) != null && creature(x,y,z) != this)
+    				return true;
+    		}
+    	}
+    	return false;
+    }
+	
     /**
-     * TEMPORARY
+     * MISCELLANEOUS
      */
     public void dig(int wx, int wy, int wz) {
         world.dig(wx, wy, wz);
