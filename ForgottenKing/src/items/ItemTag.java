@@ -13,6 +13,9 @@ public enum ItemTag {
 	CROSSBOW("Crossbow", "A crossbow, fires quivered bolts.", Loader.crossbowIconGold),
 	SLING("Sling", "A sling, fires quivered stones.", Loader.slingIconGold),
 	
+	RUSTED("Rusted", "", null),	//-1 to attack and damage rolls
+	PRISTINE("Pristine", "", null), //+1 to attack and damage rolls
+	
 	LIGHTARMOR("Light Armor", "The lightest of armor, you do not have to be trained in its use to be able to wear it.", Loader.lightArmorTag),
 	MEDIUMARMOR("Medium Armor", "Applies a debuff of 2 to your speed, evasion and attack if your brawn is less than 5.", Loader.mediumArmorTag),
 	HEAVYARMOR("Heavy Armor", "Applies a debuff of 5 to your speed, evasion and attack if your brawn is less than 8.", Loader.heavyArmorTag), 

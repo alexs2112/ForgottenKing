@@ -55,7 +55,7 @@ public class Creature {
     		x += x/10;
     	xp += x; 
     }
-    public int nextLevelXP() { return (int)(Math.pow((double)level(),1.2) * 750); }
+    public int nextLevelXP() { return (int)(Math.pow((double)level(),1.2) * 500); }
     private int hp;
     public int hp() { return hp; }
     private int maxHP;
@@ -550,8 +550,8 @@ public class Creature {
 	        if (is(Tag.STRONG_ARROWS))
 	        	breakChance = 8;
 	        if (Math.random()*100 < breakChance) {
+	        	world.notify(wx,wy,wz,"The " + i.name() + " broke!");
 	        	world.remove(i, wx, wy, wz);
-	        	world.notify(wx,wy,wz,"The " + quiver.name() + " broke!");
 	        }
 		} else
 			doAction("fire your " + weapon().name());

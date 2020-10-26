@@ -12,8 +12,10 @@ import spells.Spell;
 public class Item {
 	private Image image;
 	public Image image() { return image; }
+	public void setImage(Image newImage) { image = newImage; }
 	private String name;
 	public String name() { return name; }
+	public void setName(String newName) { name = newName; }
 	private ItemType type;
 	public ItemType type() { return type; }
 	private String description;

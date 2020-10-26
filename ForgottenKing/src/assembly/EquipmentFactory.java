@@ -10,13 +10,25 @@ import world.World;
 public class EquipmentFactory {
 	private World world;
 	
+	//D = decrepit, -1
+	//P = Pristine, +1
+	//E = Enchanted, Various effects
 	//Images
 	private Image shortWeaponFull = new Image(this.getClass().getResourceAsStream("resources/items/short_weapon_full.png"));
 	private Image daggerIcon = tools.ImageCrop.cropImage(shortWeaponFull, 0, 0, 32, 32);
+	private Image daggerIconD = tools.ImageCrop.cropImage(shortWeaponFull, 0, 32, 32, 32);
+	private Image daggerIconP = tools.ImageCrop.cropImage(shortWeaponFull, 0, 64, 32, 32);
+	private Image daggerIconE = tools.ImageCrop.cropImage(shortWeaponFull, 0, 96, 32, 32);
 	
 	private Image medWeaponFull = new Image(this.getClass().getResourceAsStream("resources/items/med_weapon_full.png"));
 	private Image shortSwordIcon = tools.ImageCrop.cropImage(medWeaponFull, 0, 0, 32, 32);
+	private Image shortSwordIconD = tools.ImageCrop.cropImage(medWeaponFull, 0, 64, 32, 32);
+	private Image shortSwordIconP = tools.ImageCrop.cropImage(medWeaponFull, 0, 128, 32, 32);
+	private Image shortSwordIconE = tools.ImageCrop.cropImage(medWeaponFull, 0, 192, 32, 32);
 	private Image handaxeIcon = tools.ImageCrop.cropImage(medWeaponFull, 0, 32, 32, 32);
+	private Image handaxeIconD = tools.ImageCrop.cropImage(medWeaponFull, 0, 96, 32, 32);
+	private Image handaxeIconP = tools.ImageCrop.cropImage(medWeaponFull, 0, 160, 32, 32);
+	private Image handaxeIconE = tools.ImageCrop.cropImage(medWeaponFull, 0, 224, 32, 32);
 	
 	private Image longWeaponFull = new Image(this.getClass().getResourceAsStream("resources/items/long_weapon_full.png"));
 	private Image staffIcon = tools.ImageCrop.cropImage(longWeaponFull, 160, 0, 32, 32);
@@ -73,6 +85,11 @@ public class EquipmentFactory {
 		item.addTag(ItemTag.LIGHT);
 		item.setDamageType(Type.PIERCING);
 		item.setDescription("A short double-edged fighting knife with a sharp point. Ideal for quick strikes or stabbing unaware foes.");
+		setMeleeWeaponCondition(item, z);
+		if (item.is(ItemTag.RUSTED))
+			item.setImage(daggerIconD);
+		if (item.is(ItemTag.PRISTINE))
+			item.setImage(daggerIconP);
 		world.addAtEmptyLocation(item,z);
 		return item;
 	}
@@ -85,6 +102,11 @@ public class EquipmentFactory {
 		item.addTag(ItemTag.LIGHT);
 		item.setDamageType(Type.SLASHING);
 		item.setDescription("A short and light blade. Perfect for your off hand, or for slashing an enemy.");
+		setMeleeWeaponCondition(item, z);
+		if (item.is(ItemTag.RUSTED))
+			item.setImage(shortSwordIconD);
+		if (item.is(ItemTag.PRISTINE))
+			item.setImage(shortSwordIconP);
 		world.addAtEmptyLocation(item,z);
 		return item;
 	}
@@ -119,6 +141,11 @@ public class EquipmentFactory {
 		item.addTag(ItemTag.CLEAVING);
 		item.setDamageType(Type.SLASHING);
 		item.setDescription("A small and mundane axe, it is still perfectly serviceable for cleaving enemies in two.");
+		setMeleeWeaponCondition(item, z);
+		if (item.is(ItemTag.RUSTED))
+			item.setImage(handaxeIconD);
+		if (item.is(ItemTag.PRISTINE))
+			item.setImage(handaxeIconP);
 		world.addAtEmptyLocation(item,z);
 		return item;
 	}
@@ -164,6 +191,23 @@ public class EquipmentFactory {
 		armor.modifyArmorValue(500);
 		world.addAtEmptyLocation(armor,z);
 		return armor;
+	}
+	
+	private void setMeleeWeaponCondition(Item item, int z) {
+		int dChance = 10 + (5-z)*5;
+		int pChance = 5*z;
+		if (Math.random()*100 < dChance) {
+			item.addTag(ItemTag.RUSTED);
+			item.setDamage(item.damage()[0]-1, item.damage()[1]-1);
+			item.modifyAttackValue(-1);
+			item.setName("Rusted " + item.name());
+		}
+		else if (Math.random()*100 < pChance) {
+			item.addTag(ItemTag.PRISTINE);
+			item.setDamage(item.damage()[0]+1, item.damage()[1]+1);
+			item.modifyAttackValue(1);
+			item.setName("Pristine " + item.name());
+		}
 	}
 	
 	

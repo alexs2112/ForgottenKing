@@ -118,12 +118,12 @@ public abstract class InventoryBasedScreen extends Screen {
              && items[letters.indexOf(c)] != null
              && isAcceptable(items[letters.indexOf(c)])) {
     		return use(items[letters.indexOf(c)]);
-    	} else if (key.getCode().equals(KeyCode.ENTER))
-            return use(items[select]);
-        else if (key.getCode().equals(KeyCode.ESCAPE))
+    	} else if (key.getCode().equals(KeyCode.ENTER)) {
+    		if (select != -1)
+    			return use(items[select]);
+    	} else if (key.getCode().equals(KeyCode.ESCAPE))
             return null;
-        else
-            return this;
+        return this;
     }
     
     private int getNextIndex(Item[] items) {

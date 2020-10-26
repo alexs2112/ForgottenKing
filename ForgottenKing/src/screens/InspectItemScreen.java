@@ -113,6 +113,10 @@ public class InspectItemScreen extends Screen {
 	}
 	private List<String> getStatDescription() {
 		List<String> text = new ArrayList<String>();
+		if (item.is(ItemTag.RUSTED))
+			text.add("It is rusted, with decreased attack and damage.");
+		if (item.is(ItemTag.PRISTINE))
+			text.add("It is pristine, with increased attack and damage.");
 		if (item.isRanged())
 			text.add("It can be fired with [f] if you have suitable ammo quivered.");
 		if (item.attackValue() != 0)

@@ -428,11 +428,14 @@ public class PlayScreen extends Screen {
 	
 	private void populate() {
 		for (int z = 0; z < world.depth(); z++) {
-			for (int i = 0; i < 20; i++)
-				creatureFactory.newRandomCreature(z, 1);
-			for (int i = 0; i < 10; i++)
-				creatureFactory.newRandomCreature(z, 2);
-			for (int i = 0; i < 10; i++){
+			//Each level has 9 creatures of a lower level, 15 creatures of that level, and 6 creatures of a higher level
+			for (int i = 0; i < 9; i++)
+				creatureFactory.newRandomCreature(z, z-1);
+			for (int i = 0; i < 15; i++)
+				creatureFactory.newRandomCreature(z, z);
+			for (int i = 0; i < 6; i++)
+				creatureFactory.newRandomCreature(z, z+1);
+			for (int i = 0; i < 8; i++){
 	            itemFactory.ammo().newRock(z);
 	        }
 			for (int i = 0; i < 5; i++){

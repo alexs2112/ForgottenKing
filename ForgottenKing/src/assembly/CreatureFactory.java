@@ -24,9 +24,15 @@ public class CreatureFactory {
 	private Image batIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/bat.gif"));
 	private Image zombieIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/zombie.gif"));
 	private Image ratIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/rat.gif"));
-	private Image koboldIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/kobold.gif"));
 	private Image soldierAntIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/giant_ant.gif"));
 	private Image homunculusIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/homunculus.gif"));
+	private Image lizardGruntIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_grunt.gif"));
+	private Image lizardFighterIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_fighter.gif"));
+	private Image lizardHunterIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_hunter.gif"));
+	private Image lizardHexerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_hexer.gif"));
+	private Image lizardShadowbladeIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_shadowblade.gif"));
+	private Image lizardGuardianIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_guardian.gif"));
+	private Image lizardPriestIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_priest.gif"));
 	
 	public CreatureFactory(World world, ItemFactory itemFactory) {
 		this.world = world;
@@ -37,24 +43,42 @@ public class CreatureFactory {
 	}
 	
 	public Creature newRandomCreature(int z, int level) {
-		if (level == 1) {
+		if (level <= 1) {
 			int c = (int)(Math.random()*3);
 			if (c == 0)
 				return newBat(z);
 			else if (c == 1)
 				return newRat(z);
 			else
-				return newKobold(z);
+				return newGoblin(z);
 		} else if (level == 2) {
 			int c = (int)(Math.random()*4);
 			if (c == 0)
-				return newGoblin(z);
+				return newLizardGrunt(z);
 			else if (c == 1)
 				return newZombie(z);
 			else if (c == 2)
 				return newSoldierAnt(z);
 			else if (c == 3)
 				return newHomunculus(z);
+		} else if (level == 3) {
+			int c = (int)(Math.random()*2);
+			if (c == 0)
+				return newLizardFighter(z);
+			else if (c == 1)
+				return newLizardHunter(z);
+		} else if (level == 4) {
+			int c = (int)(Math.random()*2);
+			if (c == 0)
+				return newLizardHexer(z);
+			else if (c == 1)
+				return newLizardShadowblade(z);
+		} else if (level >= 5) {
+			int c = (int)(Math.random()*2);
+			if (c == 0)
+				return newLizardGuardian(z);
+			else if (c == 1)
+				return newLizardPriest(z);
 		}
 		return newGoblin(z);
 	}
@@ -78,7 +102,7 @@ public class CreatureFactory {
 	}
 	
 	public Creature newBat(int z) {
-		Creature bat = new Creature(world, "Bat",1,25, 10, 9, 0, 1, 0, 2, batIcon);
+		Creature bat = new Creature(world, "Bat",1,25, 10, 9, 0, 1, 1, 3, batIcon);
 		bat.setAttributes(0,2,1);
 	    bat.setStats(1,2,3,1,1,1);
 	    bat.modifyMovementDelay(-5);
@@ -90,7 +114,7 @@ public class CreatureFactory {
 	    return bat;
 	}
 	public Creature newRat(int z) {
-		Creature rat = new Creature(world, "Rat",1,25, 10, 9, 0, 1, 1, 3, ratIcon);
+		Creature rat = new Creature(world, "Rat",1,25, 10, 9, 0, 1, 2, 4, ratIcon);
 		rat.setAttributes(1,1,1);
 	    rat.setStats(1,1,1,2,1,0);
 	    rat.modifyMovementDelay(-1);
@@ -99,18 +123,18 @@ public class CreatureFactory {
 	    new BasicAI(rat, player);
 	    return rat;
 	}
-	public Creature newKobold(int z) {
-		Creature kobold = new Creature(world, "Kobold",1,30, 11, 9, 0, 2, 1, 3, koboldIcon);
-		new BasicAI(kobold, player);
-		kobold.setAttributes(1,1,1);
-	    kobold.setStats(1,2,2,2,1,1);
-	    kobold.setDescription("Kobolds are small lizardfolk with the brains to match. No one knows for sure where kobolds come from, but ancient demon-gods, evil spirits, and meddling wizards have all been suggested as culprits.");//*
-	    world.addAtEmptyLocation(kobold, z);
-	    if (Math.random() * 100 < 60)
-	    	kobold.addItemToInventory(itemFactory.ammo().newDart(-1));
-	    if (z > 0 && Math.random()*100 < 20*z)
-	    	kobold.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
-	    return kobold;
+	public Creature newGoblin(int z) {
+		Creature goblin = new Creature(world, "Goblin",1,30, 11, 9, 0, 2, 1, 3, goblinIcon);
+		new BasicAI(goblin, player);
+		goblin.setAttributes(1, 1, 1);
+		goblin.setStats(1, 2, 2, 2, 1, 1);
+		goblin.setDescription("A short and ugly humanoid, they make up for their lack of intelligence with their stupidity.");
+		world.addAtEmptyLocation(goblin, z);
+		for (int i = 0; i < (int)(Math.random()*10)+1; i++)
+			goblin.addItemToInventory(itemFactory.ammo().newRock(-1));
+		if (z > 0 && Math.random()*100 < 20*z)
+	    	goblin.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
+		return goblin;
 	}
 
 	public Creature newZombie(int z) {
@@ -127,18 +151,19 @@ public class CreatureFactory {
 		new BasicAI(zombie, player);
 		return zombie;
 	}
-	public Creature newGoblin(int z) {
-		Creature goblin = new Creature(world, "Goblin",2,60, 15, 8, 0, 1, 1, 3, goblinIcon);
-		new BasicAI(goblin, player);
-		goblin.setAttributes(2, 1, 1);
-		goblin.setStats(2, 2, 2, 3, 1, 2);
-		goblin.setDescription("A short and ugly humanoid, they make up for their lack of intelligence with their stupidity.");
-		world.addAtEmptyLocation(goblin, z);
-		for (int i = 0; i < (int)(Math.random()*10)+1; i++)
-			goblin.addItemToInventory(itemFactory.ammo().newRock(-1));
-		if (z > 0 && Math.random()*100 < 20*z)
-	    	goblin.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
-		return goblin;
+	public Creature newLizardGrunt(int z) {
+		Creature lizardGrunt = new Creature(world, "Lizard Grunt",2,60, 15, 9, 0, 2, 1, 3, lizardGruntIcon);
+		new BasicAI(lizardGrunt, player);
+		lizardGrunt.setAttributes(2,1,1);
+	    lizardGrunt.setStats(2,2,2,3,2,1);
+	    lizardGrunt.setDescription("The lowest ranking of the lizardfolk, the grunts are usually put on guard duties or doing chores of the higher ranks. Often carrying a small pouch of darts.");
+	    world.addAtEmptyLocation(lizardGrunt, z);
+	    if (Math.random() * 100 < 60) {
+	    	for (int i = 0; i < 3 + (int)(Math.random()*2); i++)
+	    		lizardGrunt.addItemToInventory(itemFactory.ammo().newDart(-1));
+	    } if (z > 0 && Math.random()*100 < 20*z)
+	    		lizardGrunt.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
+	    return lizardGrunt;
 	}
 	public Creature newSoldierAnt(int z) {
 		Creature soldierAnt = new Creature(world, "Soldier Ant",2,70, 10, 8, 2, 1, 0, 2, soldierAntIcon);
@@ -164,5 +189,89 @@ public class CreatureFactory {
 	    	homunculus.addEquipment(itemFactory.equipment().newStaff(-1));
 	    world.addAtEmptyLocation(homunculus, z);
 	    return homunculus;
+	}
+	public Creature newLizardFighter(int z) {
+		Creature lizard = new Creature(world, "Lizard Fighter",3,110, 23, 9, 2, 2, 1, 3, lizardFighterIcon);
+		new BasicAI(lizard, player);
+		lizard.setAttributes(2,1,1);
+	    lizard.setStats(3,3,2,3,2,1);
+	    lizard.setDescription("A common foot soldier of the Lizardfolk. What they lose in intelligence they make up for with their strength and willingness to follow orders.");
+	    world.addAtEmptyLocation(lizard, z);
+	    lizard.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
+	    return lizard;
+	}
+	public Creature newLizardHunter(int z) {
+		Creature lizard = new Creature(world, "Lizard Hunter",3,100, 19,10,0,3,2,4, lizardHunterIcon);
+		new BasicAI(lizard, player);
+		lizard.setAttributes(1,2,1);
+	    lizard.setStats(3,2,3,3,2,2);
+	    lizard.setDescription("A lizardfolk armed and trained with a bow. Quite deadly at a range, however noticably weaker when they are forced to fight hand to hand.");
+	    world.addAtEmptyLocation(lizard, z);
+	    lizard.addEquipment(itemFactory.equipment().newShortbow(-1));
+	    for (int i = 0; i < 6 + (int)(Math.random()*3); i++)
+	    	lizard.addItemToInventory(itemFactory.ammo().newArrow(-1));
+	    return lizard;
+	}
+	public Creature newLizardHexer(int z) {
+		Creature lizard = new Creature(world, "Lizard Hexer",4,135, 24,9,2,4,4,6, lizardHexerIcon);
+		new BasicAI(lizard, player);
+		//new SpellcastingAI(lizard, player, 60);
+		lizard.setAttributes(1,2,3);
+	    lizard.setStats(2,2,3,2,4,4);
+	    lizard.setDescription("");
+	    world.addAtEmptyLocation(lizard, z);
+	    //lizard.addTag(Tag.SPELLCASTER);
+	    //Add spells
+	    //Blind
+	    //Weaken
+	    //Siphon Soul
+	    //25% chance to be holding a spellbook containing those DARK spells
+	    return lizard;
+	}
+	public Creature newLizardShadowblade(int z) {
+		Creature lizard = new Creature(world, "Lizard Shadowblade",4,140, 24,10,2,4,1,3, lizardShadowbladeIcon);
+		new BasicAI(lizard, player);
+		//new SpellcastingAI(lizard, player, 40);
+		lizard.setAttributes(1,3,2);
+	    lizard.setStats(2,2,3,4,2,3);
+	    lizard.modifyAttackDelay(-3);
+	    lizard.modifyMovementDelay(-1);
+	    lizard.setDescription("");
+	    world.addAtEmptyLocation(lizard, z);
+	    lizard.addEquipment(itemFactory.equipment().newDagger(-1));
+	    lizard.addEquipment(itemFactory.equipment().newLeatherArmor(-1));
+	    //lizard.addTag(Tag.SPELLCASTER);
+	    //Add spells
+	    //Vulnerable
+	    //Slow
+	    //25% chance to be holding a spellbook containing those DARK spells
+	    return lizard;
+	}
+	public Creature newLizardGuardian(int z) {
+		Creature lizard = new Creature(world, "Lizard Guardian",5,185, 30,7,2,3,2,4, lizardGuardianIcon);
+		new BasicAI(lizard, player);
+		lizard.setAttributes(3,2,1);
+	    lizard.setStats(4,3,2,3,4,2);
+	    lizard.setDescription("");
+	    world.addAtEmptyLocation(lizard, z);
+	    lizard.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
+	    lizard.addEquipment(itemFactory.equipment().newStuddedLeatherArmor(-1));
+	    return lizard;
+	}
+	public Creature newLizardPriest(int z) {
+		Creature lizard = new Creature(world, "Lizard Priest",5,175, 30,8,2,5,5,8, lizardPriestIcon);
+		new BasicAI(lizard, player);
+		//new SpellcastingAI(lizard, player, 70);
+		lizard.setAttributes(1,3,3);
+	    lizard.setStats(2,1,4,2,5,5);
+	    lizard.setDescription("");
+	    world.addAtEmptyLocation(lizard, z);
+	    //lizard.addTag(Tag.SPELLCASTER);
+	    //Add spells
+	    //SMITE
+	    //FIREBOLT
+	    //STUN
+	    //25% chance to be holding a spellbook containing those LIGHT (and FIRE) spells
+	    return lizard;
 	}
 }
