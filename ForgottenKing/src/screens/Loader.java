@@ -102,6 +102,7 @@ public final class Loader {
 	public static Image lightArmorProficiencyIcon = ImageCrop.cropImage(perksFull, 160, 0, 32, 32);
 	public static Image mediumArmorSkillIcon = ImageCrop.cropImage(perksFull, 192, 0, 32, 32);
 	public static Image heavyArmorSkillIcon = ImageCrop.cropImage(perksFull, 224, 0, 32, 32);
+	public static Image improvedCleaveIcon = ImageCrop.cropImage(perksFull, 0, 32, 32, 32);
 	
 	private static Image tagsFull = new Image(Screen.class.getResourceAsStream("resources/creature_tags_full.png"));
 	public static Image spellcasterIcon = ImageCrop.cropImage(tagsFull, 0, 0, 32, 32);

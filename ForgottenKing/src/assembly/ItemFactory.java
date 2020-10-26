@@ -52,6 +52,8 @@ public class ItemFactory {
 			for (int i = 0; i < 8; i++)
 				player.addItemToInventory(ammo().newArrow(-1));
 		}
+		else if (player.is(Tag.BERSERKER))
+			player.addEquipment(equipment().newHandaxe(-1));
 		else {	//Adventurer
 			player.addEquipment(equipment().newDagger(-1));
 			player.addEquipment(equipment().newLeatherArmor(-1));

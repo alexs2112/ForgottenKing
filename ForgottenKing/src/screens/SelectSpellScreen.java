@@ -3,9 +3,7 @@ package screens;
 import java.util.ArrayList;
 
 import creatures.Creature;
-import creatures.Tag;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;

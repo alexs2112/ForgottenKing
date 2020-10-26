@@ -3,7 +3,9 @@ package screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import creatures.Attribute;
 import creatures.Creature;
+import creatures.Stat;
 import creatures.Type;
 import items.Item;
 import items.ItemTag;
@@ -137,6 +139,12 @@ public class InspectItemScreen extends Screen {
 				s += "-" + item.rangedDamage()[1];
 			text.add(s + ".");
 		}
+		if (item.thrownDamage() != null) {
+			String s = "It deals an additional " + item.thrownDamage()[0];
+			if (item.thrownDamage()[0] != item.thrownDamage()[1])
+				s += "-" + item.thrownDamage()[1];
+			text.add(s + " when thrown.");
+		}
 		if (item.armorValue() != 0)
 			text.add("It increases your armor value by " + item.armorValue() + ".");
 		if (item.weaponDelay() < 0)
@@ -151,6 +159,14 @@ public class InspectItemScreen extends Screen {
 			for (Type t : item.resistances().keySet())
 				text.add("It increases your resistance to " + t.text() + " by " + item.getResistance(t) + ".");
 		}
+		if (item.attributes() != null)
+			for (Attribute a : item.attributes().keySet())
+				text.add("It increases your " + a.text() + " by " + item.attributes().get(a) + ".");
+		if (item.stats() != null)
+			for (Stat a : item.stats().keySet())
+				text.add("It increases your " + a.text() + " by " + item.stats().get(a) + ".");
+		if (item.ability() != null)
+			text.add("It gives you the [" + item.ability().name() + "] ability, accessible by [a].");
 		return text;
 	}
 

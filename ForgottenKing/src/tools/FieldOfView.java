@@ -40,8 +40,8 @@ public class FieldOfView {
         depth = wz;
         visible = new boolean[world.width()][world.height()];
     
-        for (int x = -r; x < r; x++){
-            for (int y = -r; y < r; y++){
+        for (int x = -r; x <= r; x++){
+            for (int y = -r; y <= r; y++){
                 if (x*x + y*y > r*r)
                     continue;
          

@@ -3,8 +3,10 @@ package screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import assembly.Abilities;
 import assembly.CreatureFactory;
 import assembly.ItemFactory;
+import creatures.Ability;
 import creatures.ClassSelection;
 import creatures.Creature;
 import creatures.Player;
@@ -36,7 +38,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = false;
+    private boolean devMode = true;
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
@@ -61,17 +63,18 @@ public class PlayScreen extends Screen {
 		world.setEntrance(player.x, player.y);
     	player.setMagic();
         itemFactory.equipPlayer(player);
-        for (Tag t : character.tags())
-        	player.addTag(t);
+        if (character.tags() != null)
+        	for (Tag t : character.tags())
+        		player.addTag(t);
+        if (character.abilities() != null)
+        	for (Ability a : character.abilities())
+        		player.addAbility(a);
         if (devMode) {
         	/*
         	player.addEquipment(itemFactory.trinket().newDevRing(-1));
         	player.addEquipment(itemFactory.equipment().newDevSword(-1));
-        	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));
-        	*/
-        	player.addEquipment(itemFactory.equipment().newCopperBreastplate(-1));
-        	player.addEquipment(itemFactory.equipment().newLeatherArmor(-1));
-        	player.addEquipment(itemFactory.equipment().newStuddedLeatherArmor(-1));
+        	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));*/
+        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -210,6 +213,8 @@ public class PlayScreen extends Screen {
      			closeDoor();
     		else if (c == 'c' && !key.isShiftDown())
     			subscreen = new SelectSpellScreen(root, player, getScrollX(), getScrollY());
+    		else if (c == 'a')
+    			subscreen = new SelectAbilityScreen(root, player, getScrollX(), getScrollY());
     		else if (key.isShiftDown() && c == '/') {
     			subscreen = new HelpScreen();
     		} else if (key.isShiftDown() && code.equals(KeyCode.PERIOD)) {
@@ -349,12 +354,12 @@ public class PlayScreen extends Screen {
         for (Item i : player.equipment().values()) {
         	draw(root, Loader.equipmentBox, 1040, 408 + 48*num);
         	draw(root, i.image(), 1049, 417 + 48*num);
-        	write(root, i.shortDesc(), 1090, 441 + 48*num, statFontS, Color.ANTIQUEWHITE);
+        	write(root, i.shortDesc(), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
         	num++;
         	if (player.quiver() != null && i.isRanged()) {
         		draw(root, Loader.equipmentBoxBlue, 1040, 408 + 48*num);
             	draw(root, player.quiver().image(), 1049, 417 + 48*num);
-            	write(root, "[" + player.inventory().quantityOf(player.quiver()) + "] " + player.quiver().shortDesc(), 1090, 441 + 48*num, statFontS, Color.ANTIQUEWHITE);
+            	write(root, "[" + player.inventory().quantityOf(player.quiver()) + "] " + player.quiver().shortDesc(), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
             	num++;
         	}
         }
@@ -450,6 +455,9 @@ public class PlayScreen extends Screen {
 			}
 			for (int i = 0; i < 3; i++) {
 				itemFactory.ammo().newArrow(z);
+			}
+			for (int i = 0; i < 3; i++) {
+				itemFactory.trinket().newRandomRing(z);
 			}
 		}
 		itemFactory.newVictoryItem(world.depth()-1);

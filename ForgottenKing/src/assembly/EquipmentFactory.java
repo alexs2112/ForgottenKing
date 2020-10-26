@@ -31,7 +31,7 @@ public class EquipmentFactory {
 	private Image handaxeIconE = tools.ImageCrop.cropImage(medWeaponFull, 0, 224, 32, 32);
 	
 	private Image longWeaponFull = new Image(this.getClass().getResourceAsStream("resources/items/long_weapon_full.png"));
-	private Image staffIcon = tools.ImageCrop.cropImage(longWeaponFull, 160, 0, 32, 32);
+	private Image spearIcon = tools.ImageCrop.cropImage(longWeaponFull, 160, 0, 32, 32);
 	
 	private Image rangedFull = new Image(this.getClass().getResourceAsStream("resources/items/ranged_full.png"));
 	private Image shortbowIcon = tools.ImageCrop.cropImage(rangedFull, 64, 32, 32, 32);
@@ -53,7 +53,7 @@ public class EquipmentFactory {
 		case 0: return newDagger(z);
 		case 1: return newShortSword(z);
 		case 3: return newHandaxe(z);
-		default: return newStaff(z);
+		default: return newSpear(z);
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class EquipmentFactory {
 		case 1: return newShortSword(z);
 		case 2: return newShortbow(z);
 		case 3: return newHandaxe(z);
-		default: return newStaff(z);
+		default: return newSpear(z);
 		}
 	}
 	public Item newRandomArmor(int z) {
@@ -111,14 +111,13 @@ public class EquipmentFactory {
 		return item;
 	}
 	
-	//To be removed or changed in the future
-	public Item newStaff(int z) {
-		Item item = new Item("Staff", ItemType.WEAPON, staffIcon);
+	public Item newSpear(int z) {
+		Item item = new Item("Spear", ItemType.WEAPON, spearIcon);
 		item.modifyAttackValue(1);
-		item.modifyArmorValue(1);
-		item.setDamage(1, 3);
+		item.setDamage(2, 4);
 		item.addTag(ItemTag.POLEARM);
-		item.setDescription("A stout walking stick.");
+		item.setDescription("A long spear. Gives you the ability to attack enemies two tiles away.");
+		item.setAbility(Abilities.reach());
 		world.addAtEmptyLocation(item,z);
 		return item;
 	}

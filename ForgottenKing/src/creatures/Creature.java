@@ -89,11 +89,17 @@ public class Creature {
         modifyAttribute(Attribute.DEX, dexterity);
         modifyAttribute(Attribute.INT, intelligence);
     }
-    public int strength() { return attributes.get(Attribute.STR); }
-    public int dexterity() { return attributes.get(Attribute.DEX); }
-    public int intelligence() { return attributes.get(Attribute.INT); }
+    public int strength() { return getAttributeTotal(Attribute.STR); }
+    public int dexterity() { return getAttributeTotal(Attribute.DEX); }
+    public int intelligence() { return getAttributeTotal(Attribute.INT); }
     public void modifyAttribute(Attribute attribute, int amount) { 
     	attributes.put(attribute, attributes.get(attribute) + amount);
+    }
+    private int getAttributeTotal(Attribute a) {
+    	int x = attributes.get(a);
+    	for (Item i : equipment().values())
+    		x += i.get(a);
+    	return x;
     }
     public void setStats(int toughness, int brawn, int agility, int accuracy, int will, int spellcasting) {
     	modifyStat(Stat.TOUGHNESS, toughness);
@@ -123,7 +129,10 @@ public class Creature {
     	stats.put(stat, stats.get(stat) + amount);
     }
     private int getStatTotal(Stat stat) {
-    	return stats.get(stat) + attributes.get(stat.parent());
+    	int x = stats.get(stat) + getAttributeTotal(stat.parent());
+    	for (Item i : equipment().values())
+    		x += i.get(stat);
+    	return x;
     }
     private int getStatValue(Stat stat) {
     	return stats.get(stat);
@@ -377,6 +386,7 @@ public class Creature {
      */
     private int visionRadius;
     public int visionRadius() { return visionRadius; }
+    public void modifyVisionRadius(int x) { visionRadius += x; }
 
     public boolean canSee(int wx, int wy, int wz){
         return ai.canSee(wx, wy, wz);
@@ -693,6 +703,12 @@ public class Creature {
 			lastWielded = null;
 		return lastWielded; 
 	}
+	public boolean hasItemTag(ItemTag t) {
+		for (Item i : equipment.values())
+			if (i.is(t))
+				return true;
+		return false;
+	}
 	
     /**
      * Notifications
@@ -713,9 +729,9 @@ public class Creature {
     			if (other == null)
     				continue;
 
-    			if (other == this)
-    				other.notify("You " + message + ".");
-    			else if (other.canSee(x, y, z))
+    			if (other == this) {
+    				other.notify(("You " + message + ".").replaceAll(" look ", " feel "));
+    			} else if (other.canSee(x, y, z))
     				other.notify(String.format("The " + name + " " + makeSecondPerson(message)));
     		}
     	}
@@ -730,8 +746,6 @@ public class Creature {
     		builder.append(word);
     	}
     	String s = builder.toString().trim();
-    	if (is(Tag.PLAYER))
-    		s.replaceAll(" look ", " feel ");
     	return s.replaceAll("the Player", "you");
     }
     
@@ -779,6 +793,8 @@ public class Creature {
 		
 		for (Point p : points)
 			spellEffects(spell, p.x, p.y);
+		
+		spell.casterEffect(this);
 	}
 	private void spellEffects(Spell spell, int x, int y) {
 		Creature target = creature(x,y,z);
@@ -799,11 +815,59 @@ public class Creature {
 	}
 	
 	/**
+	 * Abilities
+	 */
+	private ArrayList<Ability> abilities;
+	public ArrayList<Ability> abilities() { return abilities; }
+	public void addAbility(Ability newAbility) {
+		if (abilities == null)
+			abilities = new ArrayList<Ability>();
+		abilities.add(newAbility); 
+		notify("You learned " + newAbility.name() + "!");
+	}
+	public void removeAbility(Ability ability) {
+		if (abilities != null) {
+			abilities.remove(ability);
+			notify("You forgot " + ability.name() + "!");
+		}
+	}
+	private void updateAbilities() {
+		if (abilities == null)
+			return;
+		for (Ability a : abilities)
+			if (a.time() > 0)
+				a.modifyTime(-1);
+		for (Item i : equipment().values()) {
+			if (i.ability() != null)
+				i.ability().modifyTime(-1);
+		}
+	}
+	public void activateAbility(Ability a, List<Point> points) {
+		if (a.time() > 0) {
+			notify(a.name() + " is still on cooldown.");
+			return;
+		}
+		a.refreshTime();
+		if (a.useText() != null)
+			doAction(a.useText());
+		a.activate(this);
+		for (Point p : points)
+			if (creature(p.x,p.y,z) != null)
+				a.activate(this, creature(p.x,p.y,z));
+	}
+	
+	/**
 	 * Effects
 	 */
 	private List<Effect> effects;
 	public List<Effect> effects(){ return effects; }
-	private void addEffect(Effect effect){
+	private List<Effect> delayedEffects;
+	public void addDelayedEffect(Effect e) {
+		if (delayedEffects == null)
+			delayedEffects = new ArrayList<Effect>();
+		delayedEffects.add(e);
+	}
+	public void addEffect(Effect effect){
         if (effect == null)
             return;
         Effect newEffect = (Effect)(effect.clone());
@@ -826,6 +890,12 @@ public class Creature {
 				done.add(effect);
 			}
 		}
+		if (delayedEffects != null) {		//A way to have effects apply other effects on end
+			for (Effect effect : delayedEffects) {
+				addEffect(effect);
+			}
+			delayedEffects = null;
+		}
 		effects.removeAll(done);
     }
 	public ArrayList<String> getEffectNames() {
@@ -840,6 +910,7 @@ public class Creature {
 			return;
 		regenerate();
     	updateEffects();
+    	updateAbilities();
         ai.onUpdate();  
     }
 	private List<Effect> effectsOnHit;

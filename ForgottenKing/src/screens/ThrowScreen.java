@@ -8,6 +8,7 @@ public class ThrowScreen extends InventoryBasedScreen {
 	private int sx;
 	private int sy;
 	private Group root;
+	private Item startAt;
 
 	public ThrowScreen(Group root, Player player, int sx, int sy) {
 		super(player);
@@ -15,6 +16,13 @@ public class ThrowScreen extends InventoryBasedScreen {
 		this.sy = sy;
 		this.root = root;
 		this.startAt = player.lastThrown();
+		if (startAt != null) {
+    		select = inventory.indexOf(startAt);
+    		System.out.println(startAt.name());
+    	} else {
+    		select = -1;
+    		System.out.println("Null");
+    	}
 	}
 
 	@Override

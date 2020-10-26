@@ -1,5 +1,6 @@
 package assembly;
 
+import creatures.Creature;
 import creatures.Type;
 import spells.Spell;
 import spells.TargetType;
@@ -66,6 +67,43 @@ public final class Spells {
 		s.setType(Type.DARK);
 		s.setEffect(Effects.slowed(duration, amount), 75);
 		s.setTargetType(TargetType.TARGET);
+		return s;
+	}
+	public static Spell weaken() {
+		Spell s = new Spell("Weaken", 3, 2);
+		s.setType(Type.DARK);
+		s.setEffect(Effects.weak(6, 4), 70);
+		s.setTargetType(TargetType.TARGET);
+		return s;
+	}
+	public static Spell blind() {
+		Spell s = new Spell("Blind", 4, 2);
+		s.setType(Type.DARK);
+		s.setEffect(Effects.blind(4), 60);
+		s.setRange(4);
+		s.setTargetType(TargetType.TARGET);
+		return s;
+	}
+	public static Spell vulnerable() {
+		Spell s = new Spell("Vulnerability", 4, 2);
+		s.setType(Type.DARK);
+		s.setEffect(Effects.vulnerable(6, 4), 75);
+		s.setTargetType(TargetType.TARGET);
+		return s;
+	}
+	public static Spell soulSiphon() {
+		Spell s = new Spell("Soul Siphon", 5, 3) {
+			public void casterEffect(Creature caster) {
+				caster.modifyHP(caster.getDamageReceived(-6, Type.DARK));
+				caster.doAction("Heal from darkness.");
+			}
+		};
+		s.setType(Type.DARK);
+		s.setEffect(Effects.weak(6, 3), 70);
+		s.setRange(6);
+		s.setDamage(4, 8);
+		s.setAttackValue(6);
+		s.setTargetType(TargetType.PROJECTILE);
 		return s;
 	}
 	

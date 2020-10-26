@@ -108,6 +108,20 @@ public final class Effects {
 		e.setImage(Loader.strongIcon);
 		return e;
 	}
+	public static Effect weak(int duration, int amount) {
+		Effect e = new Effect("Weak", duration){
+			public void start(Creature creature){
+				creature.modifyAttribute(Attribute.STR, -amount);
+				creature.doAction("look weak");
+			}
+			public void end(Creature creature){
+				creature.modifyAttribute(Attribute.STR, +amount);
+				creature.doAction("look stronger");
+			}
+		};
+		e.setImage(Loader.weakIcon);
+		return e;
+	}
 	public static Effect slowed(int duration, int amount) {
 		Effect e = new Effect("Slowed", duration) {
 			public void start(Creature creature) {
@@ -122,6 +136,34 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.slowedIcon);
+		return e;
+	}
+	public static Effect blind(int duration) {
+		Effect e = new Effect("Blind", duration) {
+			public void start(Creature creature) {
+				creature.modifyVisionRadius(-8);
+				creature.doAction("become blind");
+			}
+			public void end(Creature creature) {
+				creature.modifyVisionRadius(8);
+				creature.doAction("restore sight");
+			}
+		};
+		e.setImage(Loader.blindIcon);
+		return e;
+	}
+	public static Effect vulnerable(int duration, int strength) {
+		Effect e = new Effect("Vulnerable", duration) {
+			public void start(Creature creature) {
+				creature.modifyArmorValue(-strength);
+				creature.doAction("look vulnerable");
+			}
+			public void end(Creature creature) {
+				creature.modifyArmorValue(strength);
+				creature.doAction("look less vulnerable");
+			}
+		};
+		e.setImage(Loader.vulnerableIcon);
 		return e;
 	}
 	
@@ -152,5 +194,23 @@ public final class Effects {
 				}
 			}
 		};
+	}
+	public static Effect raging() {
+		Effect e = new Effect("Raging", 12) {
+			public void start(Creature creature) {
+				creature.modifyAttribute(Attribute.STR, 4);
+				creature.modifyAttackDelay(-3);
+				creature.doAction("go berserk");
+			}
+			public void end(Creature creature) {
+				creature.modifyAttribute(Attribute.STR, -4);
+				creature.modifyAttackDelay(3);
+				creature.doAction("calm down");
+				creature.addDelayedEffect(weak(10, 4));
+				creature.addDelayedEffect(slowed(10, 5));
+			}
+		};
+		e.setImage(Loader.ragingIcon);
+		return e;
 	}
 }

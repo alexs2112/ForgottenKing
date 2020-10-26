@@ -28,7 +28,18 @@ public class ClassSelection {
     public String descriptionText;
     private List<Tag> tags;
     public List<Tag> tags() { return tags; }
-    public void addTag(Tag t) { tags.add(t); }
+    public void addTag(Tag t) {
+    	if (tags  == null)
+    		tags = new ArrayList<Tag>();
+    	tags.add(t); 
+    }
+    private List<Ability> abilities;
+    public List<Ability> abilities() { return abilities; }
+    public void addAbility(Ability a) {
+    	if (abilities  == null)
+    		abilities = new ArrayList<Ability>();
+    	abilities.add(a); 
+    }
     
     
     /**
@@ -45,7 +56,6 @@ public class ClassSelection {
     	this.attack = attack;
     	this.damageMin = damageMin;
     	this.damageMax = damageMax;
-    	tags = new ArrayList<Tag>();
     }
     
     public void setAttributes(int STR, int DEX, int INT) {

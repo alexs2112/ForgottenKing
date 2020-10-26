@@ -3,6 +3,7 @@ package screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import assembly.Abilities;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -11,7 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
+import creatures.Ability;
 import creatures.ClassSelection;
 import creatures.Tag;
 
@@ -24,9 +25,11 @@ public class CharacterSelectionScreen extends Screen {
 	private Image adventurerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer-96.gif"));
 	private Image fighterIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter-96.gif"));
 	private Image rangerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger-96.gif"));
+	private Image berserkerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/berserker-96.gif"));
 	private Image adventurerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer.gif"));
 	private Image fighterIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter.gif"));
 	private Image rangerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger.gif"));
+	private Image berserkerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/berserker.gif"));
 	
 	public CharacterSelectionScreen() {
 		font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
@@ -83,13 +86,23 @@ public class CharacterSelectionScreen extends Screen {
 		
 		writeWrapped(root, c.descriptionText, 426, 160, 520, font, Color.ANTIQUEWHITE);
 		
-		for (int i = 0; i < c.tags().size(); i++) {
-			Tag t = c.tags().get(i);
-			draw(root, Loader.perkBoxSmall, 440, 374 + 122*i);
-			if (t.icon() != null)
-				draw(root, t.icon(), 460, 394+122*i);
-			writeWrapped(root, t.text() + ": " + t.description(), 512, 416 + 122*i, 432, fontS, Color.ANTIQUEWHITE);
-		}
+		if (c.tags() != null)
+			for (int i = 0; i < c.tags().size(); i++) {
+				Tag t = c.tags().get(i);
+				draw(root, Loader.perkBoxSmall, 440, 374 + 122*i);
+				if (t.icon() != null)
+					draw(root, t.icon(), 460, 394+122*i);
+				writeWrapped(root, t.text() + ": " + t.description(), 512, 416 + 122*i, 432, fontS, Color.ANTIQUEWHITE);
+			}
+		if (c.abilities() != null)
+			for (int i = 0; i < c.abilities().size(); i++) {
+				int m = (i+c.tags().size());
+				Ability a = c.abilities().get(i);
+				draw(root, Loader.perkBoxSmall, 440, 374 + 122*m);
+				if (a.icon() != null)
+					draw(root, a.icon(), 460, 394+122*m);
+				writeWrapped(root, a.name() + ": " + a.description(), 512, 416 + 122*m, 432, fontS, Color.ANTIQUEWHITE);
+			}
 		
 		stage.setScene(scene);
 		stage.show();
@@ -97,7 +110,7 @@ public class CharacterSelectionScreen extends Screen {
 	
 	public Screen respondToUserInput(KeyEvent key) {
     	if (key.getCode().equals(KeyCode.DOWN))
-    		selection = Math.min(2, selection+1);
+    		selection = Math.min(classes.size()-1, selection+1);
     	if (key.getCode().equals(KeyCode.UP))
     		selection = Math.max(0, selection-1);
     	if (key.getCode().equals(KeyCode.ENTER))
@@ -110,6 +123,7 @@ public class CharacterSelectionScreen extends Screen {
 		classes.add(adventurer());
 		classes.add(fighter());
 		classes.add(ranger());
+		classes.add(berserker());
 	}
 	private ClassSelection adventurer() {
 		ClassSelection c = new ClassSelection(Tag.ADVENTURER, adventurerIconLarge, adventurerIcon, 22, 10, 0, 0, 1, 2);
@@ -133,6 +147,15 @@ public class CharacterSelectionScreen extends Screen {
 		c.setStats(1, 1, 2, 3, 2, 2);
 		c.descriptionText = "An accomplished ranger. Equipped with a dagger and shortbow, along with a small quiver of arrows, this character is quick on their toes with a marksmans eye.";
 		c.addTag(Tag.IMPROVED_CRITICAL);
+		return c;
+	}
+	private ClassSelection berserker() {
+		ClassSelection c = new ClassSelection(Tag.BERSERKER, berserkerIconLarge, berserkerIcon, 22, 10, 0, 0, 1, 2);
+		c.setAttributes(2, 0, 1);
+		c.setStats(2, 3, 2, 2, 1, 0);
+		c.descriptionText = "A raging barbarian. Equipped with only a handaxe and their undying rage, there is not much that can stop this character when they are angry.";
+		c.addTag(Tag.IMPROVED_CLEAVE);
+		c.addAbility(Abilities.rage());
 		return c;
 	}
 	

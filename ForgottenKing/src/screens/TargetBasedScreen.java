@@ -42,6 +42,8 @@ public class TargetBasedScreen extends Screen {
 			handleProjectile();
 		else if (targetType == TargetType.BEAM)
 			handleBeam();
+		else if (targetType == TargetType.SELF)
+			handleSelf();
 		else
 			handleTarget();
 	    displayTargets();
@@ -89,6 +91,13 @@ public class TargetBasedScreen extends Screen {
 			addTarget(p);
 		}
 		creatures.remove(player);
+	}
+	private void handleSelf() {
+		targets = new ArrayList<Point>();
+		creatures = new ArrayList<Creature>();
+		addTarget(new Point(player.x, player.y, player.z));
+		if (targets.size() > 1)
+			creatures.remove(player);
 	}
 	private boolean inRange(Point p, Line line) {
 		if (range == 0)

@@ -19,7 +19,7 @@ public class Player extends Creature {
     private Item lastThrown;
     public Item lastThrown() { return lastThrown; }
     public void throwItem(Item item, int wx, int wy, int wz) {
-    	lastThrown = item;
+    	this.lastThrown = item;
     	super.throwItem(item, wx, wy, wz);
     }
 	

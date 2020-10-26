@@ -6,3 +6,7 @@ Burning
 Strong
 Slowed
 Glowing
+Weak
+Blind
+Vulnerable
+Raging

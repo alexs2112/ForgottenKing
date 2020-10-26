@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import creatures.Ability;
+import creatures.Attribute;
+import creatures.Stat;
 import creatures.Type;
 import javafx.scene.image.Image;
 import spells.Effect;
@@ -32,7 +35,6 @@ public class Item {
 		this.image = image;
 		this.type = type;
 		damage = new int[2];
-		thrownDamage = new int[2];
 		if (type == ItemType.ARMOR ||
 			type == ItemType.RING ||
 			type == ItemType.AMULET ||
@@ -62,6 +64,8 @@ public class Item {
 	private int[] thrownDamage;
 	public int[] thrownDamage() { return thrownDamage; }
 	public int getThrownDamage() {
+		if (thrownDamage == null)
+			return 0;
 		return Math.max(((int)(Math.random() * (thrownDamage[1] - thrownDamage[0])) + thrownDamage[0]),0);
 	}
 	public void setThrownDamage(int min, int max) {
@@ -163,6 +167,41 @@ public class Item {
 	}
 	
 	/**
+	 * Abilities
+	 */
+	private Ability ability;
+	public Ability ability() { return ability; }
+	public void setAbility(Ability a) { ability = a; }
+	
+	/**
+	 * Attributes and Stats
+	 */
+	private HashMap<Attribute, Integer> attributes;
+	public HashMap<Attribute, Integer> attributes() { return attributes;}
+	public void setAttribute(Attribute a, int i) {
+		if (attributes == null)
+			attributes = new HashMap<Attribute, Integer>();
+		attributes.put(a, i);
+	}
+	public int get(Attribute a) {
+		if (attributes == null || !attributes.containsKey(a))
+			return 0;
+		return attributes.get(a); 
+	}
+	private HashMap<Stat, Integer> stats;
+	public HashMap<Stat, Integer> stats() { return stats; }
+	public void setStat(Stat s, int i) {
+		if (stats == null)
+			stats = new HashMap<Stat, Integer>();
+		stats.put(s, i);
+	}
+	public int get(Stat s) { 
+		if (stats == null || !stats.containsKey(s))
+			return 0;
+		return stats.get(s); 
+	}
+	
+	/**
 	 * String Handling
 	 */
 	public String shortDesc() {
@@ -184,6 +223,14 @@ public class Item {
 		}
 		if (armorValue != 0)
 			x += " AC+" + armorValue;
+		if (type == ItemType.RING || type == ItemType.AMULET) {
+			if (attributes != null)
+				for (Attribute a : attributes.keySet())
+					x += a.name() +"+"+ attributes.get(a);
+			if (stats != null)
+				for (Stat s : stats.keySet())
+					x += s.text() +"+"+ stats.get(s);
+		}
 		return x.trim();
 	}
 

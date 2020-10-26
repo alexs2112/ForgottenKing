@@ -15,8 +15,7 @@ public abstract class InventoryBasedScreen extends Screen {
 	protected Player player;
 	protected Inventory inventory;
 	private String letters;
-	private int select;
-	protected Item startAt;
+	protected int select;
 	protected abstract String getVerb();
     protected abstract boolean isAcceptable(Item item);
     protected abstract Screen use(Item item);
@@ -32,10 +31,6 @@ public abstract class InventoryBasedScreen extends Screen {
     }
     private void init() {
     	this.letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    	if (startAt != null) {
-    		select = inventory.indexOf(startAt);
-    	} else
-    		select = -1;
     }
     
     public void displayOutput(Stage stage) {

@@ -1,11 +1,8 @@
 package assembly;
 
-import creatures.Creature;
-import creatures.Type;
 import items.Item;
 import items.ItemType;
 import javafx.scene.image.Image;
-import spells.Effect;
 import world.World;
 
 public class BookFactory {
@@ -14,6 +11,7 @@ public class BookFactory {
 	private Image booksFull = new Image(this.getClass().getResourceAsStream("resources/items/books_full.png"));
 	private Image vitalityIcon = tools.ImageCrop.cropImage(booksFull, 64, 32, 32, 32);
 	private Image flamesIcon = tools.ImageCrop.cropImage(booksFull, 0, 0, 32, 32);
+	private Image maledictionsIcon = tools.ImageCrop.cropImage(booksFull, 128, 96, 32, 32);
 
 	public BookFactory(World world) {
 		this.world = world;
@@ -40,6 +38,16 @@ public class BookFactory {
 		item.addSpell(Spells.innerGlow());
 		item.addSpell(Spells.moltenFire());
 		item.setDescription("A large dark book, the cover is coated in ash and the pages feel brittle to the touch.");
+		world.addAtEmptyLocation(item, z);
+		return item;
+	}
+	
+	public Item newBookOfMaledictions(int z) {
+		Item item = new Item("Book of Maledictions", ItemType.BOOK, maledictionsIcon);
+		item.addSpell(Spells.weaken());
+		item.addSpell(Spells.innerGlow());
+		item.addSpell(Spells.soulSiphon());
+		item.setDescription("This book is quite plain, however it is chill to the touch and light seems to fade around it.");
 		world.addAtEmptyLocation(item, z);
 		return item;
 	}

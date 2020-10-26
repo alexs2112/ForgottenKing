@@ -13,6 +13,7 @@ public enum Tag {
 	ADVENTURER("Adventurer", "Your chosen character"),
 	RANGER("Ranger", "Your chosen character"),
 	FIGHTER("Fighter", "Your chosen character"),
+	BERSERKER("Berserker", "Your chosen character"),
 	
 	//Creature Classes
 	/*
@@ -31,6 +32,7 @@ public enum Tag {
 	QUICK_LEARNER("Quick Learner", "You gain an additional 10% experience from all actions.", Loader.quickLearnerIcon),	//Starting perk for the adventurer
 	FASTENED_ARMOR("Fastened Armor", "Your armor blocks an extra 8% of physical damage you take.", Loader.fastenArmorIcon), //Starting perk for the fighter
 	IMPROVED_CRITICAL("Improved Critical", "Your critical chance is increased by 10%.", Loader.improvedCriticalIcon), 		//Starting perk for the ranger
+	IMPROVED_CLEAVE("Improved Cleave", "Your cleaving damage is increased to 80%, instead of 50%.", Loader.improvedCleaveIcon), //Starting perk for the berserker
 	DEADLY_CRITICAL("Deadly Critical", "You deal an additional DEX-Accuracy damage on critical hits.", Loader.deadlyCriticalIcon),
 	STRONG_ARROWS("Strong Arrows", "The chance for your fired arrows to break is reduced by 12%.", Loader.strongArrowsIcon),
 	LIGHT_ARMOR_PROFICIENCY("Light Armor Proficiency", "Equipping items with the Light Armor property increases your evasion by 2.", Loader.lightArmorProficiencyIcon),

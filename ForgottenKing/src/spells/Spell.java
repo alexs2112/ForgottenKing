@@ -71,6 +71,8 @@ public class Spell {
 	private String useText;
 	public String useText() { return useText; }
 	public void setUseText(String x) { useText = x; }
+	
+	public void casterEffect(Creature caster) { }	//To be overridden
 
 	public Spell(String name, int cost, int level) {
 		this.name = name;

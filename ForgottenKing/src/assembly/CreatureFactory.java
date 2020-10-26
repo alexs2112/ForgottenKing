@@ -186,7 +186,7 @@ public class CreatureFactory {
 	    homunculus.addSpell(Spells.homunculiSlow());
 	    homunculus.setDescription("The creation of a wizard, it wanders the dungeon for a purpose. Its bright blue eyes seem to cloud your vision and drain your energy.");
 	    if (z > 0 && Math.random()*100 < 40)
-	    	homunculus.addEquipment(itemFactory.equipment().newStaff(-1));
+	    	homunculus.addEquipment(itemFactory.equipment().newSpear(-1));
 	    world.addAtEmptyLocation(homunculus, z);
 	    return homunculus;
 	}
@@ -194,7 +194,7 @@ public class CreatureFactory {
 		Creature lizard = new Creature(world, "Lizard Fighter",3,110, 23, 9, 2, 2, 1, 3, lizardFighterIcon);
 		new BasicAI(lizard, player);
 		lizard.setAttributes(2,1,1);
-	    lizard.setStats(3,3,2,3,2,1);
+	    lizard.setStats(3,3,2,2,2,1);
 	    lizard.setDescription("A common foot soldier of the Lizardfolk. What they lose in intelligence they make up for with their strength and willingness to follow orders.");
 	    world.addAtEmptyLocation(lizard, z);
 	    lizard.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
@@ -204,7 +204,7 @@ public class CreatureFactory {
 		Creature lizard = new Creature(world, "Lizard Hunter",3,100, 19,10,0,3,2,4, lizardHunterIcon);
 		new BasicAI(lizard, player);
 		lizard.setAttributes(1,2,1);
-	    lizard.setStats(3,2,3,3,2,2);
+	    lizard.setStats(2,2,3,3,2,2);
 	    lizard.setDescription("A lizardfolk armed and trained with a bow. Quite deadly at a range, however noticably weaker when they are forced to fight hand to hand.");
 	    world.addAtEmptyLocation(lizard, z);
 	    lizard.addEquipment(itemFactory.equipment().newShortbow(-1));
@@ -214,45 +214,44 @@ public class CreatureFactory {
 	}
 	public Creature newLizardHexer(int z) {
 		Creature lizard = new Creature(world, "Lizard Hexer",4,135, 24,9,2,4,4,6, lizardHexerIcon);
-		new BasicAI(lizard, player);
-		//new SpellcastingAI(lizard, player, 60);
-		lizard.setAttributes(1,2,3);
-	    lizard.setStats(2,2,3,2,4,4);
-	    lizard.setDescription("");
+		new SpellcastingAI(lizard, player, 60);
+		lizard.setAttributes(1,2,2);
+	    lizard.setStats(1,1,3,2,4,4);
+	    lizard.setDescription("A lizardfolk trained in the dark arts, they are capable of casting powerful hexes against you and draining your soul.");
 	    world.addAtEmptyLocation(lizard, z);
-	    //lizard.addTag(Tag.SPELLCASTER);
-	    //Add spells
-	    //Blind
-	    //Weaken
-	    //Siphon Soul
-	    //25% chance to be holding a spellbook containing those DARK spells
+	    lizard.addTag(Tag.SPELLCASTER);
+	    lizard.setMana(20, 20);
+	    lizard.addSpell(Spells.weaken());
+	    lizard.addSpell(Spells.blind());
+	    lizard.addSpell(Spells.soulSiphon());
+	    if (Math.random()*100 < 25)
+	    	lizard.addItemToInventory(itemFactory.book().newBookOfMaledictions(-1));
 	    return lizard;
 	}
 	public Creature newLizardShadowblade(int z) {
 		Creature lizard = new Creature(world, "Lizard Shadowblade",4,140, 24,10,2,4,1,3, lizardShadowbladeIcon);
-		new BasicAI(lizard, player);
-		//new SpellcastingAI(lizard, player, 40);
-		lizard.setAttributes(1,3,2);
-	    lizard.setStats(2,2,3,4,2,3);
+		new SpellcastingAI(lizard, player, 40);
+		lizard.setAttributes(1,2,2);
+	    lizard.setStats(1,2,3,3,2,3);
 	    lizard.modifyAttackDelay(-3);
 	    lizard.modifyMovementDelay(-1);
-	    lizard.setDescription("");
+	    lizard.setDescription("Trained as an elite lizardfolk, the shadowblades are an order of lizard assassins armed with deadly daggers and hexing spells.");
 	    world.addAtEmptyLocation(lizard, z);
 	    lizard.addEquipment(itemFactory.equipment().newDagger(-1));
 	    lizard.addEquipment(itemFactory.equipment().newLeatherArmor(-1));
-	    //lizard.addTag(Tag.SPELLCASTER);
-	    //Add spells
-	    //Vulnerable
-	    //Slow
-	    //25% chance to be holding a spellbook containing those DARK spells
+	    lizard.addTag(Tag.SPELLCASTER);
+	    lizard.addTag(Tag.IMPROVED_CRITICAL);
+	    lizard.setMana(12, 12);
+	    lizard.addSpell(Spells.slow(3, 5, 5));
+	    lizard.addSpell(Spells.vulnerable());
 	    return lizard;
 	}
 	public Creature newLizardGuardian(int z) {
 		Creature lizard = new Creature(world, "Lizard Guardian",5,185, 30,7,2,3,2,4, lizardGuardianIcon);
 		new BasicAI(lizard, player);
-		lizard.setAttributes(3,2,1);
-	    lizard.setStats(4,3,2,3,4,2);
-	    lizard.setDescription("");
+		lizard.setAttributes(3,1,1);
+	    lizard.setStats(4,3,1,2,3,2);
+	    lizard.setDescription("A powerful and high ranking lizardfolk trained in the use of an impressive arsenal of arms and armour, they serve to guard the most important of their people. Why are they in the dungeon?");
 	    world.addAtEmptyLocation(lizard, z);
 	    lizard.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
 	    lizard.addEquipment(itemFactory.equipment().newStuddedLeatherArmor(-1));
