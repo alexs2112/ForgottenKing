@@ -11,7 +11,7 @@ public class SpellcastingAI extends BasicAI {
 		this.castChance = castChance;
 	}
 	
-	public void onUpdate() {
+	protected void action() {
 		if (Math.random()*100 < castChance && creature.spells() != null && creature.spells().size() > 0) {
 			//cast a randomly selected spell
 			Spell s = creature.spells().get((int)(Math.random()*creature.spells().size()));
@@ -20,7 +20,7 @@ public class SpellcastingAI extends BasicAI {
 				return;
 			}
 		}
-		action();
+		super.action();
 	}
 
 }

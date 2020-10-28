@@ -36,6 +36,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.healingIcon);
+		e.setStrength(amount);
 		return e;
 	}
 	public static Effect mana(int amount) {
@@ -73,6 +74,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.poisonedIcon);
+		e.setStrength(strength);
 		return e;
 	}
 	public static Effect burning(int duration, int strength) {
@@ -92,6 +94,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.burningIcon);
+		e.setStrength(strength);
 		return e;
 	}
 	public static Effect strong(int duration, int amount) {
@@ -106,6 +109,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.strongIcon);
+		e.setStrength(amount);
 		return e;
 	}
 	public static Effect weak(int duration, int amount) {
@@ -120,6 +124,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.weakIcon);
+		e.setStrength(amount);
 		return e;
 	}
 	public static Effect slowed(int duration, int amount) {
@@ -136,16 +141,75 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.slowedIcon);
+		e.setStrength(amount);
+		return e;
+	}
+	public static Effect shocked(int duration) {
+		Effect e = new Effect("Shocked", duration) {
+			public void start(Creature creature) {
+				creature.modifyMovementDelay(10);
+				creature.modifyAttackDelay(10);
+				creature.doAction("get shocked");
+			}
+			public void end(Creature creature) {
+				creature.modifyMovementDelay(-10);
+				creature.modifyAttackDelay(-10);
+			}
+		};
+		e.setImage(Loader.shockedIcon);
+		return e;
+	}
+	public static Effect swift(int duration, int amount) {
+		Effect e = new Effect("Swift", duration) {
+			public void start(Creature creature) {
+				creature.modifyMovementDelay(-amount);
+				creature.doAction("move faster");
+			}
+			public void end(Creature creature) {
+				creature.modifyMovementDelay(amount);
+				creature.doAction("move slower");
+			}
+		};
+		e.setImage(Loader.swiftIcon);
+		e.setStrength(amount);
+		return e;
+	}
+	public static Effect stun(int duration) {
+		Effect e = new Effect("Stunned", duration) {
+			public void start(Creature creature) {
+				creature.modifyStunAmount(1);
+				creature.doAction("become stunned");
+			}
+			public void end(Creature creature) {
+				creature.modifyStunAmount(-1);
+				creature.doAction("shake off the stun");
+			}
+		};
+		e.setImage(Loader.stunnedIcon);
+		return e;
+	}
+	public static Effect confused(int duration) {
+		Effect e = new Effect("Confused", duration) {
+			public void start(Creature creature) {
+				creature.modifyConfusedAmount(1);
+				creature.doAction("become confused");
+			}
+			public void end(Creature creature) {
+				creature.modifyConfusedAmount(-1);
+				creature.doAction("shake off the confusion");
+			}
+		};
+		e.setImage(Loader.confusedIcon);
 		return e;
 	}
 	public static Effect blind(int duration) {
 		Effect e = new Effect("Blind", duration) {
 			public void start(Creature creature) {
-				creature.modifyVisionRadius(-8);
+				creature.modifyVisionRadius(-9);
 				creature.doAction("become blind");
 			}
 			public void end(Creature creature) {
-				creature.modifyVisionRadius(8);
+				creature.modifyVisionRadius(9);
 				creature.doAction("restore sight");
 			}
 		};
@@ -164,6 +228,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.vulnerableIcon);
+		e.setStrength(strength);
 		return e;
 	}
 	
@@ -179,6 +244,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.glowingIcon);
+		e.setStrength(amount);
 		return e;
 	}
 	public static Effect curePoison() {
@@ -196,7 +262,7 @@ public final class Effects {
 		};
 	}
 	public static Effect raging() {
-		Effect e = new Effect("Raging", 12) {
+		Effect e = new Effect("Raging", 15) {
 			public void start(Creature creature) {
 				creature.modifyAttribute(Attribute.STR, 4);
 				creature.modifyAttackDelay(-3);
@@ -211,6 +277,24 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.ragingIcon);
+		return e;
+	}
+	public static Effect armorOfFrost() {
+		Effect e = new Effect("Frost Armor", 12) {
+			public void start(Creature creature) {
+				creature.modifyAttackDelay(2);
+				creature.modifyMovementDelay(2);
+				creature.modifyArmorValue(3);
+				creature.doAction("coat with ice");
+			}
+			public void end(Creature creature) {
+				creature.modifyAttackDelay(-2);
+				creature.modifyMovementDelay(-2);
+				creature.modifyArmorValue(-3);
+				creature.doAction("lose the icy shell");
+			}
+		};
+		e.setImage(Loader.armorOfFrostIcon);
 		return e;
 	}
 }

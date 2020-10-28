@@ -1,28 +1,31 @@
 package screens;
 
-import creatures.Creature;
 import creatures.Magic;
-import creatures.Stat;
+import creatures.Player;
 import creatures.Type;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import spells.Spell;
 
 public class MagicScreen extends Screen {
+	private Player player;
 	private Magic magic;
 	private Font font;
+	private Font fontS;
 	private String letters;
 	private char selection;
 	private int[] floatingValues;
 	private Type[] types;
 
-	public MagicScreen(Creature player) {
+	public MagicScreen(Player player) {
 		this.magic = player.magic();
+		this.player = player;
 		font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
+		fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
 		letters = "abcdef";
 		selection = '-';
 		floatingValues = new int[6];
@@ -39,8 +42,8 @@ public class MagicScreen extends Screen {
 		root = new Group();
 		draw(root, Loader.screenBorder, 0, 0);
 		int x = 32;
-		int y = 48;
-		write(root, "Allocate Spell Points", x, y+=32, font, Color.WHITE);
+		int y = 80;
+		write(root, "Allocate Spell Points", x, y, font, Color.WHITE);
 		
 		y+= 12;
 		if (selection != '-')	//Display which type the player is selecting
@@ -65,7 +68,19 @@ public class MagicScreen extends Screen {
 		}
 		if (magic.floatingPoints() > 0) {
 			draw(root, Loader.spellPointsBox, x, y += 452);
-			write(root, "[" + magic.floatingPoints() + "] Free Points", x + 14, y += 42, font, Color.DARKBLUE);
+			write(root, "[" + magic.floatingPoints() + "] Free Points", x + 14, y += 42, font, Color.DEEPSKYBLUE);
+		}
+		
+		x = 682;
+		y = 80;
+		write(root, "Memorized Spells:",x,y, font, Color.WHITE);
+		x+=18;
+		for (int i = 0; i < player.spells().size(); i++) {
+			Spell s = player.spells().get(i);
+			Color c = Color.WHITE;
+			if (magic.get(s.type()) < s.level())
+				c = Color.DARKGREY;
+			write(root, s.name() + " [" + s.type() + ":" + s.level()+"]", x, y+=22, fontS, c);
 		}
 	}
 	

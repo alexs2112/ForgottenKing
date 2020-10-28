@@ -3,7 +3,6 @@ package screens;
 import java.util.ArrayList;
 import java.util.List;
 
-import assembly.Abilities;
 import assembly.CreatureFactory;
 import assembly.ItemFactory;
 import creatures.Ability;
@@ -38,7 +37,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = true;
+    private boolean devMode = false;
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
@@ -48,6 +47,7 @@ public class PlayScreen extends Screen {
         fov = new FieldOfView(world);
         itemFactory = new ItemFactory(world);
         creatureFactory = new CreatureFactory(world, itemFactory);
+        itemFactory.setCreatureFactory(creatureFactory);
         setUpPlayer(character);
         populate();
     }
@@ -74,7 +74,7 @@ public class PlayScreen extends Screen {
         	player.addEquipment(itemFactory.trinket().newDevRing(-1));
         	player.addEquipment(itemFactory.equipment().newDevSword(-1));
         	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));*/
-        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
+			player.addItemToInventory(itemFactory.book().newBookOfChills(-1));
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -163,6 +163,13 @@ public class PlayScreen extends Screen {
     		c = key.getText().charAt(0);
     	if (subscreen != null) {
     		subscreen = subscreen.respondToUserInput(key);
+    	} else if (player.isStunned()) {
+    		endAfterUserInput = true;
+    		player.notify("You are stunned!");
+    	} else if (player.isConfused()) {
+    		endAfterUserInput = true;
+    		player.notify("You are confused!");
+    		player.confusedWander();
     	} else {
     		if (code.equals(KeyCode.LEFT) || c == 'h' || code.equals(KeyCode.NUMPAD4)) { player.moveBy(-1,0,0); }
     		else if (code.equals(KeyCode.RIGHT) || c == 'l' || code.equals(KeyCode.NUMPAD6)) { player.moveBy(1,0,0); }
@@ -261,6 +268,9 @@ public class PlayScreen extends Screen {
     		else
     			endAfterUserInput = false;
     	}
+    	//This is a gimpy way to fix exiting out of menus
+    	if (code.equals(KeyCode.ESCAPE))
+    		endAfterUserInput = false;
     	
     	
 		
@@ -383,8 +393,8 @@ public class PlayScreen extends Screen {
         	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
         }
         if (player.perkPoints() > 0) {
-        	String s = "[p]: "+player.magic().floatingPoints()+" Perk Point";
-        	if (player.magic().floatingPoints() > 1)
+        	String s = "[p]: "+player.perkPoints()+" Perk Point";
+        	if (player.perkPoints() > 1)
         		s += "s";
         	s += " Available!";
         	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);

@@ -38,7 +38,10 @@ public class ReadSpellbookScreen extends Screen {
         for (int i = 0; i < spells.size(); i++) {
         	Spell spell = spells.get(i);
         	String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.cost() + ") [" + spell.type().text() + ":" + spell.level() + "]";
-        	write(root, line, x, 32*i + y + 32, font, Color.ANTIQUEWHITE);
+        	Color c = Color.WHITE;
+        	if (player.magic().get(spell.type()) < spell.level())
+        		c = Color.GREY;
+        	write(root, line, x, 32*i + y + 32, font, c);
         }
     }
     

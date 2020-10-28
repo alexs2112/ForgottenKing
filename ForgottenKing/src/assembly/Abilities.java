@@ -7,7 +7,7 @@ import spells.TargetType;
 
 public class Abilities {
 	public static Ability rage() {
-		Ability a = new Ability("Rage", null, 20) {
+		Ability a = new Ability("Rage", null, 35) {
 			public void activate(Creature owner, Creature other) {
 				if (owner.hasItemTag(ItemTag.MEDIUMARMOR) || owner.hasItemTag(ItemTag.HEAVYARMOR)) {
 					owner.notify("You cannot activate this ability while wearing medium or heavy armor.");

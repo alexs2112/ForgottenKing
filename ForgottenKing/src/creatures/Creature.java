@@ -470,9 +470,12 @@ public class Creature {
 		if (weapon() != null && weapon().is(ItemTag.CLEAVING)) {
 			Point target = new Point(other.x, other.y, other.z);
 			List<Point> neighbours = new Point(x, y, z).neighbors8();
+			double value = 0.5;
+			if (is(Tag.IMPROVED_CLEAVE))
+				value = 0.8;
 			for (Point t : target.neighbors8()) {
 				if (neighbours.contains(t) && creature(t.x,t.y,t.z) != null)
-					basicAttack(creature(t.x,t.y,t.z), weapon(), getCurrentAttackValue(), (getDamageValue() + getCurrentDamageMod())/2, "attack the " + creature(t.x,t.y,t.z).name());
+					basicAttack(creature(t.x,t.y,t.z), weapon(), getCurrentAttackValue(), (int)((getDamageValue() + getCurrentDamageMod())*value), "attack the " + creature(t.x,t.y,t.z).name());
 			}
 		}
 	}
@@ -594,9 +597,10 @@ public class Creature {
 		if (items == null) {
 			notify("There is nothing here");
 		}
+		/*
 		if (!items.contains(item)) {
 			notify("The " + item.name() + " isn't here!");
-		}
+		}*/
 		if (inventory.isFull()) {
 			notify("Your inventory is full");
 		}
@@ -757,7 +761,7 @@ public class Creature {
     /**
 	 * Spells
 	 */
-	private ArrayList<Spell> spells;
+	protected ArrayList<Spell> spells;
 	public ArrayList<Spell> spells() { return spells; }
 	public void addSpell(Spell newSpell) {
 		if (spells == null)
@@ -874,7 +878,14 @@ public class Creature {
         for (Effect e : effects)
         	//If you get an effect with the same name as an effect already afflicting you, add its duration and remove the effect
         	if (e.name().equals(newEffect.name())) {
-        		e.modifyDuration(newEffect.duration());
+//        		if (newEffect.strength() > e.strength()) {
+//        			int t = e.duration();					This is really broken right now
+//        			//e = newEffect;						It technically works, just if you buff up it doesnt
+//        			effects.remove(e);						add the difference to the buff at the start, so the end
+//        			effects.add(newEffect);					still reduces you by the full amount of a greater value
+//        			newEffect.modifyDuration(t);
+//        		} else
+        			e.modifyDuration(newEffect.duration());
         		return;
         	}
         newEffect.start(this);
@@ -911,7 +922,7 @@ public class Creature {
 		regenerate();
     	updateEffects();
     	updateAbilities();
-        ai.onUpdate();  
+    	ai.onUpdate();  
     }
 	private List<Effect> effectsOnHit;
 	public List<Effect> effectsOnHit() {
@@ -931,6 +942,13 @@ public class Creature {
 		effectsOnHit.add(e);
 		e.setOwner(this);
 	}
+	private int stunAmount;		//The amount of times the stun has been placed, in case you get stunned multiple times
+	public void modifyStunAmount(int x) { stunAmount += x; }
+	public boolean isStunned() { return stunAmount > 0; }
+	private int confusedAmount;
+	public void modifyConfusedAmount(int x) { confusedAmount += x; }
+	public boolean isConfused() { return confusedAmount > 0; }
+	public void confusedWander() { ai.confusedWander(); }
 	
 	/**
 	 * Tags

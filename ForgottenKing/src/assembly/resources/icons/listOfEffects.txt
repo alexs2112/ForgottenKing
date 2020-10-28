@@ -10,3 +10,9 @@ Weak
 Blind
 Vulnerable
 Raging
+
+Armor of Frost
+Shocked
+Swift
+Stunned
+Confused

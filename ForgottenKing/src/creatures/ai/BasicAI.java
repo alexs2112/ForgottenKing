@@ -12,10 +12,6 @@ public class BasicAI extends CreatureAI {
 		this.player = player;
 	}
 	
-	public void onUpdate() {
-		action();
-	}
-	
 	protected void action() {
 		//Make the creatures follow the player around so they dont lose interest
 		if (creature.canSee(player.x, player.y, player.z))

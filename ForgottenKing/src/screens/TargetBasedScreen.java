@@ -124,8 +124,9 @@ public class TargetBasedScreen extends Screen {
 					!(player.canSee(p.x+wx, p.y+wy, player.z)))
 					continue;
 				Point n = new Point(wx+p.x, wy+p.y, p.z);
-				for (Point temp : targets) {
-					if (temp.equals(n))
+				List<Point> temp = new ArrayList<Point>(targets);
+				for (Point t : temp) {
+					if (t.equals(n))
 						targets.remove(n);
 				}
 				targets.add(n);

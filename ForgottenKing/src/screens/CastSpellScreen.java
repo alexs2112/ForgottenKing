@@ -3,6 +3,7 @@ package screens;
 import creatures.Creature;
 import javafx.scene.Group;
 import spells.Spell;
+import spells.TargetType;
 
 public class CastSpellScreen extends TargetBasedScreen {
 	private Spell spell;
@@ -13,6 +14,10 @@ public class CastSpellScreen extends TargetBasedScreen {
 		this.targetType = spell.targetType();
 		this.spellRadius = spell.radius();
 		this.range = spell.range();
+		if (spell.targetType() != TargetType.SELF) {
+			x = player.getAutoTarget().x - player.x;
+			y = player.getAutoTarget().y - player.y;
+		}
 	}
 	
 	public Screen selectWorldCoordinate(){

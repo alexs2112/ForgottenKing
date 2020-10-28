@@ -19,6 +19,9 @@ public class ItemFactory {
 	public BookFactory book() { return book; }
 	public TrinketFactory trinket() { return trinket; }
 	public AmmoFactory ammo() { return ammo; }
+	public void setCreatureFactory(CreatureFactory f) { 
+		book.setCreatureFactory(f);
+	}	//For summons and stuff
 
 	public ItemFactory(World world) {
 		this.world = world;

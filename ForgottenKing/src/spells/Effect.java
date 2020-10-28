@@ -13,6 +13,9 @@ public class Effect implements Cloneable {
 	private Image image;
 	public Image image() { return image; }
 	public void setImage(Image x) { image = x; }
+	private int strength;
+	public int strength() { return strength; }
+	public void setStrength(int x) { strength = x; }
 	
 	public boolean isDone() { return duration < 1; }
 

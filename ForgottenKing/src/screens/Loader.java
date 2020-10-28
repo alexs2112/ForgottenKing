@@ -109,4 +109,5 @@ public final class Loader {
 	public static Image erraticIcon = ImageCrop.cropImage(tagsFull, 32, 0, 32, 32);
 	public static Image venomousIcon = ImageCrop.cropImage(tagsFull, 64, 0, 32, 32);
 	public static Image undeadIcon = ImageCrop.cropImage(tagsFull, 96, 0, 32, 32);
+	public static Image allyIcon = ImageCrop.cropImage(tagsFull, 128, 0, 32, 32);
 }

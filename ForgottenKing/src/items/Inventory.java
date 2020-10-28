@@ -114,8 +114,12 @@ public class Inventory {
 				if (quantity[i] > 1)
 					line += quantity[i] + " ";
 				line += items[i].name();
-				if (quantity[i] > 1)
-	        		line += "s";
+				if (quantity[i] > 1) {
+					if (line.contains(" of "))
+						line = line.replaceAll(" of ", "s of ");
+					else
+						line += "s";
+				}
 				line += ", ";
 			}
 		return line.substring(0,line.length()-2);

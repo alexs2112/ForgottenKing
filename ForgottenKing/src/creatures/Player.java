@@ -1,12 +1,16 @@
 package creatures;
 
+import java.util.ArrayList;
+
 import items.Item;
 import javafx.scene.image.Image;
+import spells.Spell;
 import world.World;
 
 public class Player extends Creature {
     public Player(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Image image) {
     	super(world,name,level,xp,hp,evasion,armorValue,baseAttackValue,baseDamageMin,baseDamageMax,image);
+    	spells = new ArrayList<Spell>();
     }
     
     private int perkPoints;
@@ -35,7 +39,7 @@ public class Player extends Creature {
     		for (int y = this.y - visionRadius(); y < this.y + visionRadius(); y++) {
     			if (x < 0 || x >= world().width() || y < 0 || y >= world().height())
     				continue;
-    			if (creature(x, y, z) != null && creature(x,y,z) != this)
+    			if (creature(x, y, z) != null && creature(x,y,z) != this && !creature(x,y,z).is(Tag.ALLY))
     				return true;
     		}
     	}

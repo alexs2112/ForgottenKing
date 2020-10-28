@@ -3,6 +3,7 @@ package creatures.ai;
 import java.util.List;
 
 import creatures.Creature;
+import creatures.Tag;
 import features.Feature;
 import items.Item;
 import items.ItemTag;
@@ -66,6 +67,12 @@ public class CreatureAI {
     		}
     	}
     }
+    public void confusedWander(){
+    	int mx = (int)(Math.random() * 3) - 1;
+    	int my = (int)(Math.random() * 3) - 1;
+    	creature.moveBy(mx, my, 0);
+    	return;
+    }
     
     public void moveTo(int x, int y) {
     	//List<Point> points = new PathFinder(creature, new Point(x,y,creature.z)).getPoints();
@@ -75,6 +82,21 @@ public class CreatureAI {
 //		int mx = points.get(0).x;
 //		int my = points.get(0).y;
 //		creature.moveTo(mx, my, creature.z);
+		int mx = points.get(0).x - creature.x;
+		int my = points.get(0).y - creature.y;
+		creature.moveBy(mx, my, 0);
+	}
+    
+    /**
+     * A method that makes an ally follow the player safely if they can see them, move towards the player but dont hit the player
+     */
+    public void followSafe(int x, int y) {
+    	List<Point> points = new Path(creature, x, y).points();
+		if (points == null || points.size() == 0)
+			return;
+		Creature c = creature.creature(points.get(0).x, points.get(0).y, creature.z);
+		if (c != null && (c.is(Tag.PLAYER) || c.is(Tag.ALLY)))
+			return;
 		int mx = points.get(0).x - creature.x;
 		int my = points.get(0).y - creature.y;
 		creature.moveBy(mx, my, 0);
@@ -132,7 +154,17 @@ public class CreatureAI {
 		return new Line(creature.x, creature.y, wx, wy).getPoints().size() <= range;
 	}
 	
-    public void onUpdate() { }
+    public void onUpdate() { 
+    	if (creature.isStunned())
+    		return;
+    	if (creature.isConfused()) {
+			confusedWander();
+			return;
+		}
+    	action();
+    }
     
     public void onNotify(String s) { }
+    
+    protected void action() { }
 }

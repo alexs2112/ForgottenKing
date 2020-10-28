@@ -2,6 +2,7 @@ package assembly;
 
 import java.util.List;
 
+import creatures.Ally;
 import creatures.ClassSelection;
 import creatures.Creature;
 import creatures.Player;
@@ -33,6 +34,8 @@ public class CreatureFactory {
 	private Image lizardShadowbladeIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_shadowblade.gif"));
 	private Image lizardGuardianIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_guardian.gif"));
 	private Image lizardPriestIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_priest.gif"));
+	
+	private Image simulacrumIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/simulacrum.gif"));
 	
 	public CreatureFactory(World world, ItemFactory itemFactory) {
 		this.world = world;
@@ -272,5 +275,20 @@ public class CreatureFactory {
 	    //STUN
 	    //25% chance to be holding a spellbook containing those LIGHT (and FIRE) spells
 	    return lizard;
+	}
+	
+	
+	/**
+	 * ALLIES
+	 */
+	public Creature newFriendlySimulacrum(int z) {
+		Ally simulacrum = new Ally(world, "Simulacrum",1, 0, 13, 9, 0, 2, 1, 3, simulacrumIcon);
+		new AllyAI(simulacrum, player);
+		simulacrum.setAttributes(1, 1, 1);
+		simulacrum.setStats(2, 2, 2, 2, 2, 2);
+		simulacrum.setDescription("A small humanoid being made purely of ice and elemental cold.");
+		simulacrum.addTag(Tag.ALLY);
+		world.addAtEmptyLocation(simulacrum, z);
+		return simulacrum;
 	}
 }

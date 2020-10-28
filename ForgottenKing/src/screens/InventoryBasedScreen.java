@@ -55,8 +55,13 @@ public abstract class InventoryBasedScreen extends Screen {
         	if (inventory.quantityOf(item) > 1)
         		line += inventory.quantityOf(item) + " ";
         	line += item.name();
-        	if (inventory.quantityOf(item) > 1)
-        		line += "s";
+        	if (inventory.quantityOf(item) > 1) {
+				if (line.contains(" of "))
+					line = line.replaceAll(" of ", "s of ");
+				else
+					line += "s";
+			}
+
         	Color equipColour = Color.WHITE;
             if (player != null && player.hasEquipped(item)) {
             	line += " (Equipped)";

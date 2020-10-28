@@ -23,6 +23,7 @@ public enum Tag {
 	SUPPORT("Support", ""),*/
 	
 	//Creature Behaviour Tags
+	ALLY("Ally", "This creature is friendly to you and will help you against your foes.", Loader.allyIcon),
 	SPELLCASTER("Spellcaster", "This creature is capable of casting spells against you.", Loader.spellcasterIcon),
 	ERRATIC("Erratic", "This creature moves in a random direction 40% of the time.", Loader.erraticIcon),
 	VENOMOUS("Venomous", "This creature has a chance to poison you when they hit you.", Loader.venomousIcon),
