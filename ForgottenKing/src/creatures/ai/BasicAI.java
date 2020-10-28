@@ -11,17 +11,10 @@ public class BasicAI extends CreatureAI {
 		super(creature);
 		this.player = player;
 	}
-	
+
 	protected void action() {
-		//Make the creatures follow the player around so they dont lose interest
 		if (creature.canSee(player.x, player.y, player.z))
 			lastSeenAt = new Point(player.x, player.y, player.z);
-		if (lastSeenAt != null && creature.x == lastSeenAt.x && creature.y == lastSeenAt.y && creature.z == lastSeenAt.z)
-			lastSeenAt = null;
-		else if (lastSeenAt != null && !creature.canSee(player.x, player.y, player.z)) {
-			moveTo(lastSeenAt.x, lastSeenAt.y);
-			return;
-		}
 		
 		//Erratic creatures randomly wander on their turn 40% of the time
 		if (creature.is(Tag.ERRATIC) && Math.random()*100 < 40) {
@@ -29,15 +22,48 @@ public class BasicAI extends CreatureAI {
 			return;
 		}
 		
-		
-		if (canRangedWeaponAttack(player))
-			creature.fireItem(creature.quiver(),player.x, player.y, player.z);
-		else if (canThrowAt(player))
-			creature.throwItem(getWeaponToThrow(), player.x, player.y, player.z);
-		else if (creature.canSee(player.x, player.y, player.z))
-			moveTo(player.x, player.y);
-		else
-			wander();
+		//If the ally can see an enemy, try to kill it
+		Creature c = getNearestEnemy();
+		if (c != null) {
+			if (canRangedWeaponAttack(c))
+				creature.fireItem(creature.quiver(), c.x, c.y, c.z);
+			else if (canThrowAt(c))
+				creature.throwItem(getWeaponToThrow(), c.x, c.y, c.z);
+			else if (creature.canSee(c.x, c.y, c.z))
+				moveTo(c.x, c.y);
+		} else {
+			//Make the creatures follow the player around so they dont lose interest
+			if (lastSeenAt != null && creature.x == lastSeenAt.x && creature.y == lastSeenAt.y && creature.z == lastSeenAt.z)
+				lastSeenAt = null;
+			else if (lastSeenAt != null && !creature.canSee(player.x, player.y, player.z)) {
+				moveTo(lastSeenAt.x, lastSeenAt.y);
+				return;
+			}
+		}
+	}
+	
+	public Creature getNearestEnemy() {
+		Creature nearest = null;
+		int distance = 100;
+		for (int x = creature.x - creature.visionRadius(); x < creature.x + creature.visionRadius(); x++) {
+			for (int y = creature.y - creature.visionRadius(); y < creature.y + creature.visionRadius(); y++) {
+				if (x < 0 || x >= creature.world().width() || y < 0 || y >= creature.world().height())
+					continue;
+				Creature c = creature.creature(x,y,creature.z);
+				if (c != null && c != creature && (c.is(Tag.PLAYER) || c.is(Tag.ALLY))) {
+					if (nearest == null) {
+						nearest = c;
+						distance = Math.max(Math.abs(x - c.x), Math.abs(y - c.y));
+						continue;
+					}
+					if (Math.max(Math.abs(x - c.x), Math.abs(y - c.y)) < distance) {
+						nearest = c;
+						distance = Math.max(Math.abs(x - c.x), Math.abs(y - c.y));
+					}
+				}
+			}
+		}
+		return nearest;
 	}
 
 }

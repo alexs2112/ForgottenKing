@@ -86,7 +86,7 @@ public final class Spells {
                     trials++;
                 }
                 while ((!caster.canEnter(caster.x+mx, caster.y+my, caster.z)
-                        && caster.canSee(caster.x+mx, caster.y+my, caster.z)) && trials <= 50);
+                        || !caster.canSee(caster.x+mx, caster.y+my, caster.z)) && trials < 50);
                 if (trials >= 50) {
                 	caster.notify("Your simulacrum failed to materialize!");
                 	return;

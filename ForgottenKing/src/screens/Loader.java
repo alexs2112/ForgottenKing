@@ -22,6 +22,10 @@ public final class Loader {
 	public static Image poisonedHealthBarThreeQuarter = ImageCrop.cropImage(healthBarIconFull, 32, 32, 32, 8);
 	public static Image poisonedHealthBarHalf = ImageCrop.cropImage(healthBarIconFull, 64, 32, 32, 8);
 	public static Image poisonedHealthBarQuarter = ImageCrop.cropImage(healthBarIconFull, 96, 32, 32, 8);
+	public static Image allyHealthBarFull = ImageCrop.cropImage(healthBarIconFull, 0, 16, 32, 8);
+	public static Image allyHealthBarThreeQuarter = ImageCrop.cropImage(healthBarIconFull, 32, 16, 32, 8);
+	public static Image allyHealthBarHalf = ImageCrop.cropImage(healthBarIconFull, 64, 16, 32, 8);
+	public static Image allyHealthBarQuarter = ImageCrop.cropImage(healthBarIconFull, 96, 16, 32, 8);
 
 	public static Image attributesFull = new Image(Screen.class.getResourceAsStream("resources/attributes.png"));
 	public static Image strengthIcon = ImageCrop.cropImage(attributesFull,0,0,32,32);

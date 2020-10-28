@@ -37,7 +37,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = false;
+    private boolean devMode = true;
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
@@ -413,18 +413,26 @@ public class PlayScreen extends Screen {
     	} if (creature.hp() > 4*creature.maxHP()/5) {
     		if (poisoned)
     			return Loader.poisonedHealthBarFull;
+    		if (creature.is(Tag.ALLY))
+    			return Loader.allyHealthBarFull;
     		return Loader.healthBarFull;
     	} else if (creature.hp() > 3 * (creature.maxHP()/5)) {
     		if (poisoned)
     			return Loader.poisonedHealthBarThreeQuarter;
+    		if (creature.is(Tag.ALLY))
+    			return Loader.allyHealthBarThreeQuarter;
     		return Loader.healthBarThreeQuarter;
     	} else if (creature.hp() > 1*creature.maxHP()/4) {
     		if (poisoned)
     			return Loader.poisonedHealthBarHalf;
+    		if (creature.is(Tag.ALLY))
+    			return Loader.allyHealthBarHalf;
     		return Loader.healthBarHalf;
     	} else {
     		if (poisoned)
     			return Loader.poisonedHealthBarQuarter;
+    		if (creature.is(Tag.ALLY))
+    			return Loader.allyHealthBarQuarter;
     		return Loader.healthBarQuarter;
     	}
     }

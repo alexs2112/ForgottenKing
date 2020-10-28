@@ -288,6 +288,7 @@ public class CreatureFactory {
 		simulacrum.setStats(2, 2, 2, 2, 2, 2);
 		simulacrum.setDescription("A small humanoid being made purely of ice and elemental cold.");
 		simulacrum.addTag(Tag.ALLY);
+		simulacrum.setTemporary(30);
 		world.addAtEmptyLocation(simulacrum, z);
 		return simulacrum;
 	}

@@ -297,4 +297,14 @@ public final class Effects {
 		e.setImage(Loader.armorOfFrostIcon);
 		return e;
 	}
+	
+	public static Effect temporarySummon(int duration) {
+		Effect e = new Effect("Temporary", duration) {
+			public void end(Creature creature) {
+				creature.doAction("crumble to dust");
+				creature.modifyHP(-creature.hp());
+			}
+		};
+		return e;
+	}
 }

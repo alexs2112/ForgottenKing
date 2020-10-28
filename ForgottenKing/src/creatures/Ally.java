@@ -1,5 +1,6 @@
 package creatures;
 
+import assembly.Effects;
 import javafx.scene.image.Image;
 import world.World;
 
@@ -7,6 +8,10 @@ public class Ally extends Creature {
 	public Ally(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Image image) {
     	super(world,name,level,xp,hp,evasion,armorValue,baseAttackValue,baseDamageMin,baseDamageMax,image);
     }
+	
+	public void setTemporary(int duration) {
+		this.addEffect(Effects.temporarySummon(duration));
+	}
 	
 	public Creature getNearestEnemy() {
 		Creature nearest = null;
