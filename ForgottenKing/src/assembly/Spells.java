@@ -13,7 +13,7 @@ public final class Spells {
 	public static Spell embers() {
 		Spell s = new Spell("Embers", 1, 1);
 		s.setType(Type.FIRE);
-		s.setDamage(2, 5);
+		s.setDamage(1, 4);
 		s.setTargetType(TargetType.PROJECTILE);
 		s.setRange(5);
 		return s;
@@ -21,7 +21,7 @@ public final class Spells {
 	public static Spell moltenFire() {
 		Spell s = new Spell("Molten Fire", 3, 2);
 		s.setType(Type.FIRE);
-		s.setDamage(1, 3);
+		s.setDamage(0, 2);
 		s.setEffect(Effects.burning(4, 3), 75);
 		s.setTargetType(TargetType.PROJECTILE);
 		s.setRange(4);
@@ -70,7 +70,7 @@ public final class Spells {
 		s.setType(Type.COLD);
 		s.setDamage(2, 5);
 		s.setTargetType(TargetType.PROJECTILE);
-		s.setEffect(Effects.slowed(3,3), 30);
+		s.setEffect(Effects.slowed(3,3), 50);
 		return s;
 	}
 	public static Spell summonSimulacrum(CreatureFactory f) {
@@ -95,10 +95,15 @@ public final class Spells {
                 	Creature c = f.newFriendlySimulacrum(caster.z);
                 	c.x = mx + caster.x;
                 	c.y = my + caster.y;
+                } else {
+                	Creature c = f.newSimulacrum(caster.z);
+                	c.x = mx + caster.x;
+                	c.y = my + caster.y;
                 }
 			}
 		};
 		s.setType(Type.COLD);
+		s.setTargetType(TargetType.SELF);
 		s.setUseText("summon a simulacrum");
 		return s;
 	}
@@ -133,7 +138,7 @@ public final class Spells {
 	public static Spell shockingTouch() {
 		Spell s = new Spell("Shocking Touch", 1, 1);
 		s.setType(Type.AIR);
-		s.setDamage(2, 5);
+		s.setDamage(1, 3);
 		s.setTargetType(TargetType.PROJECTILE);
 		s.setRange(1);
 		s.setEffect(Effects.shocked(2), 80);
@@ -175,6 +180,27 @@ public final class Spells {
 		s.setTargetType(TargetType.SELF);
 		return s;
 	}
+	public static Spell whirlwind() {
+		Spell s = new Spell("Whirlwind", 3, 2) {
+			@Override
+			public void casterEffect(Creature caster) {
+				for (int x = -1; x <= 1; x++) {
+					for (int y = -1; y <= 1; y++) {
+						Creature c = caster.creature(caster.x+x, caster.y+y, caster.z);
+						if (c != null && c != caster) {
+							c.moveBy(x, y, 0);
+							c.moveBy(x, y, 0);
+						}
+					}
+				}
+			}
+		};
+		s.setType(Type.AIR);
+		s.setTargetType(TargetType.SELF);
+		s.setRadius(1);
+		s.setDamage(2, 5);
+		return s;
+	}
 	public static Spell lightningBolt() {
 		Spell s = new Spell("Lightning Bolt", 5, 3);
 		s.setType(Type.AIR);
@@ -191,7 +217,7 @@ public final class Spells {
 	public static Spell sting() {
 		Spell s = new Spell("Sting", 1, 1);
 		s.setType(Type.POISON);
-		s.setEffect(Effects.poisoned(5, 1, 0), 90);
+		s.setEffect(Effects.poisoned(5, 1), 90);
 		s.setDamage(2, 4);
 		s.setRange(4);
 		s.setTargetType(TargetType.PROJECTILE);
@@ -215,6 +241,7 @@ public final class Spells {
 		s.setType(Type.LIGHT);
 		s.setEffect(Effects.curePoison(), 100);
 		s.setTargetType(TargetType.TARGET);
+		s.setBeneficial(true);
 		return s;
 	}
 	public static Spell innerGlow() {
@@ -229,6 +256,7 @@ public final class Spells {
 		s.setType(Type.LIGHT);
 		s.setEffect(Effects.healOverTime(8, 2), 100);
 		s.setTargetType(TargetType.TARGET);
+		s.setBeneficial(true);
 		return s;
 	}
 	public static Spell heroism() {
@@ -236,6 +264,7 @@ public final class Spells {
 		s.setType(Type.LIGHT);
 		s.setEffect(Effects.strong(8, 2), 100);
 		s.setTargetType(TargetType.TARGET);
+		s.setBeneficial(true);
 		return s;
 	}
 	
@@ -271,11 +300,20 @@ public final class Spells {
 		s.setTargetType(TargetType.TARGET);
 		return s;
 	}
+	public static Spell darksmite() {
+		Spell s = new Spell("Darksmite", 4, 2);
+		s.setType(Type.DARK);
+		s.setTargetType(TargetType.TARGET);
+		s.setRange(6);
+		s.setDamage(4, 8);
+		s.setUseText("call upon darkness");
+		return s;
+	}
 	public static Spell soulSiphon() {
 		Spell s = new Spell("Soul Siphon", 5, 3) {
 			public void casterEffect(Creature caster) {
-				caster.modifyHP(caster.getDamageReceived(-6, Type.DARK));
-				caster.doAction("Heal from darkness.");
+				caster.modifyHP(caster.getDamageReceived(6, Type.DARK));
+				caster.doAction("heal from darkness.");
 			}
 		};
 		s.setType(Type.DARK);
@@ -295,5 +333,31 @@ public final class Spells {
 		Spell slow = slow(4,4,5);
 		slow.setUseText("gaze at you");
 		return slow;		
+	}
+	public static Spell fireStomp() {
+		Spell s = new Spell("Stomp", 4, 3) {
+			@Override
+			public void casterEffect(Creature caster) {
+				for (int x = -1; x <= 1; x++) {
+					for (int y = -1; y <= 1; y++) {
+						Creature c = caster.creature(caster.x+x, caster.y+y, caster.z);
+						if (c != null && c != caster) {
+							c.moveBy(x, y, 0);
+							c.moveBy(x, y, 0);
+							c.moveBy(x, y, 0);
+							c.doAction("get blasted backwards");
+						}
+					}
+				}
+			}
+		};
+		s.setType(Type.FIRE);
+		s.setTargetType(TargetType.TARGET);
+		s.setRange(1);
+		s.setRadius(1);
+		s.setDamage(2, 5);
+		s.setEffect(Effects.burning(3, 2), 5);
+		s.setUseText("stomp the ground");
+		return s;
 	}
 }

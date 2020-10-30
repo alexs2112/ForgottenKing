@@ -26,10 +26,12 @@ public class CharacterSelectionScreen extends Screen {
 	private Image fighterIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter-96.gif"));
 	private Image rangerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger-96.gif"));
 	private Image berserkerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/berserker-96.gif"));
+	private Image elementalistIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/elementalist-96.gif"));
 	private Image adventurerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer.gif"));
 	private Image fighterIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter.gif"));
 	private Image rangerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger.gif"));
 	private Image berserkerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/berserker.gif"));
+	private Image elementalistIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/elementalist.gif"));
 	
 	public CharacterSelectionScreen() {
 		font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
@@ -124,6 +126,7 @@ public class CharacterSelectionScreen extends Screen {
 		classes.add(fighter());
 		classes.add(ranger());
 		classes.add(berserker());
+		classes.add(elementalist());
 	}
 	private ClassSelection adventurer() {
 		ClassSelection c = new ClassSelection(Tag.ADVENTURER, adventurerIconLarge, adventurerIcon, 22, 10, 0, 0, 1, 2);
@@ -158,6 +161,13 @@ public class CharacterSelectionScreen extends Screen {
 		c.addAbility(Abilities.rage());
 		return c;
 	}
-	
+	private ClassSelection elementalist() {
+		ClassSelection c = new ClassSelection(Tag.ELEMENTALIST, elementalistIconLarge, elementalistIcon, 18, 10, 0, 0, 1, 2);
+		c.setAttributes(0, 1, 2);
+		c.setStats(1, 1, 2, 2, 2, 3);
+		c.descriptionText = "An acolyte of the elemental arts. This character begins with a Book of Kindling and an Acolyte's Robe, prepared to roast the inhabitants of the dungeon.";
+		c.addTag(Tag.ACOLYTES_MANA);
+		return c;
+	}
 
 }

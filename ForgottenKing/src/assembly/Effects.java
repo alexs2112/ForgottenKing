@@ -47,10 +47,10 @@ public final class Effects {
 	        }
 	    };
 	}
-	public static Effect poisoned(int duration, int strength, int resistMod) {
+	public static Effect poisoned(int duration, int strength) {
 		Effect e = new Effect("Poisoned", duration){
 			public void start(Creature creature){
-				if (Math.random() * 100 < creature.getToughness() * 10 + resistMod) {
+				if (Math.random() * 100 < creature.getToughness() * 10) {
 					creature.doAction("resist being poisoned");
 					duration = 0;
 				}
@@ -204,12 +204,14 @@ public final class Effects {
 	}
 	public static Effect blind(int duration) {
 		Effect e = new Effect("Blind", duration) {
+			private int num;
 			public void start(Creature creature) {
-				creature.modifyVisionRadius(-9);
+				num = creature.visionRadius();
+				creature.modifyVisionRadius(-num);
 				creature.doAction("become blind");
 			}
 			public void end(Creature creature) {
-				creature.modifyVisionRadius(9);
+				creature.modifyVisionRadius(num);
 				creature.doAction("restore sight");
 			}
 		};

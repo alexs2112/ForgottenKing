@@ -5,6 +5,7 @@ import tools.ImageCrop;
 
 public final class Loader {
 	public static Image screenBorder = new Image(Screen.class.getResourceAsStream("resources/screenBorder.png"));
+	public static Image screenSeparator = new Image(Screen.class.getResourceAsStream("resources/screen_separator.png"));
 	public static Image targetBox = new Image(Screen.class.getResourceAsStream("resources/targetBox.png"));
 	public static Image selectionBoxFull = new Image(Screen.class.getResourceAsStream("resources/selection.png"));
 	public static Image yellowSelection = ImageCrop.cropImage(selectionBoxFull, 0, 0, 32, 32);
@@ -75,7 +76,7 @@ public final class Loader {
 	public static Image magicTypeBox = new Image(Screen.class.getResourceAsStream("resources/magic_type_box.png"));
 	public static Image spellPointsBox = new Image(Screen.class.getResourceAsStream("resources/spell_points_box.png"));
 	
-	public static Image characterSelectionBackground = new Image(Screen.class.getResourceAsStream("resources/character_selection_screen.png"));
+	public static Image characterSelectionBackground = new Image(Screen.class.getResourceAsStream("resources/full-screens/character_selection_screen.png"));
 	private static Image characterSelectionFull = new Image(Screen.class.getResourceAsStream("resources/character_selection_full.png"));
 	public static Image characterSelectionBox = ImageCrop.cropImage(characterSelectionFull, 0, 0, 104, 104);
 	public static Image characterSelectionUpArrow = ImageCrop.cropImage(characterSelectionFull, 104, 0, 104, 52);
@@ -94,6 +95,8 @@ public final class Loader {
 	public static Image inventoryBoxGreen = ImageCrop.cropImage(inventoryBoxFull, 0, 192, 892, 64);
 	public static Image inventoryBoxDarkGreen = ImageCrop.cropImage(inventoryBoxFull, 0, 256, 892, 64);
 	
+	//public static Image statsScreenStatBox = new Image(Screen.class.getResourceAsStream("resources/stats-screen-stat-box.png"));
+	public static Image statsScreenFull = new Image(Screen.class.getResourceAsStream("resources/full-screens/stats-screen-full.png"));
 	/**
 	 * TAGS
 	 */
@@ -107,6 +110,7 @@ public final class Loader {
 	public static Image mediumArmorSkillIcon = ImageCrop.cropImage(perksFull, 192, 0, 32, 32);
 	public static Image heavyArmorSkillIcon = ImageCrop.cropImage(perksFull, 224, 0, 32, 32);
 	public static Image improvedCleaveIcon = ImageCrop.cropImage(perksFull, 0, 32, 32, 32);
+	public static Image acolytesManaIcon = ImageCrop.cropImage(perksFull, 32, 32, 32, 32);
 	
 	private static Image tagsFull = new Image(Screen.class.getResourceAsStream("resources/creature_tags_full.png"));
 	public static Image spellcasterIcon = ImageCrop.cropImage(tagsFull, 0, 0, 32, 32);

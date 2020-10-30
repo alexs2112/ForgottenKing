@@ -22,7 +22,7 @@ public class BasicAI extends CreatureAI {
 			return;
 		}
 		
-		//If the ally can see an enemy, try to kill it
+		//If the creature can see an enemy, try to kill it
 		Creature c = getNearestEnemy();
 		if (c != null) {
 			if (canRangedWeaponAttack(c))
@@ -38,6 +38,8 @@ public class BasicAI extends CreatureAI {
 			else if (lastSeenAt != null && !creature.canSee(player.x, player.y, player.z)) {
 				moveTo(lastSeenAt.x, lastSeenAt.y);
 				return;
+			} else {
+				wander();
 			}
 		}
 	}

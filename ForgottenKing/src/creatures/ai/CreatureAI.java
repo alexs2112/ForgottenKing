@@ -58,7 +58,7 @@ public class CreatureAI {
     }
     
     public void wander(){
-    	for (int i = 0; i < 10; i++) {
+    	for (int i = 0; i < 50; i++) {
     		int mx = (int)(Math.random() * 3) - 1;
     		int my = (int)(Math.random() * 3) - 1;
     		if (creature.canEnter(creature.x+mx,creature.y+my,creature.z)) {
@@ -75,13 +75,9 @@ public class CreatureAI {
     }
     
     public void moveTo(int x, int y) {
-    	//List<Point> points = new PathFinder(creature, new Point(x,y,creature.z)).getPoints();
     	List<Point> points = new Path(creature, x, y).points();
 		if (points == null || points.size() == 0)
 			return;
-//		int mx = points.get(0).x;
-//		int my = points.get(0).y;
-//		creature.moveTo(mx, my, creature.z);
 		int mx = points.get(0).x - creature.x;
 		int my = points.get(0).y - creature.y;
 		creature.moveBy(mx, my, 0);
@@ -110,11 +106,13 @@ public class CreatureAI {
 		return creature.weapon() != null 
 				&& creature.weapon().isRanged()
 				&& creature.quiver() != null
+				&& !adjacentTo(target.x, target.y)
 				&& canDrawLine(target.x, target.y, target.z);
 	}
 	protected boolean canThrowAt(Creature target) {
 		return canDrawLine(target.x, target.y, target.z)
-				&& getWeaponToThrow() != null;
+				&& getWeaponToThrow() != null
+				&& !adjacentTo(target.x, target.y);
 	}
 	protected Item getWeaponToThrow() {
 		for (Item item : creature.inventory().getUniqueItems()) {
@@ -136,6 +134,9 @@ public class CreatureAI {
 				return false;
 		}
 		return true;
+	}
+	protected boolean adjacentTo(int x, int y) {
+		return new Line(creature.x, creature.y, x, y).getPoints().size() <= 2;
 	}
 	protected boolean canCastSpell(Spell spell, int x, int y, int z) {
 		if (spell.cost() > creature.mana() || !inRange(spell.range(), x, y))

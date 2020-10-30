@@ -1,6 +1,6 @@
 package screens;
 
-import creatures.Creature;
+import creatures.Player;
 import javafx.scene.Group;
 import spells.Spell;
 import spells.TargetType;
@@ -8,13 +8,13 @@ import spells.TargetType;
 public class CastSpellScreen extends TargetBasedScreen {
 	private Spell spell;
 
-	public CastSpellScreen(Group root, Creature player, String caption, int sx, int sy, Spell spell) {
+	public CastSpellScreen(Group root, Player player, String caption, int sx, int sy, Spell spell) {
 		super(root, player, caption, sx, sy);
 		this.spell = spell;
 		this.targetType = spell.targetType();
 		this.spellRadius = spell.radius();
 		this.range = spell.range();
-		if (spell.targetType() != TargetType.SELF) {
+		if (spell.targetType() != TargetType.SELF && !spell.isBeneficial()) {
 			x = player.getAutoTarget().x - player.x;
 			y = player.getAutoTarget().y - player.y;
 		}

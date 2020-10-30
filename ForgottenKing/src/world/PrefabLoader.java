@@ -1,20 +1,15 @@
 package world;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import features.*;
 
 public class PrefabLoader {
-	private File file;
-	private Scanner reader;
 	private ArrayList<Prefab> prefabs;
 	public ArrayList<Prefab> prefabs() { return prefabs; }
 	private ArrayList<char[][]> charSheets;
-	private String type;
 	private boolean canLoad;
 	public boolean canLoad() { return canLoad; }
 	
@@ -36,7 +31,6 @@ public class PrefabLoader {
 	public PrefabLoader(String type) {
 		prefabs = new ArrayList<Prefab>();
 		charSheets = new ArrayList<char[][]>();
-		this.type = type;
 		canLoad = load();
 		if (canLoad)
 			loadRoomsPrefabs();
@@ -47,39 +41,38 @@ public class PrefabLoader {
 	 * These chars are later loaded and turned into tiles based on specific chars
 	 */
 	private boolean load() {
-		try {
-			file = new File(Prefab.class.getResource("resources/rooms.prefab").getPath());
-			System.out.println(file.getAbsolutePath());
-			reader = new Scanner(file);
-			while (reader.hasNextLine()) {
-		        String data = reader.nextLine();
-		        if (data.length() == 0)
-		        	continue;
-		        if (data.length() > 1)
-		        	if (data.charAt(0) == '/' && data.charAt(1) == '/')
-		        		continue;
-		        if (data.contains("[start]")) {	//Start a new prefab
-		        	String[] size = reader.nextLine().split(":");
-		        	int width = Integer.valueOf(size[0]);
-		        	int height = Integer.valueOf(size[1]);
-		        	char[][] chars = new char[width][height];
-		        	data = reader.nextLine();
-		        	for (int y = 0; y < height; y++) {
-		        		for (int x = 0; x < width; x++) {
-		        			chars[x][y] = data.charAt(x);
-		        		}
-		        		data = reader.nextLine();
-		        	}
-		        	charSheets.add(chars);
-		        }
-		        
-		      }
-			return true;
-		} catch (FileNotFoundException e) {
-			//e.printStackTrace();
-			System.out.println("Cannot load prefabs: file not found");
+		InputStream stream = Prefab.class.getResourceAsStream("resources/rooms.prefab");
+		if (stream == null) {
+			System.out.println("rooms.prefab not located.");
 			return false;
 		}
+		
+		Scanner reader = new Scanner(stream);
+		while (reader.hasNextLine()) {
+			String data = reader.nextLine();
+			if (data.length() == 0)
+				continue;
+			if (data.length() > 1)
+				if (data.charAt(0) == '/' && data.charAt(1) == '/')
+					continue;
+			if (data.contains("[start]")) {	//Start a new prefab
+				String[] size = reader.nextLine().split(":");
+				int width = Integer.valueOf(size[0]);
+				int height = Integer.valueOf(size[1]);
+				char[][] chars = new char[width][height];
+				data = reader.nextLine();
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
+						chars[x][y] = data.charAt(x);
+					}
+					data = reader.nextLine();
+				}
+				charSheets.add(chars);
+			}
+
+		}
+		reader.close();
+		return true;
 	}
 	
 	private void loadRoomsPrefabs() {
@@ -110,6 +103,6 @@ public class PrefabLoader {
 	}
 	
 	public Prefab getRandomPrefab() {
-		return prefabs.get((int)(Math.random()*prefabs.size()));
+		return prefabs.get((int)(Math.random()*prefabs.size())).rotate();
 	}
 }

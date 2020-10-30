@@ -32,9 +32,12 @@ public class TrinketFactory {
 			return newRingOfPoisonResistance(z);
 		else if (roll == 1)
 			return newRingOfAttribute(z);
-		else
-			return newRingOfStat(z);
-			
+		else {
+			if (z > 1)
+				return newRingOfStat(z);
+			else
+				return newRandomRing(z);
+		}
 	}
 	
 	public Item newRingOfPoisonResistance(int z) {

@@ -82,6 +82,8 @@ public class MagicScreen extends Screen {
 				c = Color.DARKGREY;
 			write(root, s.name() + " [" + s.type() + ":" + s.level()+"]", x, y+=22, fontS, c);
 		}
+		
+		write(root, "Spell Slots: " + (player.totalSpellSlots() - player.remainingSpellSlots()) + "/" + player.totalSpellSlots(), 64, 664, font, Color.WHITE);
 	}
 	
 	public Screen respondToUserInput(KeyEvent key) {
@@ -116,6 +118,7 @@ public class MagicScreen extends Screen {
 	}
 	
 	private void modifyTypes() {
+		player.modifyTime(8);	//Currently just adds to the players time to do this, fix this later as a "rest" kind of method
 		magic.modify(Type.FIRE, floatingValues[0]);
 		magic.modify(Type.COLD, floatingValues[1]);
 		magic.modify(Type.AIR, floatingValues[2]);

@@ -65,7 +65,12 @@ public class Creature {
     private int mana;
     public int mana() { return mana; }
     private int maxMana;
-    public int maxMana() { return maxMana + (level*getWill())/2; }
+    public int maxMana() {
+    	int i = maxMana + (level*getWill())/2; 
+    	if (is(Tag.ACOLYTES_MANA))
+    		i += 5;
+    	return i;
+    }
     public void fillMana() { mana = maxMana(); }
     public void modifyMana(int x) { mana = Math.min(maxMana(), mana + x); }
     public void setMana(int current, int max) { maxMana = max; mana = current; }
@@ -167,6 +172,10 @@ public class Creature {
 		} else
 			attackMod += getBrawn();
 		attackMod += getAccuracy() / 4;
+		for (Effect e : effects) {
+			if (e.name().equals("Blind"))
+				attackMod /= 2;
+		}
 		return attackMod;
 	}
 	public int getCurrentDamageMod() {
@@ -515,12 +524,12 @@ public class Creature {
 				action += " **Critical Hit**";
 			}
 			doAction(action);
-			other.modifyHP(-damage, this);
-			
 			if (effectsOnHit() != null && item == weapon())
-				for (Effect e : effectsOnHit()) {
-					other.addEffect(e);
+				for (Effect e : effectsOnHit().keySet()) {
+					if (Math.random() < effectsOnHit().get(e))
+						other.addEffect(e);
 				}
+			other.modifyHP(-damage, this);
 		} else {
 			if (is(Tag.PLAYER))
 				action += " but miss";
@@ -530,6 +539,7 @@ public class Creature {
 		}
 		setLastAttacked(other);
 	}
+	
 	/**
 	 * Returns the damage reduced 1 for 1 by armor, to a maximum of 80% reduction
 	 */
@@ -623,7 +633,7 @@ public class Creature {
 
 	public void drop(Item item) {
 		int n = 1;
-		if (!item.equippable())
+		if (!item.equippable() && item.type() != ItemType.BOOK)
 			n = inventory.quantityOf(item);
 		for (int i = 0; i < n; i++)
 			putAt(item, x, y, z);
@@ -735,8 +745,12 @@ public class Creature {
 
     			if (other == this) {
     				other.notify(("You " + message + ".").replaceAll(" look ", " feel "));
-    			} else if (other.canSee(x, y, z))
-    				other.notify(String.format("The " + name + " " + makeSecondPerson(message)));
+    			} else if (other.canSee(x, y, z)) {
+    				String s = "";
+    				if (!is(Tag.LEGENDARY))
+    					s += "The ";
+    				other.notify(s + name + " " + makeSecondPerson(message));
+    			}
     		}
     	}
     }
@@ -794,6 +808,12 @@ public class Creature {
 			doAction(spell.useText());
 		else
 			doAction("cast " + spell.name());
+		
+		for (Point p : points)
+			if (creature(p.x,p.y,z) != null) {
+				lastAttacked = creature(p.x,p.y,z);
+				break;
+			}
 		
 		for (Point p : points)
 			spellEffects(spell, p.x, p.y);
@@ -924,22 +944,22 @@ public class Creature {
     	updateAbilities();
     	ai.onUpdate();  
     }
-	private List<Effect> effectsOnHit;
-	public List<Effect> effectsOnHit() {
-		List<Effect> newList;
+	private HashMap<Effect, Integer> effectsOnHit;
+	public HashMap<Effect, Integer> effectsOnHit() {
+		HashMap<Effect, Integer> newMap;
 		if (effectsOnHit == null)
-			newList = new ArrayList<Effect>();
+			newMap = new HashMap<Effect, Integer>();
 		else
-			newList = new ArrayList<Effect>(effectsOnHit);
+			newMap = new HashMap<Effect, Integer>(effectsOnHit);
 		Item weapon = weapon();
 		if (weapon != null && weapon.effectOnHit() != null)
-			newList.add(weapon.effectOnHit());
-		return newList; 
+			newMap.put(weapon.effectOnHit(), weapon.effectChance());
+		return newMap; 
 	}
-	public void addEffectOnHit(Effect e) {
+	public void addEffectOnHit(Effect e, int chance) {
 		if (effectsOnHit == null)
-			effectsOnHit = new ArrayList<Effect>();
-		effectsOnHit.add(e);
+			effectsOnHit = new HashMap<Effect, Integer>();
+		effectsOnHit.put(e, chance);
 		e.setOwner(this);
 	}
 	private int stunAmount;		//The amount of times the stun has been placed, in case you get stunned multiple times

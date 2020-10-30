@@ -4,7 +4,6 @@ import javafx.scene.Scene;
 import javafx.scene.effect.ColorAdjust;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -55,6 +54,7 @@ public abstract class Screen {
     public static void write(Group root, String s, int x, int y, Font font) {
     	write(root, s, x, y, font, Color.WHITE);
     }
+    
     public static void writeWrapped(Group root, String s, int x, int y, int width, Font font, Color colour) {
     	Text text = new Text();
     	text.setText(s);
@@ -66,5 +66,5 @@ public abstract class Screen {
     		text.setWrappingWidth(width);
     	root.getChildren().add(text);
     }
-
+    
 }

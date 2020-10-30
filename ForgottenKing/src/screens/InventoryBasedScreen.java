@@ -15,6 +15,7 @@ public abstract class InventoryBasedScreen extends Screen {
 	protected Player player;
 	protected Inventory inventory;
 	private String letters;
+	private int height = 22;
 	protected int select;
 	protected abstract String getVerb();
     protected abstract boolean isAcceptable(Item item);
@@ -77,9 +78,11 @@ public abstract class InventoryBasedScreen extends Screen {
             }
             draw(root, item.image(), x-44, 32*num + y + 4);
         	write(root, line, x, 32*num + y + 32, fontS, equipColour);
+        	
         	if (select == i) {
         		draw(root, Loader.arrowRight, 20, 32*num+y+4);
         	}
+        			
         	num++;
         }
     }

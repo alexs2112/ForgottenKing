@@ -5,6 +5,14 @@ import javafx.scene.image.Image;
 import world.World;
 
 public class Ally extends Creature {
+	private Player player;
+	public void setPlayer(Player player) { this.player = player; }
+	
+	public void modifyXP(int x) {
+		if (player != null)
+			player.modifyXP(x * 3 / 4); 
+	}	//Things that your summon kills grants you 3/4 of the XP
+	
 	public Ally(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Image image) {
     	super(world,name,level,xp,hp,evasion,armorValue,baseAttackValue,baseDamageMin,baseDamageMax,image);
     }

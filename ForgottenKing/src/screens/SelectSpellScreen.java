@@ -2,7 +2,7 @@ package screens;
 
 import java.util.ArrayList;
 
-import creatures.Creature;
+import creatures.Player;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -13,18 +13,21 @@ import spells.Spell;
 
 public class SelectSpellScreen extends Screen {
 
-	protected Creature player;
+	protected Player player;
     private String letters;
     private Group playRoot;
     private int sx;
     private int sy;
+    private int select = -1;
     
-    public SelectSpellScreen(Group playRoot, Creature player, int sx, int sy){
+    public SelectSpellScreen(Group playRoot, Player player, int sx, int sy){
         this.player = player;
         this.letters = "abcdefghijklmnopqrstuvwxyz";
         this.playRoot = playRoot;
         this.sx = sx;
         this.sy = sy;
+        if (player.lastCast() != null && player.spells().contains(player.lastCast()))
+        	select = player.spells().indexOf(player.lastCast());
     }
     
     public void displayOutput(Stage stage) {
@@ -42,6 +45,7 @@ public class SelectSpellScreen extends Screen {
         	write(root, "You have no spells memorized!", x,y + 32, font, Color.ANTIQUEWHITE);
         	return;
         }
+        x += 32;
         for (int i = 0; i < spells.size(); i++) {
         	Spell spell = spells.get(i);
         	String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.cost() + " Mana) [" + spell.type().text() + ":" + spell.level() + "]";
@@ -50,6 +54,8 @@ public class SelectSpellScreen extends Screen {
         			player.mana() < spell.cost())
         		c = Color.DARKGREY;
         	write(root, line, x, 32*i + y + 32, font, c);
+        	if (i == select)
+        		draw(root, Loader.arrowRight, x-48, 32*i+y+4);
         }
     }
     
@@ -62,19 +68,37 @@ public class SelectSpellScreen extends Screen {
     		&& spells != null
     		&& spells.size() > letters.indexOf(c)) {
     		Spell spell = spells.get(letters.indexOf(c));
-    		if (spell.level() > player.magic().get(spell.type())) {
-    			player.notify("Your " + spell.type().text() + " skill is not high enough to cast " + spell.name());
+    		if (canCastSpell(spell))
+    			return new CastSpellScreen(playRoot, player, "Cast " + spell.name(), sx, sy, spell);
+    		else
     			return null;
-    		} if (spell.cost() > player.mana()) {
-    			player.notify("You don't have enough mana to cast " + spell.name());
+    	}
+    	else if (key.getCode().equals(KeyCode.DOWN))
+    		select = Math.min(select+1, spells.size()-1);
+    	else if (key.getCode().equals(KeyCode.UP))
+    		select = Math.max(select-1, 0);
+    	else if (key.getCode().equals(KeyCode.ENTER) && select != -1) {
+    		Spell spell = spells.get(select);
+    		if (canCastSpell(spell))
+    			return new CastSpellScreen(playRoot, player, "Cast " + spell.name(), sx, sy, spell);
+    		else
     			return null;
-    		}
-    		return new CastSpellScreen(playRoot, player, "Cast " + spell.name(), sx, sy, spell);
-    	} else if (key.getCode().equals(KeyCode.ESCAPE)) {
+    	}
+    	else if (key.getCode().equals(KeyCode.ESCAPE)) {
             return null;
-        } else {
-            return this;
-        }
+    	}
+        return this;
     }
 
+    private boolean canCastSpell(Spell spell) {
+    	if (spell.level() > player.magic().get(spell.type())) {
+			player.notify("Your " + spell.type().text() + " skill is not high enough to cast " + spell.name());
+			return false;
+		} 
+    	if (spell.cost() > player.mana()) {
+			player.notify("You don't have enough mana to cast " + spell.name());
+			return false;
+		}
+		return true;
+    }
 }

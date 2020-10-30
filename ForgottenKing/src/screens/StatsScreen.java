@@ -1,7 +1,6 @@
 package screens;
 
 import creatures.Creature;
-import creatures.Stat;
 import creatures.Type;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
@@ -21,9 +20,10 @@ public class StatsScreen extends Screen {
 	
 	public void displayOutput(Stage stage) {
 		root = new Group();
-		draw(root, Loader.screenBorder, 0, 0);
+		draw(root, Loader.statsScreenFull, 0, 0);
 		int x = 32;
-		int y = 48;
+		int y = 16;
+		write(root, "Stats:", x, y+=32, font, Color.WHITE);
 		write(root, "Level: " + player.level(), x, y+=32, font, Color.WHITE);
 		write(root, "XP: " + player.xp() + "/" + player.nextLevelXP(), x, y+=32, font, Color.WHITE);
 		write(root, "HP: " + player.hp() + "/" + player.maxHP(), x, y+=32, font, Color.WHITE);
@@ -37,25 +37,44 @@ public class StatsScreen extends Screen {
 		write(root, "Attack Delay: " + player.attackDelay(), x, y += 32, font, Color.WHITE);
 		
 		
-		x+=410;
-		y = 64;
-		draw(root, Loader.strengthIcon, x, y+=4);
-		write(root, "STR: " + player.strength(), x+40, y+=28, font, Color.WHITE);
-		draw(root, Loader.dexterityIcon, x, y+=36);
-		write(root, "DEX: " + player.dexterity(), x+40, y+=28, font, Color.WHITE);
-		draw(root, Loader.intelligenceIcon, x, y+=36);
-		write(root, "INT: " + player.intelligence(), x+40, y+=28, font, Color.WHITE);
 		
+		//Attributes
+		x = 800;
+		y = 122;
+		write(root, "" + player.strength(), x, y, font, Color.WHITE);
+		write(root, "" + player.dexterity(), x, y+=98, font, Color.WHITE);
+		write(root, "" + player.intelligence(), x, y+=98, font, Color.WHITE);
 		
-		
-		x += 248;
-		y = 48;
-		write(root, "Toughness: " + player.getToughness() + " (" + player.stats().get(Stat.TOUGHNESS) + ")", x, y+=32, font, Color.WHITE);
-		write(root, "Brawn: " + player.getBrawn() + " (" + player.stats().get(Stat.BRAWN) + ")", x, y+=32, font, Color.WHITE);
-		write(root, "Agility: " + player.getAgility() + " (" + player.stats().get(Stat.AGILITY) + ")", x, y+=32, font, Color.WHITE);
-		write(root, "Accuracy: " + player.getAccuracy() + " (" + player.stats().get(Stat.ACCURACY) + ")", x, y+=32, font, Color.WHITE);
-		write(root, "Will: " + player.getWill() + " (" + player.stats().get(Stat.WILL) + ")", x, y+=32, font, Color.WHITE);
-		write(root, "Spellcasting: " + player.getSpellcasting() + " (" + player.stats().get(Stat.SPELLCASTING) + ")", x, y+=32, font, Color.WHITE);
+		//Base Stat Values
+		x = 1050;
+		y = 98;
+		Color c = Color.LIGHTGREY;
+		write(root, "" + player.toughness(), x, y, font, c);
+		write(root, "" + player.brawn(), x, y+=48, font, c);
+		write(root, "" + player.agility(), x, y+=51, font, c);
+		write(root, "" + player.accuracy(), x, y+=48, font, c);
+		write(root, "" + player.will(), x, y+=51, font, c);
+		write(root, "" + player.spellcasting(), x, y+=48, font, c);
+		//Modifier of Stat Values
+		x = 1100;
+		y = 98;
+		c = Color.LIGHTGREY;
+		write(root, "" + (player.getToughness() - player.strength() - player.toughness()), x, y, font, c);
+		write(root, "" + (player.getBrawn() - player.strength() - player.brawn()), x, y+=48, font, c);
+		write(root, "" + (player.getAgility() - player.dexterity() - player.agility()), x, y+=51, font, c);
+		write(root, "" + (player.getAccuracy() - player.dexterity() - player.accuracy()), x, y+=48, font, c);
+		write(root, "" + (player.getWill() - player.intelligence() - player.will()), x, y+=51, font, c);
+		write(root, "" + (player.getSpellcasting() - player.intelligence() - player.spellcasting()), x, y+=48, font, c);
+		//Total Stat Values
+		x = 1168;
+		y = 98;
+		c = Color.WHITE;
+		write(root, "" + (player.getToughness()), x, y, font, c);
+		write(root, "" + (player.getBrawn()), x, y+=48, font, c);
+		write(root, "" + (player.getAgility()), x, y+=51, font, c);
+		write(root, "" + (player.getAccuracy()), x, y+=48, font, c);
+		write(root, "" + (player.getWill()), x, y+=51, font, c);
+		write(root, "" + (player.getSpellcasting()), x, y+=48, font, c);
 		
 		y += 32;
 		write(root, "Fire: " + player.magic().get(Type.FIRE), x+=48, y+=32, font, Color.WHITE);

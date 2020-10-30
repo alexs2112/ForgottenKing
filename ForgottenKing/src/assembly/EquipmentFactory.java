@@ -177,8 +177,8 @@ public class EquipmentFactory {
 	public Item newDevSword(int z) {
 		Item sword = new Item("Sword of the Dev", ItemType.WEAPON, devSwordIcon);
 		sword.modifyAttackValue(400);
-		sword.setDamage(2, 4);
-		sword.setEffectOnHit(Effects.poisoned(5, 2, 0));
+		sword.setDamage(50, 80);
+		sword.setEffectOnHit(Effects.poisoned(5, 2), 100);
 		world.addAtEmptyLocation(sword,z);
 		sword.addTag(ItemTag.SWORD);
 		sword.addTag(ItemTag.CLEAVING);
@@ -193,8 +193,12 @@ public class EquipmentFactory {
 	}
 	
 	private void setMeleeWeaponCondition(Item item, int z) {
-		int dChance = 10 + (5-z)*5;
-		int pChance = 5*z;
+		int dChance = 10;
+		int pChance = 10;
+		if (z != -1) {
+			dChance += (5-z)*5;
+			pChance = 5*z;
+		}
 		if (Math.random()*100 < dChance) {
 			item.addTag(ItemTag.RUSTED);
 			item.setDamage(item.damage()[0]-1, item.damage()[1]-1);

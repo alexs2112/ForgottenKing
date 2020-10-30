@@ -6,6 +6,9 @@ import creatures.Type;
 public class Spell {
 	private String name;
 	public String name() { return name; }
+	private String description;
+	public String description() { return description; }
+	public void setDescription(String s) { description = s; }
 	
 	private int level;
 	public int level() { return level; }
@@ -67,6 +70,10 @@ public class Spell {
 	private int range;
 	public int range() { return range; }
 	public void setRange(int x) { range = x; }
+	
+	private boolean isBeneficial;
+	public boolean isBeneficial() { return isBeneficial; }
+	public void setBeneficial(boolean x) { isBeneficial = x; }
 	
 	private String useText;
 	public String useText() { return useText; }

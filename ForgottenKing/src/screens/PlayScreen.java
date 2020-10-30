@@ -41,7 +41,7 @@ public class PlayScreen extends Screen {
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
-        screenHeight = 22;
+        screenHeight = 24;
         messages = new ArrayList<String>();
         createWorld();
         fov = new FieldOfView(world);
@@ -70,11 +70,8 @@ public class PlayScreen extends Screen {
         	for (Ability a : character.abilities())
         		player.addAbility(a);
         if (devMode) {
-        	/*
-        	player.addEquipment(itemFactory.trinket().newDevRing(-1));
         	player.addEquipment(itemFactory.equipment().newDevSword(-1));
-        	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));*/
-			player.addItemToInventory(itemFactory.book().newBookOfChills(-1));
+        	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -89,14 +86,14 @@ public class PlayScreen extends Screen {
 	    scene = new Scene(root, 1280, 800, Color.BLACK);
 	    displayTiles(left, top);
 	    displayStats();
-	    displayMessages(messages);
-	    stage.setScene(scene);
-		stage.show();
-		
 		if (subscreen != null) {
 			subscreen.displayOutput(stage);
 			scene.setRoot(subscreen.root());
+		} else {
+			displayMessages(messages);
 		}
+		stage.setScene(scene);
+		stage.show();
 	}
 	public int getScrollX() {
 	    return Math.max(0, Math.min(player.x - screenWidth / 2, world.width() - screenWidth));
@@ -313,7 +310,7 @@ public class PlayScreen extends Screen {
 	
 	Font statFontM = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 20);
 	Font statFontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 16);
-	Font statFontXS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 12);
+	Font statFontXS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
     private void displayStats() {
     	draw(root, Loader.playerUIFull, 1040, 0);
         write(root, "HP: " + player.hp() + "/" + player.maxHP(), 1060, 34, statFontM, Color.RED);
@@ -478,7 +475,7 @@ public class PlayScreen extends Screen {
 				itemFactory.trinket().newRandomRing(z);
 			}
 		}
-		itemFactory.newVictoryItem(world.depth()-1);
+		creatureFactory.newGrisstok(world.depth()-1);	//Spawn in the boss, have a more interesting way of doing this later
 		for (Creature c : world.creatures()) {
 			c.fillHP();
 			c.fillMana();

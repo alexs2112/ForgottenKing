@@ -120,7 +120,9 @@ public class Item {
 	public void setEffect(Effect x) { effect = x; }
 	private Effect effectOnHit;
 	public Effect effectOnHit() { return effectOnHit; }
-	public void setEffectOnHit(Effect x) { effectOnHit = x; }
+	public void setEffectOnHit(Effect x, int chance) { effectOnHit = x; effectChance = chance; }
+	private int effectChance;
+	public int effectChance() { return effectChance; }
 	
 	/**
 	 * Spell Methods

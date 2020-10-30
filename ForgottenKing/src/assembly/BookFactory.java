@@ -20,6 +20,7 @@ public class BookFactory {
 	private Image debilitationIcon = tools.ImageCrop.cropImage(booksFull, 224, 32, 32, 32);
 	private Image vitalityIcon = tools.ImageCrop.cropImage(booksFull, 64, 32, 32, 32);
 	private Image maledictionsIcon = tools.ImageCrop.cropImage(booksFull, 128, 96, 32, 32);
+	private Image lizardRitualsIcon = tools.ImageCrop.cropImage(booksFull, 160, 0, 32, 32);
 
 	public BookFactory(World world) {
 		this.world = world;
@@ -34,10 +35,11 @@ public class BookFactory {
 			case 3: return newBookOfVitality(z);
 			}
 		} else if (z < 7) {
-			switch((int)(Math.random()*3)) {
+			switch((int)(Math.random()*4)) {
 			case 0: return newBookOfFlames(z);
 			case 1: return newBookOfFrost(z);
 			case 2: return newBookOfElectricity(z);
+			case 3: return newBookOfMaledictions(z);
 			}
 		}
 		return newBookOfKindling(z);
@@ -102,7 +104,7 @@ public class BookFactory {
 	public Item newBookOfElectricity(int z) {
 		Item item = new Item("Book of Electricity", ItemType.BOOK, electricityIcon);
 		item.addSpell(Spells.blink());
-		//item.addSpell(Spells.gust());	//Knock back all adjacent enemies
+		item.addSpell(Spells.whirlwind());
 		item.addSpell(Spells.lightningBolt());
 		item.setDescription("A bound set of papers, electricity crackles between them and cause your fingers to tingle when you bring them close.");
 		world.addAtEmptyLocation(item, z);
@@ -136,7 +138,7 @@ public class BookFactory {
 	}
 	
 	/**
-	 * DARK
+	 * ENEMY DROPS
 	 */
 	public Item newBookOfMaledictions(int z) {
 		Item item = new Item("Book of Maledictions", ItemType.BOOK, maledictionsIcon);
@@ -144,6 +146,15 @@ public class BookFactory {
 		item.addSpell(Spells.blind());
 		item.addSpell(Spells.soulSiphon());
 		item.setDescription("This book is quite plain, however it is chill to the touch and light seems to fade around it.");
+		world.addAtEmptyLocation(item, z);
+		return item;
+	}
+	public Item newBookOfLizardRituals(int z) {
+		Item item = new Item("Book of Lizard Rituals", ItemType.BOOK, lizardRitualsIcon);
+		item.addSpell(Spells.vulnerable());
+		item.addSpell(Spells.minorStun());
+		item.addSpell(Spells.darksmite());
+		item.setDescription("An embellished book full of rituals devised and used by lizard priests.");
 		world.addAtEmptyLocation(item, z);
 		return item;
 	}

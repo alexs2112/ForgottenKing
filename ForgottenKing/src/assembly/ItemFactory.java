@@ -57,7 +57,10 @@ public class ItemFactory {
 		}
 		else if (player.is(Tag.BERSERKER))
 			player.addEquipment(equipment().newHandaxe(-1));
-		else {	//Adventurer
+		else if (player.is(Tag.ELEMENTALIST)) {
+			player.addItemToInventory(book().newBookOfKindling(-1));
+			player.addEquipment(equipment().newDagger(-1));
+		} else {	//Adventurer
 			player.addEquipment(equipment().newDagger(-1));
 			player.addEquipment(equipment().newLeatherArmor(-1));
 			for (int i = 0; i < 5; i++)

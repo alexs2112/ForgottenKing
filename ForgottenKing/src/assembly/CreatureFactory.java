@@ -17,7 +17,7 @@ import world.World;
 public class CreatureFactory {
 	private World world;
 	private ItemFactory itemFactory;
-	private Creature player;
+	private Player player;
 	
 	private Image plantIconsFull = new Image(this.getClass().getResourceAsStream("resources/creatures/plants_full.png"));
 	private Image goblinIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/goblin.gif"));
@@ -34,6 +34,7 @@ public class CreatureFactory {
 	private Image lizardShadowbladeIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_shadowblade.gif"));
 	private Image lizardGuardianIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_guardian.gif"));
 	private Image lizardPriestIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_priest.gif"));
+	private Image grisstokIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/yamzuushk.gif"));
 	
 	private Image simulacrumIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/simulacrum.gif"));
 	
@@ -41,7 +42,7 @@ public class CreatureFactory {
 		this.world = world;
 		this.itemFactory = itemFactory;
 	}
-	public void setPlayer(Creature player) {
+	public void setPlayer(Player player) {
 		this.player = player;
 	}
 	
@@ -105,7 +106,7 @@ public class CreatureFactory {
 	}
 	
 	public Creature newBat(int z) {
-		Creature bat = new Creature(world, "Bat",1,25, 10, 9, 0, 1, 1, 3, batIcon);
+		Creature bat = new Creature(world, "Bat",1,25, 9, 8, 0, 1, 1, 3, batIcon);
 		bat.setAttributes(0,2,1);
 	    bat.setStats(1,2,3,1,1,1);
 	    bat.modifyMovementDelay(-5);
@@ -172,7 +173,7 @@ public class CreatureFactory {
 		Creature soldierAnt = new Creature(world, "Soldier Ant",2,70, 10, 8, 2, 1, 0, 2, soldierAntIcon);
 		soldierAnt.setAttributes(2, 1, 0);
 		soldierAnt.setStats(3,2,2,2,0,0);
-		soldierAnt.addEffectOnHit(Effects.poisoned(3, 1, 50));
+		soldierAnt.addEffectOnHit(Effects.poisoned(4, 1), 50);
 		soldierAnt.addTag(Tag.VENOMOUS);
 		soldierAnt.setDescription("An ant that has grown the size of a small cow. Its razor sharp mandibles drip with poison.");
 		world.addAtEmptyLocation(soldierAnt, z);
@@ -187,6 +188,7 @@ public class CreatureFactory {
 	    homunculus.setStats(1,1,3,2,2,3);
 	    homunculus.addTag(Tag.SPELLCASTER);
 	    homunculus.addSpell(Spells.homunculiSlow());
+	    homunculus.addSpell(Spells.summonSimulacrum(this));
 	    homunculus.setDescription("The creation of a wizard, it wanders the dungeon for a purpose. Its bright blue eyes seem to cloud your vision and drain your energy.");
 	    if (z > 0 && Math.random()*100 < 40)
 	    	homunculus.addEquipment(itemFactory.equipment().newSpear(-1));
@@ -268,18 +270,36 @@ public class CreatureFactory {
 	    lizard.setStats(2,1,4,2,5,5);
 	    lizard.setDescription("");
 	    world.addAtEmptyLocation(lizard, z);
-	    //lizard.addTag(Tag.SPELLCASTER);
-	    //Add spells
-	    //SMITE
-	    //FIREBOLT
-	    //STUN
-	    //25% chance to be holding a spellbook containing those LIGHT (and FIRE) spells
+	    lizard.addTag(Tag.SPELLCASTER);
+	    lizard.setMana(12, 12);
+	    lizard.addSpell(Spells.vulnerable());
+	    lizard.addSpell(Spells.darksmite());
+	    lizard.addSpell(Spells.minorStun());
+	    if (Math.random()*100 < 25)
+	    	lizard.addItemToInventory(itemFactory.book().newBookOfLizardRituals(-1));
 	    return lizard;
+	}
+	public Creature newGrisstok(int z) {
+		Creature grisstok = new Creature(world, "Griss'tok",6,400, 32,8,2,5,5,8, grisstokIcon);
+		new SpellcastingAI(grisstok, player, 50);
+		grisstok.setAttributes(4,1,3);
+	    grisstok.setStats(4,4,2,2,3,4);
+	    grisstok.addTag(Tag.SPELLCASTER);
+	    grisstok.addTag(Tag.LEGENDARY);
+	    grisstok.setResistance(Type.FIRE, 1);
+	    grisstok.addEffectOnHit(Effects.burning(3, 2), 40);
+	    grisstok.addSpell(Spells.fireStomp());
+	    grisstok.addSpell(Spells.darksmite());
+	    grisstok.setMana(12, 12);
+	    grisstok.setDescription("What was once a lizardfolk has been turned into a massive monstrosity through priestly ritual. Griss'tok the Fierce has large spined wings and is covered with bloodred scales. He emanates heat and the ground trembles when he moves.");
+	    grisstok.addItemToInventory(itemFactory.newVictoryItem(-1));
+	    world.addAtEmptyLocation(grisstok, z);
+	    return grisstok;
 	}
 	
 	
 	/**
-	 * ALLIES
+	 * SUMMONS
 	 */
 	public Creature newFriendlySimulacrum(int z) {
 		Ally simulacrum = new Ally(world, "Simulacrum",1, 0, 13, 9, 0, 2, 1, 3, simulacrumIcon);
@@ -289,6 +309,17 @@ public class CreatureFactory {
 		simulacrum.setDescription("A small humanoid being made purely of ice and elemental cold.");
 		simulacrum.addTag(Tag.ALLY);
 		simulacrum.setTemporary(30);
+		simulacrum.setPlayer(player);
+		world.addAtEmptyLocation(simulacrum, z);
+		return simulacrum;
+	}
+	public Creature newSimulacrum(int z) {
+		Creature simulacrum = new Creature(world, "Simulacrum",1, 0, 13, 9, 0, 2, 1, 3, simulacrumIcon);
+		new BasicAI(simulacrum, player);
+		simulacrum.setAttributes(1, 1, 1);
+		simulacrum.setStats(2, 2, 2, 2, 2, 2);
+		simulacrum.setDescription("A small humanoid being made purely of ice and elemental cold.");
+		simulacrum.addEffect(Effects.temporarySummon(30));;
 		world.addAtEmptyLocation(simulacrum, z);
 		return simulacrum;
 	}

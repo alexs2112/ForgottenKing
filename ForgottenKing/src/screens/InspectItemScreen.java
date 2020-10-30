@@ -5,6 +5,7 @@ import java.util.List;
 
 import creatures.Attribute;
 import creatures.Creature;
+import creatures.Player;
 import creatures.Stat;
 import creatures.Type;
 import items.Item;
@@ -22,9 +23,9 @@ import screens.Screen;
 public class InspectItemScreen extends Screen {
 	private Item item;
 	private Screen previousScreen;
-	private Creature player;
+	private Player player;
 
-	public InspectItemScreen(Creature player, Item item, Screen previousScreen) {
+	public InspectItemScreen(Player player, Item item, Screen previousScreen) {
 		this.player = player;
 		this.item = item;
 		this.previousScreen = previousScreen;
