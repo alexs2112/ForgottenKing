@@ -23,7 +23,7 @@ public class Player extends Creature {
     public void modifyPerkPoints(int x) { perkPoints += x; }
     
     /**
-     * SPELL SLOTS
+     * MAGIC
      */
     public int totalSpellSlots() { return getWill() + level(); }
     public int remainingSpellSlots() {
@@ -40,6 +40,32 @@ public class Player extends Creature {
 			notify("You don't have enough spell slots!");
 		}
 	}
+    private int meditating;
+    public int meditating() { return meditating; }
+    public void modifyMeditating(int x) {
+    	meditating += x;
+    	if (meditating <= 0)
+    		doneMeditating();
+    }
+    public void stopMeditating() {
+    	meditating = 0;
+    }
+    private int[] magicChanges;
+    public void meditate(int[] a) {
+    	for (int i = 0; i < a.length; i++)
+    		meditating += 8 * Math.abs(a[i]);
+    	magicChanges = a;
+    }
+    public void doneMeditating() {
+    	if (magicChanges != null && magicChanges.length > 5) {
+    		magic.modify(Type.FIRE, magicChanges[0]);
+    		magic.modify(Type.COLD, magicChanges[1]);
+    		magic.modify(Type.AIR, magicChanges[2]);
+    		magic.modify(Type.POISON, magicChanges[3]);
+    		magic.modify(Type.LIGHT, magicChanges[4]);
+    		magic.modify(Type.DARK, magicChanges[5]);
+    	}
+    }
     
     /**
      * MEMORY STUFF

@@ -16,6 +16,7 @@ public final class Spells {
 		s.setDamage(1, 4);
 		s.setTargetType(TargetType.PROJECTILE);
 		s.setRange(5);
+		s.setDescription("You fling forward a pile of burning embers at a target, dealing MINDAMAGE - MAXDAMAGE fire damage.");
 		return s;
 	}
 	public static Spell moltenFire() {
@@ -25,6 +26,7 @@ public final class Spells {
 		s.setEffect(Effects.burning(4, 3), 75);
 		s.setTargetType(TargetType.PROJECTILE);
 		s.setRange(4);
+		s.setDescription("Hurl a globe of molten fire towards your target, dealing MINDAMAGE - MAXDAMAGE fire damage, with a chance to light the target on fire.");
 		return s;
 	}
 	public static Spell flameWave() {
@@ -33,6 +35,7 @@ public final class Spells {
 		s.setDamage(3, 7);
 		s.setEffect(Effects.burning(4, 2), 60);
 		s.setTargetType(TargetType.SELF);
+		s.setDescription("You blast a wave of fire around yourself, dealing MINDAMAGE - MAXDAMAGE fire damage to each adjacent creature, with a chance to light them on fire.");
 		s.setRadius(1);
 		return s;
 	}
@@ -41,6 +44,7 @@ public final class Spells {
 		s.setType(Type.FIRE);
 		s.setDamage(4, 7);
 		s.setTargetType(TargetType.BEAM);
+		s.setDescription("You summon a beam of pure heat, dealing MINDAMAGE - MAXDAMAGE fire damage to every creature in a line.");
 		s.setRange(4);
 		return s;
 	}
@@ -50,6 +54,7 @@ public final class Spells {
 		s.setDamage(7, 10);
 		s.setTargetType(TargetType.TARGET);
 		s.setRadius(1);
+		s.setDescription("You flick a tiny globe of fire towards your target, which quickly blossoms into a fiery explosion dealing MINDAMAGE - MAXDAMAGE fire damage to every creature caught in the blast.");
 		return s;
 	}
 	
@@ -63,6 +68,7 @@ public final class Spells {
 		s.setTargetType(TargetType.TARGET);
 		s.setRange(6);
 		s.setEffect(Effects.slowed(6, 5), 80);
+		s.setDescription("A target of your choice becomes slowed, taking MINDAMAGE - MAXDAMAGE cold damage in the process.");
 		return s;
 	}
 	public static Spell iceShard() {
@@ -71,6 +77,7 @@ public final class Spells {
 		s.setDamage(2, 5);
 		s.setTargetType(TargetType.PROJECTILE);
 		s.setEffect(Effects.slowed(3,3), 50);
+		s.setDescription("Throw a razor sharp shard of ice at a target, dealing MINDAMAGE - MAXDAMAGE cold damage, with a chance to become slowed.");
 		return s;
 	}
 	public static Spell summonSimulacrum(CreatureFactory f) {
@@ -104,6 +111,7 @@ public final class Spells {
 		};
 		s.setType(Type.COLD);
 		s.setTargetType(TargetType.SELF);
+		s.setDescription("Summon a simulacrum, a weak ice elemental that will fight alongside you for a short time.");
 		s.setUseText("summon a simulacrum");
 		return s;
 	}
@@ -112,6 +120,7 @@ public final class Spells {
 		s.setType(Type.COLD);
 		s.setTargetType(TargetType.SELF);
 		s.setEffect(Effects.armorOfFrost(),100);
+		s.setDescription("Coat yourself with an armor made of ice. This increases your armor and slightly decreases your speed for a short time.");
 		return s;
 	}
 	public static Spell icicle() {
@@ -120,15 +129,17 @@ public final class Spells {
 		s.setDamage(4, 6);
 		s.setTargetType(TargetType.PROJECTILE);
 		s.setEffect(Effects.slowed(5,4), 70);
+		s.setDescription("Hurl a giant icicle, dealing MINDAMAGE - MAXDAMAGE cold damage, with a chance to slow your target.");
 		return s;
 	}
 	public static Spell massChill() {
 		Spell s = new Spell("Chill", 4, 3);
 		s.setType(Type.COLD);
-		s.setDamage(0, 2);
+		s.setDamage(0, 1);
 		s.setTargetType(TargetType.SELF);
-		s.setRadius(4);
+		s.setRadius(3);
 		s.setEffect(Effects.slowed(8, 6), 80);
+		s.setDescription("Every creature within 3 tiles of you that you can see takes MINDAMAGE - MAXDAMAGE cold damage, with a high chance to become slowed.");
 		return s;
 	}
 	
@@ -142,6 +153,7 @@ public final class Spells {
 		s.setTargetType(TargetType.PROJECTILE);
 		s.setRange(1);
 		s.setEffect(Effects.shocked(2), 80);
+		s.setDescription("You reach out with a shocking grasp to deal MINDAMAGE - MAXDAMAGE air damage and shock your target for their next turn.");
 		return s;
 	}
 	public static Spell swiftness() {
@@ -149,14 +161,16 @@ public final class Spells {
 		s.setType(Type.AIR);
 		s.setTargetType(TargetType.SELF);
 		s.setEffect(Effects.swift(6,5),100);
+		s.setDescription("Empowered by the wind, your movement delay decreases by 5 for a short time.");
 		return s;
 	}
 	public static Spell minorStun() {
-		Spell s = new Spell("Minor Stun", 3, 2);
+		Spell s = new Spell("Minor Stun", 5, 2);
 		s.setType(Type.AIR);
 		s.setTargetType(TargetType.TARGET);
 		s.setRange(4);
 		s.setEffect(Effects.stun(4),70);
+		s.setDescription("Use an unseen electrical current to try to stun a creature that you can see for a few turns.");
 		return s;
 	}
 	public static Spell blink() {
@@ -178,6 +192,7 @@ public final class Spells {
 		};
 		s.setType(Type.AIR);
 		s.setTargetType(TargetType.SELF);
+		s.setDescription("Pulled along by electrical currents, you randomly teleport to a tile within 5 tiles of you that you can see.");
 		return s;
 	}
 	public static Spell whirlwind() {
@@ -199,6 +214,7 @@ public final class Spells {
 		s.setTargetType(TargetType.SELF);
 		s.setRadius(1);
 		s.setDamage(2, 5);
+		s.setDescription("Summon a mighty gust of air to blast back each creature adjacent to you, dealing MINDAMAGE - MAXDAMAGE to each of them.");
 		return s;
 	}
 	public static Spell lightningBolt() {
@@ -207,20 +223,22 @@ public final class Spells {
 		s.setDamage(7, 10);
 		s.setTargetType(TargetType.BEAM);
 		s.setRange(5);
-		s.setEffect(Effects.shocked(2), 75);
+		s.setEffect(Effects.shocked(2), 75); 
+		s.setDescription("Hurl a mighty bolt of lightning. Each creature struck by it takes MINDAMAGE - MAXDAMAGE air damage, with a high chance to become shocked for their next turn.");
 		return s;
 	}
 	
 	/**
 	 * POISON SPELLS
 	 */
-	public static Spell sting() {
+	static Spell sting() {
 		Spell s = new Spell("Sting", 1, 1);
 		s.setType(Type.POISON);
 		s.setEffect(Effects.poisoned(5, 1), 90);
-		s.setDamage(2, 4);
+		s.setDamage(1, 3);
 		s.setRange(4);
 		s.setTargetType(TargetType.PROJECTILE);
+		s.setDescription("A short range poison spell, sting deals MINDAMAGE-MAXDAMAGE poison damage, with a high chance to poison the target for several turns.");
 		return s;
 	}
 	public static Spell minorConfuse() {
@@ -229,6 +247,7 @@ public final class Spells {
 		s.setEffect(Effects.confused(4), 70);
 		s.setRange(4);
 		s.setTargetType(TargetType.TARGET);
+		s.setDescription("Cause a small amount of toxic fog to infect your targets brain, confusing them for a few turns.");
 		return s;
 	}
 	
@@ -242,6 +261,7 @@ public final class Spells {
 		s.setEffect(Effects.curePoison(), 100);
 		s.setTargetType(TargetType.TARGET);
 		s.setBeneficial(true);
+		s.setDescription("Call on the power of light to purge all poisons from your body.");
 		return s;
 	}
 	public static Spell innerGlow() {
@@ -249,6 +269,7 @@ public final class Spells {
 		s.setType(Type.LIGHT);
 		s.setEffect(Effects.glowing(6,4), 80);
 		s.setTargetType(TargetType.TARGET);
+		s.setDescription("Your target begins to glow with an inner light, making them easier to hit in the gloominess of the dungeon.");
 		return s;
 	}
 	public static Spell regenerateHealth() {
@@ -257,6 +278,7 @@ public final class Spells {
 		s.setEffect(Effects.healOverTime(8, 2), 100);
 		s.setTargetType(TargetType.TARGET);
 		s.setBeneficial(true);
+		s.setDescription("You begin to regenerate, healing 2 HP every turn for 8 turns.");
 		return s;
 	}
 	public static Spell heroism() {
@@ -265,6 +287,7 @@ public final class Spells {
 		s.setEffect(Effects.strong(8, 2), 100);
 		s.setTargetType(TargetType.TARGET);
 		s.setBeneficial(true);
+		s.setDescription("The power of light grants you heroic strength, making you stronger for 8 turns.");
 		return s;
 	}
 	
@@ -276,6 +299,7 @@ public final class Spells {
 		s.setType(Type.DARK);
 		s.setEffect(Effects.slowed(duration, amount), 75);
 		s.setTargetType(TargetType.TARGET);
+		s.setDescription("You sap the energy from your targets limbs, increasing their attack delay and movement delay by " + amount + " for " + duration + " turns.");
 		return s;
 	}
 	public static Spell weaken() {
@@ -283,6 +307,7 @@ public final class Spells {
 		s.setType(Type.DARK);
 		s.setEffect(Effects.weak(6, 4), 70);
 		s.setTargetType(TargetType.TARGET);
+		s.setDescription("The power of darkness weakens your target, reducing their strength for a short period of time.");
 		return s;
 	}
 	public static Spell blind() {
@@ -291,6 +316,7 @@ public final class Spells {
 		s.setEffect(Effects.blind(4), 60);
 		s.setRange(4);
 		s.setTargetType(TargetType.TARGET);
+		s.setDescription("Blind your target, making them unable to see anywhere further than their own tile.");
 		return s;
 	}
 	public static Spell vulnerable() {
@@ -298,6 +324,7 @@ public final class Spells {
 		s.setType(Type.DARK);
 		s.setEffect(Effects.vulnerable(6, 4), 75);
 		s.setTargetType(TargetType.TARGET);
+		s.setDescription("Darkness is used to prey on your opponents defenses, reducing their armor for a short time.");
 		return s;
 	}
 	public static Spell darksmite() {
@@ -305,8 +332,9 @@ public final class Spells {
 		s.setType(Type.DARK);
 		s.setTargetType(TargetType.TARGET);
 		s.setRange(6);
-		s.setDamage(4, 8);
+		s.setDamage(3, 7);
 		s.setUseText("call upon darkness");
+		s.setDescription("An unholy prayer similar to it's light counterpart causing darkness to strike your target from above, dealing MINDAMAGE - MAXDAMAGE dark damage.");
 		return s;
 	}
 	public static Spell soulSiphon() {
@@ -322,6 +350,7 @@ public final class Spells {
 		s.setDamage(4, 8);
 		s.setAttackValue(6);
 		s.setTargetType(TargetType.PROJECTILE);
+		s.setDescription("You use dark magic to drain your target's life force directly, dealing MINDAMAGE - MAXDAMAGE dark damage and healing yourself for some of it.");
 		return s;
 	}
 	

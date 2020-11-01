@@ -85,11 +85,11 @@ public class EquipmentFactory {
 		item.addTag(ItemTag.LIGHT);
 		item.setDamageType(Type.PIERCING);
 		item.setDescription("A short double-edged fighting knife with a sharp point. Ideal for quick strikes or stabbing unaware foes.");
-		setMeleeWeaponCondition(item, z);
-		if (item.is(ItemTag.RUSTED))
-			item.setImage(daggerIconD);
-		if (item.is(ItemTag.PRISTINE))
-			item.setImage(daggerIconP);
+//		setMeleeWeaponCondition(item, z);
+//		if (item.is(ItemTag.RUSTED))
+//			item.setImage(daggerIconD);
+//		if (item.is(ItemTag.PRISTINE))
+//			item.setImage(daggerIconP);
 		world.addAtEmptyLocation(item,z);
 		return item;
 	}
@@ -102,11 +102,11 @@ public class EquipmentFactory {
 		item.addTag(ItemTag.LIGHT);
 		item.setDamageType(Type.SLASHING);
 		item.setDescription("A short and light blade. Perfect for your off hand, or for slashing an enemy.");
-		setMeleeWeaponCondition(item, z);
-		if (item.is(ItemTag.RUSTED))
-			item.setImage(shortSwordIconD);
-		if (item.is(ItemTag.PRISTINE))
-			item.setImage(shortSwordIconP);
+//		setMeleeWeaponCondition(item, z);
+//		if (item.is(ItemTag.RUSTED))
+//			item.setImage(shortSwordIconD);
+//		if (item.is(ItemTag.PRISTINE))
+//			item.setImage(shortSwordIconP);
 		world.addAtEmptyLocation(item,z);
 		return item;
 	}
@@ -140,11 +140,11 @@ public class EquipmentFactory {
 		item.addTag(ItemTag.CLEAVING);
 		item.setDamageType(Type.SLASHING);
 		item.setDescription("A small and mundane axe, it is still perfectly serviceable for cleaving enemies in two.");
-		setMeleeWeaponCondition(item, z);
-		if (item.is(ItemTag.RUSTED))
-			item.setImage(handaxeIconD);
-		if (item.is(ItemTag.PRISTINE))
-			item.setImage(handaxeIconP);
+//		setMeleeWeaponCondition(item, z);
+//		if (item.is(ItemTag.RUSTED))
+//			item.setImage(handaxeIconD);
+//		if (item.is(ItemTag.PRISTINE))
+//			item.setImage(handaxeIconP);
 		world.addAtEmptyLocation(item,z);
 		return item;
 	}

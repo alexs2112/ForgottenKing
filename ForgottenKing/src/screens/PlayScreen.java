@@ -37,7 +37,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = true;
+    private boolean devMode = false;
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
@@ -160,6 +160,8 @@ public class PlayScreen extends Screen {
     		c = key.getText().charAt(0);
     	if (subscreen != null) {
     		subscreen = subscreen.respondToUserInput(key);
+    		if (player.meditating() > 0)
+    			meditatePlayer();
     	} else if (player.isStunned()) {
     		endAfterUserInput = true;
     		player.notify("You are stunned!");
@@ -167,6 +169,8 @@ public class PlayScreen extends Screen {
     		endAfterUserInput = true;
     		player.notify("You are confused!");
     		player.confusedWander();
+    	} else if (player.meditating() > 0) {
+    		meditatePlayer();
     	} else {
     		if (code.equals(KeyCode.LEFT) || c == 'h' || code.equals(KeyCode.NUMPAD4)) { player.moveBy(-1,0,0); }
     		else if (code.equals(KeyCode.RIGHT) || c == 'l' || code.equals(KeyCode.NUMPAD6)) { player.moveBy(1,0,0); }
@@ -286,7 +290,7 @@ public class PlayScreen extends Screen {
 			return new LevelUpScreen(player, this);
 		}
 		if (player.hp() <= 0)
-			repeatKeyPress = true;	//Repeats the players last keypress to force them into the lose screen immediately
+			repeatKeyPress = true;
     	return this;
     }
 	
@@ -491,12 +495,22 @@ public class PlayScreen extends Screen {
     		if (player.creatureInSight())
     			player.notify("There are creatures in view");
     		else {
-    			if (player.hp() >= player.maxHP())
-    				player.notify("Health Restored");
-    			if (player.mana() >= player.maxMana())
-    				player.notify("Mana Restored");
+    			player.notify("Finished resting!");
     		}
     	}
+	}
+	private void meditatePlayer() {
+		if (!player.creatureInSight() && player.meditating() > 0) {
+			player.modifyMeditating(-1);
+			if (player.meditating() > 0)
+				repeatKeyPress = true;
+			else
+	    		player.notify("Done meditating");
+		} else {
+			player.stopMeditating();
+			if (player.creatureInSight())
+				player.notify("Enemies interrupt your meditation!");
+		}
 	}
 	
 }

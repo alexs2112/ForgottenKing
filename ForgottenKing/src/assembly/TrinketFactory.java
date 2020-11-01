@@ -42,7 +42,11 @@ public class TrinketFactory {
 	
 	public Item newRingOfPoisonResistance(int z) {
 		Image i = images.get(0);
-		Item item = new Item("Ring of Poison Resistance", ItemType.RING, i);
+		Item item = new Item("Ring of Poison Resistance", ItemType.RING, i) {
+			public String shortDesc() {
+				return "resist poison";
+			}
+		};
 		item.addResistance(Type.POISON, 1);
 		item.setDescription(descriptions.get(i) + ", it is etched with a serpentine design and glows a slight green.");
 		world.addAtEmptyLocation(item, z);

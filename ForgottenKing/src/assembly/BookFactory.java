@@ -27,7 +27,7 @@ public class BookFactory {
 	}
 	
 	public Item newRandomBook(int z) {
-		if (z < 4) {
+		if (z < 3) {
 			switch( (int)(Math.random()*4) ) {
 			case 0: return newBookOfKindling(z);
 			case 1: return newBookOfChills(z);

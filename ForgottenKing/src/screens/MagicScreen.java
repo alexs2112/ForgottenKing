@@ -20,6 +20,7 @@ public class MagicScreen extends Screen {
 	private char selection;
 	private int[] floatingValues;
 	private Type[] types;
+	private int points;
 
 	public MagicScreen(Player player) {
 		this.magic = player.magic();
@@ -30,6 +31,7 @@ public class MagicScreen extends Screen {
 		selection = '-';
 		floatingValues = new int[6];
 		types = new Type[6];
+		points = magic.floatingPoints();
 		types[0] = Type.FIRE;
 		types[1] = Type.COLD;
 		types[2] = Type.AIR;
@@ -54,21 +56,27 @@ public class MagicScreen extends Screen {
 			draw(root, types[i].largeIcon(), x+6, y+5 + 72*i);
 			write(root, types[i].text(), x+100, y+48 + 72*i, font, Color.WHITE);
 			int wx = x+334;
-			if (magic.get(types[i]) > 9)
+			int value = magic.get(types[i]) + floatingValues[i];
+			if (value > 9)
 				wx-= 10;
-			write(root, ""+magic.get(types[i]), wx, y + 48 + 72*i, font, Color.WHITE);
+			Color c = Color.WHITE;
+			if (value > magic.get(types[i]))
+				c = Color.LIMEGREEN;
+			else if (value < magic.get(types[i]))
+				c = Color.RED;
+			write(root, ""+value, wx, y + 48 + 72*i, font, c);
 			if (i == letters.indexOf(selection)) {
 				wx = x + 377;
-				if (magic.floatingPoints() > 0) {
+				if (points > 0) {
 					draw(root, Loader.plusIcon, wx, y + 72*i + 18);
 					wx += 32;
-				} if (magic.get(types[i]) > 0)
+				} if (value > 0)
 					draw(root, Loader.minusIcon, wx, y + 72*i + 18);
 			}
 		}
-		if (magic.floatingPoints() > 0) {
+		if (points > 0) {
 			draw(root, Loader.spellPointsBox, x, y += 452);
-			write(root, "[" + magic.floatingPoints() + "] Free Points", x + 14, y += 42, font, Color.DEEPSKYBLUE);
+			write(root, "[" + points + "] Free Points", x + 14, y += 42, font, Color.DEEPSKYBLUE);
 		}
 		
 		x = 682;
@@ -84,6 +92,14 @@ public class MagicScreen extends Screen {
 		}
 		
 		write(root, "Spell Slots: " + (player.totalSpellSlots() - player.remainingSpellSlots()) + "/" + player.totalSpellSlots(), 64, 664, font, Color.WHITE);
+		
+		write(root, "[esc] to exit", 600, 700, font, Color.WHITE);
+		if (changesPresent()) {
+			if (player.creatureInSight())
+				write(root, "Enemies in sight!", 600, 732, font, Color.GREY);
+			else
+				write(root, "[enter] to start meditating", 600, 732, font, Color.WHITE);
+		}
 	}
 	
 	public Screen respondToUserInput(KeyEvent key) {
@@ -91,8 +107,13 @@ public class MagicScreen extends Screen {
     	if (key.getText().length() > 0)
     		c = key.getText().charAt(0);
     	
-		if (key.getCode().equals(KeyCode.ESCAPE) || key.getCode().equals(KeyCode.ENTER))
+		if (key.getCode().equals(KeyCode.ESCAPE))
             return null;
+		if (key.getCode().equals(KeyCode.ENTER)) {
+			player.meditate(floatingValues);
+			return null;
+		}
+			
 		if (key.getCode().equals(KeyCode.DOWN)) {
 			int i = letters.indexOf(selection);
 			int n = i + 1;
@@ -110,22 +131,29 @@ public class MagicScreen extends Screen {
 		if (letters.indexOf(c) != -1)
 			selection = c;
 		if (key.isShiftDown() && c == '=' && letters.indexOf(selection) != -1)
-			floatingValues[letters.indexOf(selection)]++;
+			modifyType(letters.indexOf(selection), 1);
 		if (c == '-' && letters.indexOf(selection) != -1)
-			floatingValues[letters.indexOf(selection)]--;
-		modifyTypes();
+			modifyType(letters.indexOf(selection), -1);
 		return this;
 	}
-	
-	private void modifyTypes() {
-		player.modifyTime(8);	//Currently just adds to the players time to do this, fix this later as a "rest" kind of method
-		magic.modify(Type.FIRE, floatingValues[0]);
-		magic.modify(Type.COLD, floatingValues[1]);
-		magic.modify(Type.AIR, floatingValues[2]);
-		magic.modify(Type.POISON, floatingValues[3]);
-		magic.modify(Type.LIGHT, floatingValues[4]);
-		magic.modify(Type.DARK, floatingValues[5]);
-		floatingValues = new int[6];
+	private void modifyType(int index, int x) {
+		if (x < 0) {
+			if (magic.get(types[index]) + floatingValues[index] > 0) {
+				floatingValues[index]--;
+				points++;
+			}
+		} else if (x > 0) {
+			if (points > 0) {
+				floatingValues[index]++;
+				points--;
+			}
+		}
+	}
+	private boolean changesPresent() {
+		for (int i = 0; i < floatingValues.length; i++)
+			if (floatingValues[i] != 0)
+				return true;
+		return false;
 	}
 
 }

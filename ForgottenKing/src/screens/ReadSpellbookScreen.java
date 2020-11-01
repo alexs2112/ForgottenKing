@@ -66,7 +66,11 @@ public class ReadSpellbookScreen extends Screen {
         	c = Color.LIGHTGREY;
         write(root, s.type().text() + " : " + s.level(), 960, y, fontS, c);
         write(root, "Mana: " + s.cost(), 960, y+32, fontS, Color.WHITE);
-        writeWrapped(root, s.description(), x, y+=32, 800, fontS, Color.ANTIQUEWHITE);
+        
+        String string = s.description(player);
+        if (s.range() != 0)
+        	string += "\n\n" + s.name() + " has a range of " + s.range();
+        writeWrapped(root, string, x, y+=32, 800, fontS, Color.ANTIQUEWHITE);
         
         c = Color.WHITE;
     	if (player.remainingSpellSlots() < s.level())

@@ -82,7 +82,7 @@ public class Creature {
     /**
      * Magic Skills
      */
-    private Magic magic;
+    protected Magic magic;
     public Magic magic() { return magic; }
     public void setMagic() { magic = new Magic(this); }
     
@@ -444,7 +444,9 @@ public class Creature {
 		for (int i = 0; i < inventory.items().length; i++) {
 			Item item = inventory.get(i);
 			if (item != null) {
-				putAt(item, x, y, z);
+				int q = inventory.quantityOf(item);
+				for (int n = 0; n < q; n++)
+					putAt(item, x, y, z);
 			}
 		}
 		if (killer != null && killer != this)

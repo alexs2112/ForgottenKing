@@ -43,6 +43,7 @@ public class SelectAbilityScreen extends Screen {
         	write(root, "You have learned no abilities!", x,y + 32, font, Color.ANTIQUEWHITE);
         	return;
         }
+        y += 36;
         for (int i = 0; i < abilities.size(); i++) {
         	Ability a = abilities.get(i);
         	String line = letters.charAt(i) + " - " + a.name() + " (" + a.cooldown() + ")";
@@ -51,7 +52,8 @@ public class SelectAbilityScreen extends Screen {
         		c = Color.DARKGREY;
         		line += " [" + a.time() + "]";
         	}
-        	write(root, line, x, 32*i + y + 32, font, c);
+        	draw(root, a.icon(), x, 34*i + y - 26);
+        	write(root, line, x+48, 34*i + y, font, c);
         }
     }
     

@@ -7,7 +7,7 @@ import spells.TargetType;
 
 public class Abilities {
 	public static Ability rage() {
-		Ability a = new Ability("Rage", null, 35) {
+		Ability a = new Ability("Rage", Loader.rageIcon, 35) {
 			public void activate(Creature owner, Creature other) {
 				if (owner.hasItemTag(ItemTag.MEDIUMARMOR) || owner.hasItemTag(ItemTag.HEAVYARMOR)) {
 					owner.notify("You cannot activate this ability while wearing medium or heavy armor.");
@@ -22,13 +22,13 @@ public class Abilities {
 		return a;
 	}
 	public static Ability reach() {
-		Ability a = new Ability("Reach Attack", null, 0) {
+		Ability a = new Ability("Reach Attack", Loader.reachAttackIcon, 0) {
 			public void activate(Creature owner, Creature other) {
 				owner.attack(other);
 			}
 		};
 		a.setTargetType(TargetType.PROJECTILE);
-		a.setDescription("You can attack enemies two tiles away.");
+		a.setDescription("You can attack enemies up to two tiles away.");
 		a.setRange(2);
 		return a;
 	}

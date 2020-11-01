@@ -7,7 +7,15 @@ public class Spell {
 	private String name;
 	public String name() { return name; }
 	private String description;
-	public String description() { return description; }
+	public String description(Creature owner) {
+		if (description == null)
+			return null;
+		if (damage != null)
+			return description.replaceAll("MINDAMAGE", ""+(damage[0] + owner.magic().get(type) + owner.getSpellcasting()/2))
+			.replaceAll("MAXDAMAGE", ""+(damage[1] + owner.magic().get(type) + owner.getSpellcasting()/2)); 
+		else
+			return description;
+		}
 	public void setDescription(String s) { description = s; }
 	
 	private int level;
@@ -107,14 +115,18 @@ public class Spell {
 			damage = target.getDamageReceived(damage, damageType);
 			
 			String text = actionText;
+			if (text == null)
+				text = "hit the " + target.name();
 			if (damage >= 0)
-				text += " (deals " + damage + " damage!)";
+				text += " dealing " + damage + " damage!)";
 			else
-				text += " (heals for " + (-damage) + "!)";
-			owner.doAction(owner.name() + " -> " + target.name() + text);
+				text += " healing for " + (-damage) + "!)";
+			owner.doAction(text);
 			
 			target.modifyHP(-damage, owner);
 		}
 	}
+	
+	
 
 }
