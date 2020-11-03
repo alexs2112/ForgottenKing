@@ -2,6 +2,7 @@ package assembly;
 
 import creatures.Attribute;
 import creatures.Creature;
+import creatures.Tag;
 import creatures.Type;
 import spells.Effect;
 
@@ -177,12 +178,16 @@ public final class Effects {
 	public static Effect stun(int duration) {
 		Effect e = new Effect("Stunned", duration) {
 			public void start(Creature creature) {
-				creature.modifyStunAmount(1);
+				creature.addTag(Tag.STUNNED);
 				creature.doAction("become stunned");
+				for (Tag t : creature.tags())
+					System.out.println(t.name());
 			}
 			public void end(Creature creature) {
-				creature.modifyStunAmount(-1);
+				creature.removeTag(Tag.STUNNED);
 				creature.doAction("shake off the stun");
+				for (Tag t : creature.tags())
+					System.out.println(t.name());
 			}
 		};
 		e.setImage(Loader.stunnedIcon);
@@ -191,11 +196,11 @@ public final class Effects {
 	public static Effect confused(int duration) {
 		Effect e = new Effect("Confused", duration) {
 			public void start(Creature creature) {
-				creature.modifyConfusedAmount(1);
+				creature.addTag(Tag.CONFUSED);
 				creature.doAction("become confused");
 			}
 			public void end(Creature creature) {
-				creature.modifyConfusedAmount(-1);
+				creature.removeTag(Tag.CONFUSED);
 				creature.doAction("shake off the confusion");
 			}
 		};
@@ -268,12 +273,16 @@ public final class Effects {
 			public void start(Creature creature) {
 				creature.modifyAttribute(Attribute.STR, 4);
 				creature.modifyAttackDelay(-3);
+				creature.addTag(Tag.NOCAST);
+				creature.addTag(Tag.NOQUAFF);
 				creature.doAction("go berserk");
 			}
 			public void end(Creature creature) {
 				creature.modifyAttribute(Attribute.STR, -4);
 				creature.modifyAttackDelay(3);
 				creature.doAction("calm down");
+				creature.removeTag(Tag.NOCAST);
+				creature.removeTag(Tag.NOQUAFF);
 				creature.addDelayedEffect(weak(10, 4));
 				creature.addDelayedEffect(slowed(10, 5));
 			}

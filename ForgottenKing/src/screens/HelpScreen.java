@@ -106,7 +106,7 @@ public class HelpScreen extends Screen {
 		strings.add("");
 		strings.add("Magic Commands");
 		strings.add("[c] to Cast a memorized spell");
-		strings.add("[m] to allocate Magic points");
+		strings.add("[m] to Meditate on spell points");
 		strings.add("");
 		strings.add("Character Stats:");
 		strings.add("[s] to view your (very basic) character Stats");

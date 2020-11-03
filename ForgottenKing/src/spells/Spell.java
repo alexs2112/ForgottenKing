@@ -118,9 +118,9 @@ public class Spell {
 			if (text == null)
 				text = "hit the " + target.name();
 			if (damage >= 0)
-				text += " dealing " + damage + " damage!)";
+				text += " (dealing " + damage + " damage!)";
 			else
-				text += " healing for " + (-damage) + "!)";
+				text += " (healing for " + (-damage) + "!)";
 			owner.doAction(text);
 			
 			target.modifyHP(-damage, owner);

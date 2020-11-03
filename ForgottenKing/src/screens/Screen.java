@@ -66,5 +66,9 @@ public abstract class Screen {
     		text.setWrappingWidth(width);
     	root.getChildren().add(text);
     }
+    public static void writeCentered(Group root, String s, int x, int y, Font font, Color colour) {
+    	int startX = x - (s.length() * ((int)font.getSize()+1))/2;
+    	write(root, s, startX, y, font, colour);
+    }
     
 }

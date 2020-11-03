@@ -35,6 +35,10 @@ public class PerkScreen extends Screen {
 				perks.add(t);
 		for (Tag t : allPerks)
 			if (!perks.contains(t))
+				if (t.canUnlock(player))
+					perks.add(t);
+		for (Tag t : allPerks)
+			if (!perks.contains(t))
 				perks.add(t);
 	}
 	
@@ -49,8 +53,7 @@ public class PerkScreen extends Screen {
 		write(root, "Available Perk Points: [" + player.perkPoints() + "]               Prerequisites:", 48, y, font,  Color.WHITE);
 		y+=12;
 		int top = Math.min(Math.max(0, select-2), perks.size()-5);
-		int bot = top+5;
-		for (int i = top; i < bot; i++) {
+		for (int i = top; i < top+5; i++) {
 			Tag t = perks.get(i);
 			if (player.tags().contains(t))
 				draw(root, Loader.perkBoxBlue, x, y + 124*(i-top));
@@ -60,7 +63,11 @@ public class PerkScreen extends Screen {
 				draw(root, Loader.perkBoxSelection, x, y + 124*(i-top));
 			if (t.icon() != null)
 				draw(root, t.icon(), x+20, y+124*(i-top)+20);
-			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42 + 124*(i-top), 632, fontS, Color.ANTIQUEWHITE);
+			Color textColour = Color.WHITE;
+			if (!t.canUnlock(player))
+				textColour = Color.DARKGREY;
+			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42 + 124*(i-top), 632, fontS, textColour);
+			writeWrapped(root, t.prerequisites(), 832, y+44+123*(i-top), 400, fontS, Color.WHITE);
 		}
 		if (top + 5 < perks.size())
 			draw(root, Loader.arrowDown, 20, y+662);
@@ -74,8 +81,9 @@ public class PerkScreen extends Screen {
     	if (key.getCode().equals(KeyCode.UP))
     		select = Math.max(0, select-1);
     	if (key.getCode().equals(KeyCode.ENTER)) {
-			if (player.perkPoints() > 0 && !player.is(perks.get(select))) {
+			if (player.perkPoints() > 0 && !player.is(perks.get(select)) && perks.get(select).canUnlock(player)) {
 				player.addTag(perks.get(select));
+				perks.get(select).unlock(player);
 				player.modifyPerkPoints(-1);
 				return this;
 			}

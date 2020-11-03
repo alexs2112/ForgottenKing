@@ -65,12 +65,7 @@ public class Creature {
     private int mana;
     public int mana() { return mana; }
     private int maxMana;
-    public int maxMana() {
-    	int i = maxMana + (level*getWill())/2; 
-    	if (is(Tag.ACOLYTES_MANA))
-    		i += 5;
-    	return i;
-    }
+    public int maxMana() { return maxMana + (level*getWill())/2; }
     public void fillMana() { mana = maxMana(); }
     public void modifyMana(int x) { mana = Math.min(maxMana(), mana + x); }
     public void setMana(int current, int max) { maxMana = max; mana = current; }
@@ -158,8 +153,11 @@ public class Creature {
 	private int armorValue;
 	public int armorValue() {
 		int value = armorValue;
-		for (Item i : equipment.values())
+		for (Item i : equipment.values()) {
 			value += i.armorValue();
+			if (i.is(ItemTag.MEDIUMARMOR) && is(Tag.MEDIUM_ARMOR_MASTERY))
+				value++;
+		}
 		return value;
 	}
 	public int getCurrentAttackValue() {
@@ -214,19 +212,32 @@ public class Creature {
 	public void modifyArmorValue(int x) { armorValue += x; }
 	private HashMap<Type, Integer> resistances;
 	public void setResistance(Type type, int n) {
+		if (resistances == null)
+			resistances = new HashMap<Type, Integer>();
 		resistances.put(type, n);
+	}
+	public void modifyResistance(Type type, int n) {
+		if (resistances == null || !resistances.containsKey(type))
+			setResistance(type, n);
+		else
+			resistances.put(type, resistances.get(type)+n);
 	}
 	public int getResistance(Type type) {
 		int r = 0;
-		if (resistances.containsKey(type)) {
-			r = resistances.get(type);
-			for (Item i : equipment.values()) {
-				r += i.getResistance(type);
-			}
+		if (resistances != null)
+			if (resistances.containsKey(type))
+				r = resistances.get(type);
+		for (Item i : equipment.values()) {
+			r += i.getResistance(type);
+			if (type.physical() && i.is(ItemTag.HEAVYARMOR))
+				r += 1;
 		}
+		
 		return r;
 	}
 	public int getDamageReceived(double amount, Type type) {
+		if (resistances == null)
+			return (int)amount;
 		if (resistances.containsKey(type)) {
 			if (getResistance(type) <= -1)
 				amount *= 1.5;
@@ -244,9 +255,12 @@ public class Creature {
 	private int evasion;
 	public int evasion() { 
 		int i = evasion + getAgility();
-		for (Item item : equipment.values())
-			if (item.is(ItemTag.LIGHTARMOR) && is(Tag.LIGHT_ARMOR_PROFICIENCY))
+		for (Item item : equipment.values()) {
+			if (item.is(ItemTag.LIGHTARMOR) && is(Tag.LIGHT_ARMOR_MASTERY))
 				i+=2;
+			if (item.is(ItemTag.MEDIUMARMOR) && is(Tag.MEDIUM_ARMOR_MASTERY))
+				i+=1;
+		}
 		return  i - getArmorDebuff();
 	}
 	public void modifyEvasion(int x) { evasion += x; }
@@ -276,9 +290,9 @@ public class Creature {
 	public int getArmorDebuff() {
 		int value = 0;
 		for (Item i : equipment.values()) {
-			if (i.is(ItemTag.MEDIUMARMOR) && !is(Tag.MEDIUM_ARMOR_SKILL) && getBrawn() < 5)
+			if (i.is(ItemTag.MEDIUMARMOR) && getBrawn() < 5)
 				value+=2;
-			if (i.is(ItemTag.HEAVYARMOR) && !is(Tag.HEAVY_ARMOR_SKILL) && getBrawn() < 8) {
+			if (i.is(ItemTag.HEAVYARMOR) && getBrawn() < 8) {
 				value += 3;
 				if (getBrawn() < 5)
 					value += 2;
@@ -340,7 +354,6 @@ public class Creature {
         this.visionRadius = 9;
         this.inventory = new Inventory(26);
         this.effects = new ArrayList<Effect>();
-        this.resistances = new HashMap<Type, Integer>();
         this.equipment = new HashMap<ItemType, Item>();
         this.attributes = new HashMap<Attribute, Integer>();
         this.stats = new HashMap<Stat, Integer>();
@@ -709,6 +722,10 @@ public class Creature {
 	}
 	
 	public void quaff(Item item){
+		if (is(Tag.NOQUAFF)) {
+			notify("You cannot quaff potions!");
+			return;
+		}
         doAction("quaff a " + item.name());
         addEffect(item.effect());
         getRidOf(item);
@@ -802,6 +819,9 @@ public class Creature {
 			return;
 		} if (spell.cost() > mana) {
 			notify("You don't have enough mana to cast " + spell.name());
+			return;
+		} if (is(Tag.NOCAST)) {
+			notify("You cannot cast spells");
 			return;
 		}
 		modifyMana(-spell.cost());
@@ -964,12 +984,8 @@ public class Creature {
 		effectsOnHit.put(e, chance);
 		e.setOwner(this);
 	}
-	private int stunAmount;		//The amount of times the stun has been placed, in case you get stunned multiple times
-	public void modifyStunAmount(int x) { stunAmount += x; }
-	public boolean isStunned() { return stunAmount > 0; }
-	private int confusedAmount;
-	public void modifyConfusedAmount(int x) { confusedAmount += x; }
-	public boolean isConfused() { return confusedAmount > 0; }
+	public boolean isStunned() { return is(Tag.STUNNED); }
+	public boolean isConfused() { return is(Tag.CONFUSED); }
 	public void confusedWander() { ai.confusedWander(); }
 	
 	/**
@@ -984,8 +1000,12 @@ public class Creature {
 		if (tags == null)
 			tags = new ArrayList<Tag>();
 		tags.add(t);
-		if (t == Tag.SPELLCASTER)
-			setMagic();
+		t.unlock(this);
+	}
+	public void removeTag(Tag t) {
+		if (tags == null)
+			return;
+		tags.remove(t);
 	}
 	
 	/**

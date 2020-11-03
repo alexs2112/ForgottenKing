@@ -1,6 +1,7 @@
 package screens;
 
 import creatures.Creature;
+import creatures.Player;
 import features.Feature;
 import items.Inventory;
 import javafx.scene.Group;
@@ -8,7 +9,7 @@ import world.Tile;
 
 public class ExamineScreen extends TargetBasedScreen {
 
-    public ExamineScreen(Group root, Creature player, String caption, int sx, int sy) {
+    public ExamineScreen(Group root, Player player, String caption, int sx, int sy) {
         super(root, player, caption, sx, sy);
         caption = player.name() + player.desc();
     }

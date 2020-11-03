@@ -94,6 +94,8 @@ public class CreatureFactory {
 	    world.addAtEmptyLocation(player, z);
 	    player.addTag(Tag.PLAYER);
 	    player.addTag(c.title);
+	    player.setLargeIcon(c.largeIcon);
+	    player.setTitle(c.title.text());
 	    new PlayerAI(player, messages, fov);
 	    return player;
 	}

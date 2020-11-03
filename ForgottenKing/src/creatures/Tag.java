@@ -18,23 +18,48 @@ public enum Tag {
 	
 	//Creature Behaviour Tags
 	ALLY("Ally", "This creature is friendly to you and will help you against your foes.", Loader.allyIcon),
-	SPELLCASTER("Spellcaster", "This creature is capable of casting spells against you.", Loader.spellcasterIcon),
+	SPELLCASTER("Spellcaster", "This creature is capable of casting spells against you.", Loader.spellcasterIcon) {
+		public void unlock(Creature player) { player.setMagic(); }
+	},
 	ERRATIC("Erratic", "This creature moves in a random direction 40% of the time.", Loader.erraticIcon),
 	VENOMOUS("Venomous", "This creature has a chance to poison you when they hit you.", Loader.venomousIcon),
 	UNDEAD("Undead", "This creature heals when inflicted with poison damage.", Loader.undeadIcon),
 	LEGENDARY("Legendary", ""),	//Maybe add a description and icon at some point, mostly here for grammar atm
+	
+	//Temporary Modifiers
+	STUNNED(),	//Cannot take actions on your turn
+	CONFUSED(),	//Each turn you move in a random direction and can't do anything else
+	NOCAST(),	//Cannot cast spells or meditate
+	NOQUAFF(),	//Cannot drink potions
 	
 	//Perks
 	QUICK_LEARNER("Quick Learner", "You gain an additional 10% experience from all actions.", Loader.quickLearnerIcon),	//Starting perk for the adventurer
 	FASTENED_ARMOR("Fastened Armor", "Your armor blocks an extra 8% of physical damage you take.", Loader.fastenArmorIcon), //Starting perk for the fighter
 	IMPROVED_CRITICAL("Improved Critical", "Your critical chance is increased by 10%.", Loader.improvedCriticalIcon), 		//Starting perk for the ranger
 	IMPROVED_CLEAVE("Improved Cleave", "Your cleaving damage is increased to 80%, instead of 50%.", Loader.improvedCleaveIcon), //Starting perk for the berserker
-	ACOLYTES_MANA("Acolyte's Mana", "Your maximum mana pool is increased by five.", Loader.acolytesManaIcon),
-	DEADLY_CRITICAL("Deadly Critical", "You deal an additional DEX-Accuracy damage on critical hits.", Loader.deadlyCriticalIcon),
+	ACOLYTES_MANA("Acolyte's Mana", "Your maximum mana pool is increased by five.", Loader.acolytesManaIcon) {
+		public void unlock(Creature player) { player.setMana(player.mana()+5, player.maxMana()+5); }
+		public boolean canUnlock(Creature player) { return (player.will() + player.intelligence() + player.spellcasting() >= 6); }
+		public String prerequisites() { return "6 combined Will, Spellcasting and Intelligence"; }
+	},	//Starting perk for the elementalist
 	STRONG_ARROWS("Strong Arrows", "The chance for your fired arrows to break is reduced by 12%.", Loader.strongArrowsIcon),
-	LIGHT_ARMOR_PROFICIENCY("Light Armor Proficiency", "Equipping items with the Light Armor property increases your evasion by 2.", Loader.lightArmorProficiencyIcon),
-	MEDIUM_ARMOR_SKILL("Medium Armor Skill", "You can equip items with the Medium Armor property without penalty.", Loader.mediumArmorSkillIcon),
-	HEAVY_ARMOR_SKILL("Heavy Armor Skill", "You can equip items with the Heavy Armor property without penalty.", Loader.heavyArmorSkillIcon),
+	MEDIUM_ARMOR_MASTERY("Medium Armor Mastery", "Medium armor gives you +1 armor and +1 evasion while equipped.", Loader.mediumArmorSkillIcon),
+	LIGHT_ARMOR_MASTERY("Light Armor Mastery", "Equipping items with the Light Armor property increases your evasion by 2.", Loader.lightArmorProficiencyIcon) {
+		public boolean canUnlock(Creature player) { return (player.agility()+player.dexterity() >= 5); }
+		public String prerequisites() { return "5 combined Agility and Dexterity"; }
+	},
+	HEAVY_ARMOR_MASTERY("Heavy Armor Mastery", "Heavy armor gives you 1 resistance to all slashing, crushing, and piercing damage.", Loader.heavyArmorSkillIcon) {
+		public boolean canUnlock(Creature player) { return (player.brawn()+player.strength() >= 9); }
+		public String prerequisites() { return "9 combined Brawn and Strength"; }
+	},
+	DEADLY_CRITICAL("Deadly Critical", "You deal an additional DEX-Accuracy damage on critical hits.", Loader.deadlyCriticalIcon) {
+		public boolean canUnlock(Creature player) { return (player.is(Tag.IMPROVED_CRITICAL) && player.accuracy() >= 5); }
+		public String prerequisites() { return "[Improved Critical] perk and 5 base Accuracy"; }
+	},
+	/*POLEARM_MASTER("Polearm Master", "When activating the reach attack ability, you can attack creatures 2 tiles away instead of 1.", null){//Loader.polearmMasterIcon) {
+		public boolean canUnlock(Creature player) { return (player.brawn() + player.strength() >= 5); }
+		public String prerequisites() { return "5 combined Brawn and Strength"; }
+	}*/
 	;
 	
 	private String text;
@@ -52,13 +77,20 @@ public enum Tag {
 	private Tag(String text, String description) {
 		this(text, description, null);
 	}
+	private Tag() {
+		this("", "", null);
+	}
 	
 	public static List<Tag> listOfPerks() {
-		return new ArrayList<Tag>(EnumSet.range(QUICK_LEARNER, HEAVY_ARMOR_SKILL));
+		return new ArrayList<Tag>(EnumSet.range(QUICK_LEARNER, DEADLY_CRITICAL));
 	}
 	
 	public boolean isPerk() {
 		return listOfPerks().contains(this);
 	}
+	
+	public boolean canUnlock(Creature player) { return true; }	//To be overridden with prerequisites
+	public String prerequisites() { return ""; }				//
+	public void unlock(Creature player) { }						//
 
 }

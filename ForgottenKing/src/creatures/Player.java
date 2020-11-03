@@ -16,6 +16,16 @@ public class Player extends Creature {
     }
     
     /**
+     * FLAVOUR STUFF
+     */
+    private Image largeIcon;
+    public Image largeIcon() { return largeIcon; }
+    public void setLargeIcon(Image x) { largeIcon = x; }
+    private String title;
+    public String title() { return title; }
+    public void setTitle(String s) { title = s; }
+    
+    /**
      * PERK POINTS
      */
     private int perkPoints;
@@ -81,6 +91,12 @@ public class Player extends Creature {
     public void castSpell(Spell spell, List<Point> points) {
     	super.castSpell(spell, points);
     	lastCast = spell;
+    }
+    private Ability lastActivated;
+    public Ability lastActivated() { return lastActivated; }
+    public void activateAbility(Ability a, List<Point> points) {
+    	super.activateAbility(a, points);
+    	lastActivated = a;
     }
 	
 	/**

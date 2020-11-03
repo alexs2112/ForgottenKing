@@ -10,6 +10,10 @@ public final class Loader {
 	public static Image selectionBoxFull = new Image(Screen.class.getResourceAsStream("resources/selection.png"));
 	public static Image yellowSelection = ImageCrop.cropImage(selectionBoxFull, 0, 0, 32, 32);
 	public static Image redSelection = ImageCrop.cropImage(selectionBoxFull, 32, 0, 32, 32);
+	private static Image startScreenMenuBoxFull = new Image(Screen.class.getResourceAsStream("resources/start-screen-menu-box.png"));
+	public static Image startScreenMenuBox = ImageCrop.cropImage(startScreenMenuBoxFull, 0, 0, 600, 78);
+	public static Image startScreenMenuBoxGold = ImageCrop.cropImage(startScreenMenuBoxFull, 0, 78, 600, 78);
+	public static Image startScreenFull = new Image(Screen.class.getResourceAsStream("resources/full-screens/start-screen.png"));
 	
 	public static Image multi_item_icon = new Image(Screen.class.getResourceAsStream("resources/multi_item_icon.png"));
 	public static Image armedEnemyIcon = new Image(Screen.class.getResourceAsStream("resources/armed_enemy.png"));

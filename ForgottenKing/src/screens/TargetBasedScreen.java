@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import creatures.Creature;
+import creatures.Player;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -15,7 +16,7 @@ import javafx.stage.Stage;
 import spells.TargetType;
 
 public class TargetBasedScreen extends Screen {
-	protected Creature player;
+	protected Player player;
 	protected String caption;
 	private int sx;
 	private int sy;
@@ -28,7 +29,7 @@ public class TargetBasedScreen extends Screen {
 	protected int spellRadius;
 	protected int range;
 
-	public TargetBasedScreen(Group root, Creature player, String caption, int sx, int sy){
+	public TargetBasedScreen(Group root, Player player, String caption, int sx, int sy){
         this.player = player;
         this.caption = caption;
         this.sx = sx;

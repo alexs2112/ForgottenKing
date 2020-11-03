@@ -32,4 +32,5 @@ public class Abilities {
 		a.setRange(2);
 		return a;
 	}
+	
 }

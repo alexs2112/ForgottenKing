@@ -1,7 +1,7 @@
 package screens;
 
 import creatures.Ability;
-import creatures.Creature;
+import creatures.Player;
 import javafx.scene.Group;
 import spells.TargetType;
 import tools.Point;
@@ -9,7 +9,7 @@ import tools.Point;
 public class ActivateAbilityScreen extends TargetBasedScreen {
 	private Ability ability;
 
-	public ActivateAbilityScreen(Group root, Creature player, String caption, int sx, int sy, Ability ability) {
+	public ActivateAbilityScreen(Group root, Player player, String caption, int sx, int sy, Ability ability) {
 		super(root, player, caption, sx, sy);
 		this.ability = ability;
 		this.targetType = ability.targetType();

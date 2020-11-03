@@ -18,7 +18,7 @@ public class SelectSpellScreen extends Screen {
     private Group playRoot;
     private int sx;
     private int sy;
-    private int select = -1;
+    private int select = 0;
     
     public SelectSpellScreen(Group playRoot, Player player, int sx, int sy){
         this.player = player;
@@ -46,16 +46,30 @@ public class SelectSpellScreen extends Screen {
         	return;
         }
         x += 32;
-        for (int i = 0; i < spells.size(); i++) {
+        
+        int top = Math.min(Math.max(0, select-5), Math.max(0, spells.size()-10));
+        for (int i = top; i < top+10; i++) {
+        	if (i >= spells.size())
+        		break;
         	Spell spell = spells.get(i);
         	String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.cost() + " Mana) [" + spell.type().text() + ":" + spell.level() + "]";
         	Color c = Color.WHITE;
         	if (player.magic().get(spell.type()) < spell.level() ||
         			player.mana() < spell.cost())
         		c = Color.DARKGREY;
-        	write(root, line, x, 32*i + y + 32, font, c);
+        	write(root, line, x, 32*(i-top) + y + 32, font, c);
         	if (i == select)
-        		draw(root, Loader.arrowRight, x-48, 32*i+y+4);
+        		draw(root, Loader.arrowRight, x-48, 32*(i-top)+y+4);
+        }
+        
+        y = 396;
+        if (spells.size() > 0) {
+        	Spell s = spells.get(select);
+        	ReadSpellbookScreen.displaySpellInfo(root, player, s, y);
+        	Color c = Color.WHITE;
+        	if (player.magic().get(s.type()) < s.level() || player.mana() < s.cost())
+        		c = Color.DARKGREY;
+        	writeCentered(root, "[enter] to cast " + s.name(), 640, 764, font, c);
         }
     }
     

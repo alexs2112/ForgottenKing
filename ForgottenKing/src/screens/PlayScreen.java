@@ -37,7 +37,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = false;
+    private boolean devMode = true;
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
@@ -61,7 +61,7 @@ public class PlayScreen extends Screen {
 		player = creatureFactory.newPlayer(messages, 0, fov, character);
 		creatureFactory.setPlayer(player);
 		world.setEntrance(player.x, player.y);
-    	player.setMagic();
+		player.setMagic();
         itemFactory.equipPlayer(player);
         if (character.tags() != null)
         	for (Tag t : character.tags())
@@ -72,11 +72,11 @@ public class PlayScreen extends Screen {
         if (devMode) {
         	player.addEquipment(itemFactory.equipment().newDevSword(-1));
         	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));
+        	player.addEquipment(itemFactory.equipment().newSpear(-1));
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
         player.notify("I hope you enjoy your stay");
-        
     }
     
 	public void displayOutput(Stage stage) {
@@ -194,7 +194,10 @@ public class PlayScreen extends Screen {
     			subscreen = new DropScreen(player);
     		else if (c == 'q' && !key.isShiftDown()) {
     			endAfterUserInput = false;
-    			subscreen = new QuaffScreen(player);
+    			if (player.is(Tag.NOQUAFF))
+    				player.notify("You cannot drink potions");
+    			else
+    				subscreen = new QuaffScreen(player);
     		}
     		else if (c == 'q' && key.isShiftDown())
     			subscreen = new QuiverScreen(player);
@@ -219,9 +222,13 @@ public class PlayScreen extends Screen {
     			subscreen = new PerkScreen(player);
     		else if (c == 'c' && key.isShiftDown())
      			closeDoor();
-    		else if (c == 'c' && !key.isShiftDown())
-    			subscreen = new SelectSpellScreen(root, player, getScrollX(), getScrollY());
-    		else if (c == 'a')
+    		else if (c == 'c' && !key.isShiftDown()) {
+    			if (player.is(Tag.NOCAST)) {
+    				player.notify("You cannot cast spells");
+    				endAfterUserInput = false;
+    			} else
+    				subscreen = new SelectSpellScreen(root, player, getScrollX(), getScrollY());
+    		} else if (c == 'a')
     			subscreen = new SelectAbilityScreen(root, player, getScrollX(), getScrollY());
     		else if (key.isShiftDown() && c == '/') {
     			subscreen = new HelpScreen();

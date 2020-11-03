@@ -47,6 +47,7 @@ public abstract class InventoryBasedScreen extends Screen {
         int y = 50;
         write(root, "What would you like to " + getVerb() + "?", 48, y, font,  Color.WHITE);
         int num = 0;
+
         for (int i = 0; i < items.length; i++) {
         	Item item = items[i];
         	if (item == null)
