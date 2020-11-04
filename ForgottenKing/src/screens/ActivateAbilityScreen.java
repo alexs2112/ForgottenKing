@@ -13,7 +13,7 @@ public class ActivateAbilityScreen extends TargetBasedScreen {
 		super(root, player, caption, sx, sy);
 		this.ability = ability;
 		this.targetType = ability.targetType();
-		this.spellRadius = ability.radius();
+		this.radius = ability.radius();
 		this.range = ability.range();
 		if (targetType == TargetType.PROJECTILE) {
 			Point p = player.getAutoTarget();

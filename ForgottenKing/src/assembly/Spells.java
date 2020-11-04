@@ -185,8 +185,8 @@ public final class Spells {
                     my = (int)(Math.random() * 13) - 6;
                 }
                 while (!caster.canEnter(caster.x+mx, caster.y+my, caster.z)
-                        && caster.canSee(caster.x+mx, caster.y+my, caster.z));
-                caster.moveBy(mx, my, 0);
+                        && !caster.canSee(caster.x+mx, caster.y+my, caster.z));
+                caster.moveTo(caster.x + mx, caster.y + my, caster.z);
                 caster.doAction("blink");
 			}
 		};

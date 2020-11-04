@@ -37,7 +37,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = true;
+    private boolean devMode = false;
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
@@ -70,9 +70,8 @@ public class PlayScreen extends Screen {
         	for (Ability a : character.abilities())
         		player.addAbility(a);
         if (devMode) {
-        	player.addEquipment(itemFactory.equipment().newDevSword(-1));
-        	player.addEquipment(itemFactory.equipment().newDevBreastplate(-1));
-        	player.addEquipment(itemFactory.equipment().newSpear(-1));
+        	player.addEquipment(itemFactory.weapon().newDevSword(-1));
+        	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -291,11 +290,6 @@ public class PlayScreen extends Screen {
 				player.modifyTime(-1);
 			}
 		}
-
-		if (player.xp() >= player.nextLevelXP()) {
-			player.notify("You leveled up!");
-			return new LevelUpScreen(player, this);
-		}
 		if (player.hp() <= 0)
 			repeatKeyPress = true;
     	return this;
@@ -324,60 +318,48 @@ public class PlayScreen extends Screen {
 	Font statFontXS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
     private void displayStats() {
     	draw(root, Loader.playerUIFull, 1040, 0);
-        write(root, "HP: " + player.hp() + "/" + player.maxHP(), 1060, 34, statFontM, Color.RED);
-        write(root, "MP: " + player.mana() + "/" + player.maxMana(), 1060, 82, statFontM, Color.BLUE);
-        write(root, "EXP: " + player.xp() + "/" + player.nextLevelXP(), 1060, 115, statFontXS, Color.YELLOW);
+        writeCentered(root, "HP: " + player.hp() + "/" + player.maxHP(), 1160, 34, statFontM, Color.RED);
+        writeCentered(root, "MP: " + player.mana() + "/" + player.maxMana(), 1160, 82, statFontM, Color.BLUE);
+        writeCentered(root, "XP: " + player.xp() + "/" + player.nextLevelXP(), 1160, 115, statFontXS, Color.YELLOW);
         int y = 154;
-        int x = 1110;
-        if (player.movementDelay() > 9)
-        	x -= 8;
-        write(root, ""+player.movementDelay(), x, y, statFontS, Color.WHITE);
-        x = 1190;
-        if (player.attackDelay() > 9)
-        	x -= 8;
-        write(root, ""+player.attackDelay(), x, y, statFontS, Color.WHITE);
+        writeCentered(root, ""+player.movementDelay(), 1120, y, statFontS, Color.WHITE);
+        writeCentered(root, ""+player.attackDelay(), 1200, y, statFontS, Color.WHITE);
         y += 48;
-        write(root, ""+player.evasion(), 1096, y, statFontS, Color.WHITE);
-        x = 1196;
-        if (player.armorValue() > 9)
-        	x -= 6;
-        if (player.armorValue() > 99)
-        	x -= 6;
-        write(root, ""+player.armorValue(), x, y, statFontS, Color.WHITE);
+        writeCentered(root, ""+player.evasion(), 1114, y, statFontS, Color.WHITE);
+        writeCentered(root, ""+player.armorValue(), 1204, y, statFontS, Color.WHITE);
         
         if (player.weapon() != null && player.weapon().isRanged())
-        	write(root, "+" + player.getCurrentRangedAttackValue() + " [" + (player.getCurrentRangedDamage()[0]) + "-" + (player.getCurrentRangedDamage()[1]) + "]", 
-                	1096, y += 48, statFontS, Color.WHITE);
+        	writeCentered(root, "+" + player.getCurrentRangedAttackValue() + " [" + (player.getCurrentRangedDamage()[0]) + "-" + (player.getCurrentRangedDamage()[1]) + "]", 
+                	1178, y += 48, statFontS, Color.WHITE);
         else
-        	write(root, "+" + player.getCurrentAttackValue() + " [" + (player.getMinDamage()+player.getCurrentDamageMod()) + "-" + (player.getMaxDamage()+player.getCurrentDamageMod()) + "]", 
-        			1096, y += 48, statFontS, Color.WHITE);
+        	writeCentered(root, "+" + player.getCurrentAttackValue() + " [" + (player.getMinDamage()+player.getCurrentDamageMod()) + "-" + (player.getMaxDamage()+player.getCurrentDamageMod()) + "]", 
+        			1178, y += 48, statFontS, Color.WHITE);
         
         if (player.weapon() != null)
         	for (ItemTag t : player.weapon().tags())
         		if (t.isWeapon() && t.icon() != null)
         			draw(root, t.icon(), 1049, 224);
         	
-        
         y = 302;
-        x = 1142;
-        int x2 = x + 92;
-        write(root, "" + player.getToughness(), x, y, statFontS, Color.WHITE);
-        write(root, "" + player.getBrawn(), x2, y, statFontS, Color.WHITE);
-        write(root, "" + player.getAgility(), x, y+=44, statFontS, Color.WHITE);
-        write(root, "" + player.getAccuracy(), x2, y, statFontS, Color.WHITE);
-        write(root, "" + player.getWill(), x, y+=44, statFontS, Color.WHITE);
-        write(root, "" + player.getSpellcasting(), x2, y, statFontS, Color.WHITE);
+        int x = 1150;
+        int x2 = 1242;
+        writeCentered(root, "" + player.getToughness(), x, y, statFontS, Color.WHITE);
+        writeCentered(root, "" + player.getBrawn(), x2, y, statFontS, Color.WHITE);
+        writeCentered(root, "" + player.getAgility(), x, y+=44, statFontS, Color.WHITE);
+        writeCentered(root, "" + player.getAccuracy(), x2, y, statFontS, Color.WHITE);
+        writeCentered(root, "" + player.getWill(), x, y+=44, statFontS, Color.WHITE);
+        writeCentered(root, "" + player.getSpellcasting(), x2, y, statFontS, Color.WHITE);
 
         int num = 0;
         for (Item i : player.equipment().values()) {
         	draw(root, Loader.equipmentBox, 1040, 408 + 48*num);
         	draw(root, i.image(), 1049, 417 + 48*num);
-        	write(root, i.shortDesc(), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
+        	write(root, i.shortDesc(player), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
         	num++;
         	if (player.quiver() != null && i.isRanged()) {
         		draw(root, Loader.equipmentBoxBlue, 1040, 408 + 48*num);
             	draw(root, player.quiver().image(), 1049, 417 + 48*num);
-            	write(root, "[" + player.inventory().quantityOf(player.quiver()) + "] " + player.quiver().shortDesc(), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
+            	write(root, "[" + player.inventory().quantityOf(player.quiver()) + "] " + player.quiver().shortDesc(player), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
             	num++;
         	}
         }
@@ -403,6 +385,20 @@ public class PlayScreen extends Screen {
         if (player.perkPoints() > 0) {
         	String s = "[p]: "+player.perkPoints()+" Perk Point";
         	if (player.perkPoints() > 1)
+        		s += "s";
+        	s += " Available!";
+        	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
+        }
+        if (player.attributePoints() > 0) {
+        	String s = "[s]: "+player.attributePoints()+" Attribute Point";
+        	if (player.attributePoints() > 1)
+        		s += "s";
+        	s += " Available!";
+        	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
+        }
+        if (player.statPoints() > 0) {
+        	String s = "[s]: "+player.statPoints()+" Stat Point";
+        	if (player.attributePoints() > 1)
         		s += "s";
         	s += " Available!";
         	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);

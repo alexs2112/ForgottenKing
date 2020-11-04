@@ -31,6 +31,13 @@ public class Ability {
 	public int radius() { return radius; }
 	public void setRadius(int x) { radius = x; }
 	
+	//For tags that grant more powerful abilities, such as polearm master
+	private Ability upgradedAbility;
+	private Tag prerequisiteTag;
+	public Ability upgradedAbility() { return upgradedAbility; }
+	public Tag prerequisiteTag() { return prerequisiteTag; }
+	public void setUpgrade(Ability ability, Tag prerequisite) { upgradedAbility = ability; prerequisiteTag = prerequisite; }
+	
 	public Ability(String name, Image icon, int cooldown) {
 		this.name = name;
 		this.icon = icon;

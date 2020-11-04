@@ -6,7 +6,9 @@ import java.util.List;
 
 import creatures.Ability;
 import creatures.Attribute;
+import creatures.Player;
 import creatures.Stat;
+import creatures.Tag;
 import creatures.Type;
 import javafx.scene.image.Image;
 import spells.Effect;
@@ -27,22 +29,23 @@ public class Item {
 	private Type damageType;
 	public Type damageType() { return damageType; }
 	public void setDamageType(Type damageType) { this.damageType = damageType; }
-	private boolean equippable;
-	public boolean equippable() { return equippable; }
+	public boolean equippable() { 
+		return type == ItemType.ARMOR ||
+				type == ItemType.RING ||
+				type == ItemType.AMULET ||
+				type == ItemType.BOOTS ||
+				type == ItemType.CLOAK ||
+				type == ItemType.GLOVES ||
+				type == ItemType.HEAD ||
+				type == ItemType.OFFHAND ||
+				type == ItemType.WEAPON;
+	}
 	
 	public Item(String name, ItemType type, Image image) {
 		this.name = name;
 		this.image = image;
 		this.type = type;
 		damage = new int[2];
-		if (type == ItemType.ARMOR ||
-			type == ItemType.RING ||
-			type == ItemType.AMULET ||
-			type == ItemType.BOOTS ||
-			type == ItemType.CLOAK ||
-			type == ItemType.GLOVES ||
-			type == ItemType.WEAPON)
-			equippable = true;
 		if (type == ItemType.BOOK)
 			newSpellList();
 	}
@@ -206,7 +209,7 @@ public class Item {
 	/**
 	 * String Handling
 	 */
-	public String shortDesc() {
+	public String shortDesc(Player player) {
 		String x = "";
 		if (isRanged() || type.isAmmo()) {
 			if (rangedAttackValue != 0)
@@ -218,8 +221,16 @@ public class Item {
 					x += " (" + rangedDamage[0] + ")";
 			}
 		} else {
-			if (attackValue != 0)
-				x += "+" + attackValue;
+			if (attackValue != 0) {
+				if (attackValue > 0)
+					x += "+";
+				if (!(attackValue < 0 && is(ItemTag.SHIELD) && player.is(Tag.SHIELD_TRAINING))) {
+					if (is(ItemTag.VERSATILE) && player.equipment().get(ItemType.OFFHAND) == null)
+						x += (attackValue + 2);
+					else
+						x += attackValue;
+				}
+			}
 			if (minDamage() != 0 && maxDamage() != 0)
 				x += " (" + minDamage() + "-" + maxDamage() + ") ";
 		}

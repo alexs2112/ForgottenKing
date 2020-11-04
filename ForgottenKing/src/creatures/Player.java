@@ -33,6 +33,35 @@ public class Player extends Creature {
     public void modifyPerkPoints(int x) { perkPoints += x; }
     
     /**
+     * LEVEL POINTS
+     */
+    private int statPoints;
+    public int statPoints() { return statPoints; }
+    public void modifyStatPoints(int x) { statPoints += x; }
+    private int attributePoints;
+    public int attributePoints() { return attributePoints; }
+    public void modifyAttributePoints(int x) { attributePoints += x; }
+    private void levelUp() {
+    	notify("You level up!");
+    	modifyXP(-nextLevelXP());
+		modifyLevel(1);
+		int x = (int)(Math.random() * 6) + 1;
+		modifyMaxHP(x);
+		modifyHP(x);
+		if (level() % 4 == 0)
+			modifyPerkPoints(1);
+		if (level() % 3 == 0)
+			modifyAttributePoints(1);
+		else
+			modifyStatPoints(1);
+    }
+    public void modifyXP(int x) {
+    	super.modifyXP(x);
+    	if (xp() > nextLevelXP())
+    		levelUp();
+    }
+    
+    /**
      * MAGIC
      */
     public int totalSpellSlots() { return getWill() + level(); }

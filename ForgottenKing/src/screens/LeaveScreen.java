@@ -1,6 +1,7 @@
 package screens;
 
 import creatures.Creature;
+import creatures.Player;
 import items.Item;
 import items.ItemTag;
 import javafx.scene.Group;
@@ -9,9 +10,15 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 public class LeaveScreen extends Screen {
-	public LeaveScreen(Creature player) {
+	Player player;
+	public LeaveScreen(Player player) {
+		this.player = player;
+	}
+	
+	public void displayOutput(Stage stage) {
 		Group root = new Group();
 		String s = getWinOrLose(player);
 		Screen.draw(root, new Image(this.getClass().getResourceAsStream(s)), 0, 0);
@@ -23,8 +30,9 @@ public class LeaveScreen extends Screen {
 			write(root, "Cowardice!", 510, 530, 22, Color.WHITE);
 			write(root, "You will be remembered for failing!", 290, 580, 22, Color.WHITE);
 		}
-			
 		scene = new Scene(root,1280,800);
+		stage.setScene(scene);
+		stage.show();
 	}
 
 	@Override

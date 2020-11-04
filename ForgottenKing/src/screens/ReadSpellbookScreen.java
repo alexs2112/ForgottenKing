@@ -42,11 +42,13 @@ public class ReadSpellbookScreen extends Screen {
         write(root, (player.totalSpellSlots()-player.remainingSpellSlots()) + "/" + player.totalSpellSlots(), 1036, y+32, fontS, Color.WHITE);
         for (int i = 0; i < spells.size(); i++) {
         	Spell spell = spells.get(i);
-        	String line = letters.charAt(i) + " - " + spell.name() + "\t\t[" + spell.type().text() + " : " + spell.level() + "]";
+        	String line = letters.charAt(i) + " - " + spell.name();
+        	String typeLine = "[" + spell.type().text() + " : " + spell.level() + "]";
         	Color c = Color.WHITE;
         	if (player.remainingSpellSlots() < spell.level())
         		c = Color.GREY;
         	write(root, line, x, 32*i + y + 32, font, c);
+        	write(root, typeLine, 732, 32*i + y + 32, font, c);
         	if (i == select)
         		draw(root, Loader.arrowRight, x-48, y + 4 + 32*i);
         }
@@ -101,7 +103,7 @@ public class ReadSpellbookScreen extends Screen {
     	Font font = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 22);
     	Font fontS = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 20);
     	draw(root, Loader.screenSeparator, 0, y);
-    	int x = 96;
+    	int x = 64;
     	y += 32;
     	write(root, s.name(), x, y+=32, font, Color.WHITE);
     	Color c = Color.WHITE;
@@ -113,6 +115,8 @@ public class ReadSpellbookScreen extends Screen {
     	String string = s.description(player);
     	if (s.range() != 0)
     		string += "\n\n" + s.name() + " has a range of " + s.range();
+    	if (s.effect() != null && s.effect().description() != null)
+    		string += "\n\n" + s.effect().description();
     	writeWrapped(root, string, x, y+=32, 800, fontS, Color.ANTIQUEWHITE);
     }
 

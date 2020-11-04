@@ -127,10 +127,15 @@ public class StatsScreen extends Screen {
 		}
 		if (i == 0)
 			write(root, "No Resistances!", 50, 530, fontL, Color.ANTIQUEWHITE);
+		
+		if (player.statPoints() > 0 || player.attributePoints() > 0)
+			writeCentered(root, "[enter] to Level Up!", 640, 764, fontL, Color.AQUA);
 	}
 	
 	public Screen respondToUserInput(KeyEvent key) {
-		if (key.getCode().equals(KeyCode.ESCAPE))
+		if (key.getCode().equals(KeyCode.ENTER))
+			return new LevelUpScreen(player);
+	    else if (key.getCode().equals(KeyCode.ESCAPE))
             return null;
         else
             return this;

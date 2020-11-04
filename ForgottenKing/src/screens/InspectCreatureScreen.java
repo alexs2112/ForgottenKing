@@ -5,10 +5,7 @@ import java.util.List;
 
 import creatures.Creature;
 import creatures.Tag;
-import creatures.Type;
 import items.Item;
-import items.ItemTag;
-import items.ItemType;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;

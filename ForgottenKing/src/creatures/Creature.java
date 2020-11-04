@@ -145,8 +145,11 @@ public class Creature {
     private int attackValue;
 	public int attackValue() { 
 		int value = attackValue;
-		for (Item i : equipment.values())
-			value += i.attackValue();
+		for (Item i : equipment.values()) {
+			if (!(i.is(ItemTag.SHIELD) && is(Tag.SHIELD_TRAINING) && i.attackValue() < 0))
+				value += i.attackValue();
+			//value += i.attackValue();
+		}
 		return value - getArmorDebuff();
 	}
 	public void modifyAttackValue(int x) { attackValue += x; }
@@ -156,7 +159,7 @@ public class Creature {
 		for (Item i : equipment.values()) {
 			value += i.armorValue();
 			if (i.is(ItemTag.MEDIUMARMOR) && is(Tag.MEDIUM_ARMOR_MASTERY))
-				value++;
+				value++; 
 		}
 		return value;
 	}
@@ -174,13 +177,21 @@ public class Creature {
 			if (e.name().equals("Blind"))
 				attackMod /= 2;
 		}
+		if (is(Tag.UNARMED_TRAINING) && weapon() == null)
+			attackMod += level();
+		if (weapon() != null && weapon().is(ItemTag.VERSATILE) && equipment().get(ItemType.OFFHAND) == null) {
+			attackMod += 2;
+		}
 		return attackMod;
 	}
 	public int getCurrentDamageMod() {
+		int x = getBrawn() / 2;
 		if (weapon() != null && weapon().is(ItemTag.LIGHT))
 			if (getAccuracy() > getBrawn())
-				return getAccuracy() / 2;
-		return getBrawn() / 2;
+				x =  getAccuracy() / 2;
+		if (is(Tag.UNARMED_TRAINING) && weapon() == null)
+			x += getBrawn() / 2 + getAccuracy() / 2;
+		return x;
 	}
 	public int getCurrentRangedDamageValue() {
 		int i = weapon().getRangedDamageValue() + getAccuracy() / 2;
@@ -446,6 +457,8 @@ public class Creature {
 		if (hp <= 0) {
 			die(source);
 		}
+		if (source != null && !canSee(source.x, source.y, source.z) && amount < 0)
+			notify("Something hits you for " + (-amount) + " damage!");
 	}
 	public void modifyHP(int amount) {
 		modifyHP(amount, null);
@@ -487,7 +500,7 @@ public class Creature {
 	public void attack(Creature other) {
 		modifyTime(attackDelay());
 		basicAttack(other, weapon(), getCurrentAttackValue(), getDamageValue() + getCurrentDamageMod(), "attack the " + other.name());
-		
+
 		/**
 		 * Handling for the CLEAVING weapon tag
 		 */
@@ -504,7 +517,12 @@ public class Creature {
 		}
 	}
 	private void throwAttack(Item item, Creature other) {
-        basicAttack(other, item, getAccuracy() + getBrawn()/2 + item.thrownAttackValue(), getBrawn()/2 + getAccuracy()/2 + item.getThrownDamage(), "throw a " + item.name() + " at the " + other.name());
+		int attack = getAccuracy() + getBrawn()/2 + item.thrownAttackValue();
+		int damage = getBrawn()/2 + getAccuracy()/2 + item.getThrownDamage();
+		if (is(Tag.STRONG_ARM)) {
+			damage += level();
+		}
+        basicAttack(other, item, attack, damage, "throw a " + item.name() + " at the " + other.name());
         if (item.type() == ItemType.POTION) {
         	Effect effect = item.effect();
         	effect.setOwner(this);
@@ -626,7 +644,7 @@ public class Creature {
 		if (!items.contains(item)) {
 			notify("The " + item.name() + " isn't here!");
 		}*/
-		if (inventory.isFull()) {
+		if (inventory.isFull() && !inventory.contains(item)) {
 			notify("Your inventory is full");
 		}
 		if (items.contains(item) && !inventory.isFull()) {
@@ -658,7 +676,8 @@ public class Creature {
 			doAction("drop " + n + " "+ item.name() + "s");
 	}
 	private void getRidOf(Item item) {
-		unequip(item);
+		if (inventory.quantityOf(item) == 1)
+			unequip(item);
 		inventory.remove(item);
 	}
 	private void putAt(Item item, int wx, int wy, int wz) {
@@ -693,6 +712,14 @@ public class Creature {
 			notify("You cannot equip this");
 			return;
 		}
+		if (item.type() == ItemType.WEAPON && item.is(ItemTag.TWOHANDED) && equipment.get(ItemType.OFFHAND) != null) {
+			notify("You cannot wield 2H Weapons with an Off-Hand.");
+			return;
+		} else if (item.type() == ItemType.OFFHAND && weapon() != null && weapon().is(ItemTag.TWOHANDED)) {
+			notify("You cannot wield an Off-Hand with a 2H Weapon.");
+			return;
+		}
+		
 		if (hasEquipped(item)) {
 			unequip(item);
 			return;
@@ -702,7 +729,7 @@ public class Creature {
 		if (equipment.containsKey(item.type())) {
 			unequip(equipment.get(item.type()));
 		}
-		if (item.type() == ItemType.WEAPON)
+		if (item.type() == ItemType.WEAPON || item.type() == ItemType.OFFHAND)
 			doAction("wield a " + item.name());
 		else
 			doAction("wear a " + item.name());
@@ -866,9 +893,21 @@ public class Creature {
 	private ArrayList<Ability> abilities;
 	public ArrayList<Ability> abilities() { return abilities; }
 	public void addAbility(Ability newAbility) {
+		int i = -1;
 		if (abilities == null)
 			abilities = new ArrayList<Ability>();
-		abilities.add(newAbility); 
+		for (Ability a : abilities) {
+			if (a.upgradedAbility() != null) 
+				if (a.upgradedAbility().name().equals(newAbility.name())) {
+					i = abilities.indexOf(a);
+					abilities.remove(a);
+					break;
+				}
+		}
+		if (i != -1)
+			abilities.add(i, newAbility);
+		else
+			abilities.add(newAbility); 
 		notify("You learned " + newAbility.name() + "!");
 	}
 	public void removeAbility(Ability ability) {
@@ -896,11 +935,28 @@ public class Creature {
 		a.refreshTime();
 		if (a.useText() != null)
 			doAction(a.useText());
-		a.activate(this);
 		for (Point p : points)
 			if (creature(p.x,p.y,z) != null)
 				a.activate(this, creature(p.x,p.y,z));
+		a.activate(this);
 	}
+	public List<Ability> getAbilities() {
+    	List<Ability> list;
+    	if (abilities() != null)
+    		list = new ArrayList<Ability>(abilities());
+    	else
+    		list = new ArrayList<Ability>();
+    	for (Item i : equipment().values()) {
+    		Ability a = i.ability();
+    		if (a != null) {
+    			if (a.upgradedAbility() != null && is(a.prerequisiteTag()))
+    				list.add(a.upgradedAbility());
+    			else
+    				list.add(a);
+    		}
+    	}
+    	return list;
+    }
 	
 	/**
 	 * Effects
@@ -959,11 +1015,11 @@ public class Creature {
 		return list;
 	}
 	public void update(){  
-		if (hp <= 0)
-			return;
 		regenerate();
     	updateEffects();
     	updateAbilities();
+    	if (hp <= 0)
+			return;
     	ai.onUpdate();  
     }
 	private HashMap<Effect, Integer> effectsOnHit;
@@ -1014,9 +1070,12 @@ public class Creature {
 	private int healthRegenTimer;
 	private int manaRegenTimer;
 	private int healthTimePerTurn() {
+		int x = 50;
 		if (is(Tag.PLAYER))
-			return 100 + (level + getToughness()) * 10;
-		return 50;
+			x = 100 + (level + getToughness()) * 10;
+		if (is(Tag.THICK_SKIN))
+			x += 300;
+		return x;
 	}
 	private int manaTimePerTurn() {
 		if (is(Tag.PLAYER))
@@ -1034,6 +1093,10 @@ public class Creature {
 			modifyMana(1);
 			manaRegenTimer -= 1000;
 		}
+		if (hp > maxHP())
+			modifyHP(-1);
+		if (mana > maxMana())
+			modifyMana(-1);
 	}
 	
     /**

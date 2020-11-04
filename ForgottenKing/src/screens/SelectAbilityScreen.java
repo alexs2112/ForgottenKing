@@ -1,10 +1,8 @@
 package screens;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import creatures.Player;
-import items.Item;
 import creatures.Ability;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
@@ -29,11 +27,7 @@ public class SelectAbilityScreen extends Screen {
         this.playRoot = playRoot;
         this.sx = sx;
         this.sy = sy;
-        abilities = getList();
-        if (player.lastActivated() != null)
-        	System.out.println(player.lastActivated().name());
-        else
-        	System.out.println("null");
+        abilities = player.getAbilities();
         if (player.lastActivated() != null && abilities.contains(player.lastActivated()))
         	select = abilities.indexOf(player.lastActivated());
     }
@@ -91,7 +85,6 @@ public class SelectAbilityScreen extends Screen {
     	char c = '-';
     	if (key.getText().length() > 0)
     		c = key.getText().charAt(0);
-    	List<Ability> abilities = getList();
     	if (letters.indexOf(c) > -1
     		&& abilities != null
     		&& abilities.size() > letters.indexOf(c)) {
@@ -113,18 +106,7 @@ public class SelectAbilityScreen extends Screen {
         return this;
     }
     
-    private List<Ability> getList() {
-    	List<Ability> list;
-    	if (player.abilities() != null)
-    		list = new ArrayList<Ability>(player.abilities());
-    	else
-    		list = new ArrayList<Ability>();
-    	for (Item i : player.equipment().values()) {
-    		if (i.ability() != null)
-    			list.add(i.ability());
-    	}
-    	return list;
-    }
+    
     
 
 }

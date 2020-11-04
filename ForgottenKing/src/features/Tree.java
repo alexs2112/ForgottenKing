@@ -1,7 +1,6 @@
 package features;
 
 import creatures.Creature;
-import javafx.scene.image.Image;
 import world.World;
 
 public class Tree extends Feature {

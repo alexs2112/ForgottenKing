@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import creatures.Attribute;
+import creatures.Player;
 import creatures.Stat;
 import creatures.Type;
 import items.Item;
@@ -31,10 +32,10 @@ public class TrinketFactory {
 		if (roll == 0)
 			return newRingOfPoisonResistance(z);
 		else if (roll == 1)
-			return newRingOfAttribute(z);
+			return newRingOfStat(z);
 		else {
 			if (z > 1)
-				return newRingOfStat(z);
+				return newRingOfAttribute(z);
 			else
 				return newRandomRing(z);
 		}
@@ -43,7 +44,7 @@ public class TrinketFactory {
 	public Item newRingOfPoisonResistance(int z) {
 		Image i = images.get(0);
 		Item item = new Item("Ring of Poison Resistance", ItemType.RING, i) {
-			public String shortDesc() {
+			public String shortDesc(Player player) {
 				return "resist poison";
 			}
 		};
@@ -62,7 +63,7 @@ public class TrinketFactory {
 		case 1: i = images.get(2); a = Attribute.DEX; descText += "faster"; break;
 		default: i = images.get(3); a = Attribute.INT; descText += "smarter"; break;
 		}
-		Item item = new Item("Ring of " + a.text(), ItemType.RING, i);
+		Item item = new Item("+" + strength + " Ring of " + a.text(), ItemType.RING, i);
 		item.setDescription(descriptions.get(i) + ", you feel " + descText + " when you put it on.");
 		item.setAttribute(a, strength);
 		world.addAtEmptyLocation(item, z);
@@ -81,7 +82,7 @@ public class TrinketFactory {
 		case 4: i = images.get(8); a = Stat.WILL; descText += "smarter"; break;
 		default: i = images.get(9); a = Stat.SPELLCASTING; descText += "smarter"; break;
 		}
-		Item item = new Item("Ring of " + a.text(), ItemType.RING, i);
+		Item item = new Item("+" + strength + " Ring of " + a.text(), ItemType.RING, i);
 		item.setDescription(descriptions.get(i) + ", you feel " + descText + " when you put it on.");
 		item.setStat(a, strength);
 		world.addAtEmptyLocation(item, z);

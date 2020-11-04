@@ -39,8 +39,16 @@ public class StartScreen extends Screen {
 				draw(root, Loader.startScreenMenuBox, 340, y + i * 84);
 		}
 		writeCentered(root, "[?] in game for help", 640, 700, fontS, Color.WHITE);
-		writeCentered(root, "Start a New Game", 640, 474+56, font, Color.WHITE);
-		writeCentered(root, "Quit Game", 640, 474+84+56, font, Color.ANTIQUEWHITE);
+		
+		Color c = Color.WHITE;
+		if (select != 0)
+			c = Color.ANTIQUEWHITE;
+		writeCentered(root, "Start a New Game", 640, 474+56, font, c);
+		
+		c = Color.WHITE;
+		if (select != 1)
+			c = Color.ANTIQUEWHITE;
+		writeCentered(root, "Quit Game", 640, 474+84+56, font, c);
 		
 		stage.setScene(scene);
 	    stage.show();

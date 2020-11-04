@@ -11,8 +11,8 @@ import tools.Point;
 public class GenerateDungeon {
 	private int[][] map;
 	private int[][] regions;
-	private Feature[][] feats;
-	public Feature feat(int x, int y) { return feats[x][y]; }
+	private Feature[][] features;
+	public Feature feat(int x, int y) { return features[x][y]; }
 	private int nextRegion;
 	private int height;
 	private int width;
@@ -24,7 +24,7 @@ public class GenerateDungeon {
 		this.height = map[0].length;
 		this.nextRegion = 1;
 		this.set = new ArrayList<Point>();
-		this.feats = new Feature[width][height];
+		this.features = new Feature[width][height];
 	}
 	
 	public int[][] generateDungeon() {
@@ -41,11 +41,12 @@ public class GenerateDungeon {
 		findConnectors();
 		resolveConnections();
 
-		for (int x = 1; x < width-1; x++) {
-			for (int y = 1; y < height-1; y++) {
+		for (int x = 0; x < width-1; x++) {
+			for (int y = 0; y < height-1; y++) {
 				if (isDeadEnd(x, y)) {
 					map[x][y] = 1;
 					regions[x][y] = 0;
+					features[x][y] = null;
 					x = 1;
 					y = 1;
 				}
@@ -193,13 +194,13 @@ public class GenerateDungeon {
 				changeRegion(regions[p.x+1][p.y], n);
 				regions[p.x][p.y] = n;
 				map[p.x][p.y] = 0; 
-				feats[p.x][p.y] = new Door(1); 
+				features[p.x][p.y] = new Door(1); 
 			} else if (regions[p.x][p.y-1] != regions[p.x][p.y+1] && regions[p.x][p.y-1]!= 0 && regions[p.x][p.y+1]!=0) {
 				int n = regions[p.x][p.y-1];
 				changeRegion(regions[p.x][p.y+1], n);
 				regions[p.x][p.y] = n;
 				map[p.x][p.y] = 0; 
-				feats[p.x][p.y] = new Door(0);
+				features[p.x][p.y] = new Door(0);
 			}
 
 		}

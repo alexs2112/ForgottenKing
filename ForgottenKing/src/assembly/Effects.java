@@ -2,26 +2,31 @@ package assembly;
 
 import creatures.Attribute;
 import creatures.Creature;
+import creatures.Stat;
 import creatures.Tag;
 import creatures.Type;
 import spells.Effect;
 
 public final class Effects {
 	public static Effect health(int amount) {
-		return new Effect("Healing", 1){
+		Effect e = new Effect("Healing", 1){
 			public void start(Creature creature){
 				creature.modifyHP(amount);
 				creature.doAction("look healthier");
 			}
 		};
+		e.setDescription("Heals for " + amount + " health.");
+		return e;
 	}
 	public static Effect damage(int amount, Type type) {
-		return new Effect("Damage", 1){
+		Effect e = new Effect("Damage", 1){
 			public void start(Creature creature){
 				creature.modifyHP(-creature.getDamageReceived(amount, type), this.owner);
 				creature.doAction("take " + amount + " " + type.text() + " damage");
 			}
 		};
+		e.setDescription("Deals " + amount + " " + type.name() + " damage.");
+		return e;
 	}
 	public static Effect healOverTime(int duration, int amount) {
 		Effect e = new Effect("Healing", duration) {
@@ -38,15 +43,18 @@ public final class Effects {
 		};
 		e.setImage(Loader.healingIcon);
 		e.setStrength(amount);
+		e.setDescription("Heals for " + amount + " health every turn, for " + duration + " turns.");
 		return e;
 	}
 	public static Effect mana(int amount) {
-		return new Effect("Mana", 1){
+		Effect e = new Effect("Mana", 1){
 	        public void start(Creature creature){
 	            creature.modifyMana(amount);
 	            creature.doAction("glow with energy");
 	        }
 	    };
+	    e.setDescription("Regenerates " + amount + " mana.");
+	    return e;
 	}
 	public static Effect poisoned(int duration, int strength) {
 		Effect e = new Effect("Poisoned", duration){
@@ -62,7 +70,6 @@ public final class Effects {
 						creature.doAction("look sick");
 				}
 			}
-
 			public void update(Creature creature){
 				super.update(creature);
 				int d = creature.getDamageReceived(strength, Type.POISON);
@@ -76,6 +83,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.poisonedIcon);
 		e.setStrength(strength);
+		e.setDescription("Poisoned creatures have a chance to resist based on their toughness. Poisoned creatures take " + strength + " poison damage per turn, for " + duration + " turns.");
 		return e;
 	}
 	public static Effect burning(int duration, int strength) {
@@ -96,6 +104,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.burningIcon);
 		e.setStrength(strength);
+		e.setDescription("Burning creatures catch fire, taking " + strength + " fire damage per turn for " + duration + " turns.");
 		return e;
 	}
 	public static Effect strong(int duration, int amount) {
@@ -111,21 +120,23 @@ public final class Effects {
 		};
 		e.setImage(Loader.strongIcon);
 		e.setStrength(amount);
+		e.setDescription("Strong creatures have increased strength by " + amount + " for " + duration + " turns.");
 		return e;
 	}
 	public static Effect weak(int duration, int amount) {
 		Effect e = new Effect("Weak", duration){
 			public void start(Creature creature){
-				creature.modifyAttribute(Attribute.STR, -amount);
+				creature.modifyStat(Stat.BRAWN, -amount);
 				creature.doAction("look weak");
 			}
 			public void end(Creature creature){
-				creature.modifyAttribute(Attribute.STR, +amount);
+				creature.modifyStat(Stat.BRAWN, +amount);
 				creature.doAction("look stronger");
 			}
 		};
 		e.setImage(Loader.weakIcon);
 		e.setStrength(amount);
+		e.setDescription("Weakened creatures have decreased Brawn by " + amount + " for " + duration + " turns.");
 		return e;
 	}
 	public static Effect slowed(int duration, int amount) {
@@ -143,6 +154,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.slowedIcon);
 		e.setStrength(amount);
+		e.setDescription("Slowed creatures have increased movement and attack delay by " + amount + " for " + duration + " turns.");
 		return e;
 	}
 	public static Effect shocked(int duration) {
@@ -158,6 +170,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.shockedIcon);
+		e.setDescription("The next action of a shocked creature takes an additional 10 ticks.");
 		return e;
 	}
 	public static Effect swift(int duration, int amount) {
@@ -173,6 +186,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.swiftIcon);
 		e.setStrength(amount);
+		e.setDescription("Swift creatures have decreased movement delay by " + amount + " for " + duration + " turns.");
 		return e;
 	}
 	public static Effect stun(int duration) {
@@ -191,6 +205,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.stunnedIcon);
+		e.setDescription("Stunned creatures can take no options until it wears off.");
 		return e;
 	}
 	public static Effect confused(int duration) {
@@ -205,6 +220,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.confusedIcon);
+		e.setDescription("Confused creatures can only move in random directions every turn.");
 		return e;
 	}
 	public static Effect blind(int duration) {
@@ -221,6 +237,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.blindIcon);
+		e.setDescription("Blind creatures have their sight reduced to 0 for " + duration + " turns.");
 		return e;
 	}
 	public static Effect vulnerable(int duration, int strength) {
@@ -236,6 +253,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.vulnerableIcon);
 		e.setStrength(strength);
+		e.setDescription("Vulnerable creatures have their Armor reduced by " + strength + " for " + duration + " turns.");
 		return e;
 	}
 	
@@ -252,10 +270,11 @@ public final class Effects {
 		};
 		e.setImage(Loader.glowingIcon);
 		e.setStrength(amount);
+		e.setDescription("Glowing creatures are easier to hit, reducing their evasion by " + amount + " for " + duration + " turns.");
 		return e;
 	}
 	public static Effect curePoison() {
-		return new Effect("Curing", 1) {
+		Effect e = new Effect("Curing", 1) {
 			public void start(Creature creature) {
 				creature.modifyHP(creature.level());
 				for (Effect e : creature.effects()) {
@@ -267,6 +286,8 @@ public final class Effects {
 				}
 			}
 		};
+		e.setDescription("Removes all Poisoned effects currently afflicting the creature.");
+		return e;
 	}
 	public static Effect raging() {
 		Effect e = new Effect("Raging", 15) {
@@ -288,6 +309,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.ragingIcon);
+		e.setDescription("Raging creatures have increased strength and attack faster, while being unable to cast spells or quaff potions. When the rage ends, the creature is slowed and weakened.");
 		return e;
 	}
 	public static Effect armorOfFrost() {
@@ -306,6 +328,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.armorOfFrostIcon);
+		e.setDescription("Creatures with an armor of frost have increased armor, however they are slightly slowed by the weight of it.");
 		return e;
 	}
 	
@@ -316,6 +339,7 @@ public final class Effects {
 				creature.modifyHP(-creature.hp());
 			}
 		};
+		e.setDescription("This creature is temporary and will crumble to dust after " + duration + " turns.");
 		return e;
 	}
 }

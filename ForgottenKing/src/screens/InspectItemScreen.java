@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import creatures.Attribute;
-import creatures.Creature;
 import creatures.Player;
 import creatures.Stat;
+import creatures.Tag;
 import creatures.Type;
 import items.Item;
 import items.ItemTag;
@@ -116,26 +116,23 @@ public class InspectItemScreen extends Screen {
 	}
 	private List<String> getStatDescription() {
 		List<String> text = new ArrayList<String>();
-		if (item.is(ItemTag.RUSTED))
-			text.add("It is rusted, with decreased attack and damage.");
-		if (item.is(ItemTag.PRISTINE))
-			text.add("It is pristine, with increased attack and damage.");
 		if (item.isRanged())
 			text.add("It can be fired with [f] if you have suitable ammo quivered.");
 		if (item.attackValue() != 0)
-			text.add("It increases your melee attack by " + item.attackValue() + ".");
+			if (!(item.attackValue() < 0 && item.is(ItemTag.SHIELD) && player.is(Tag.SHIELD_TRAINING)))
+				text.add("It modifies your melee attack by " + item.attackValue() + ".");
 		if (item.rangedAttackValue() != 0)
-			text.add("It increases your ranged attack by " + item.rangedAttackValue() + ".");
+			text.add("It modifies your ranged attack by " + item.rangedAttackValue() + ".");
 		if (item.minDamage() != 0 && item.maxDamage() != 0) {
 			String t = "";
-			t += "It increases your melee damage by " + item.minDamage() + "-" + item.maxDamage();
+			t += "It modifies your melee damage by " + item.minDamage() + "-" + item.maxDamage();
 			if (item.damageType() != null)
 				t += ", dealing " + item.damageType().text() + " damage";
 			t += ".";
 			text.add(t);
 		}
 		if (item.rangedDamage() != null) {
-			String s = "It increases your ranged damage by " + item.rangedDamage()[0];
+			String s = "It modifies your ranged damage by " + item.rangedDamage()[0];
 			if (item.rangedDamage()[0] != item.rangedDamage()[1])
 				s += "-" + item.rangedDamage()[1];
 			text.add(s + ".");
@@ -147,7 +144,7 @@ public class InspectItemScreen extends Screen {
 			text.add(s + " when thrown.");
 		}
 		if (item.armorValue() != 0)
-			text.add("It increases your armor value by " + item.armorValue() + ".");
+			text.add("It modifies your armor value by " + item.armorValue() + ".");
 		if (item.weaponDelay() < 0)
 			text.add("It reduces your attack delay by " + Math.abs(item.weaponDelay()) + ".");
 		else if (item.weaponDelay() > 0)

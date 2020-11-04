@@ -16,6 +16,9 @@ public class Effect implements Cloneable {
 	private int strength;
 	public int strength() { return strength; }
 	public void setStrength(int x) { strength = x; }
+	private String description;
+	public String description() { return description; }
+	public void setDescription(String x) { description = x; }
 	
 	public boolean isDone() { return duration < 1; }
 

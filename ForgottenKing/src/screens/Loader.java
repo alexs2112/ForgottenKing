@@ -115,6 +115,13 @@ public final class Loader {
 	public static Image heavyArmorSkillIcon = ImageCrop.cropImage(perksFull, 224, 0, 32, 32);
 	public static Image improvedCleaveIcon = ImageCrop.cropImage(perksFull, 0, 32, 32, 32);
 	public static Image acolytesManaIcon = ImageCrop.cropImage(perksFull, 32, 32, 32, 32);
+	public static Image knockbackAllIcon = ImageCrop.cropImage(perksFull, 64, 32, 32, 32);
+	public static Image improvedKnockbackAllIcon = ImageCrop.cropImage(perksFull, 96, 32, 32, 32);
+	public static Image strongArmIcon = ImageCrop.cropImage(perksFull, 128, 32, 32, 32);
+	public static Image polearmMasterIcon = ImageCrop.cropImage(perksFull, 160, 32, 32, 32);
+	public static Image unarmedTrainingIcon = ImageCrop.cropImage(perksFull, 192, 32, 32, 32);
+	public static Image thickSkinIcon = ImageCrop.cropImage(perksFull, 224, 32, 32, 32);
+	public static Image shieldTrainingIcon = ImageCrop.cropImage(perksFull, 0, 64, 32, 32);
 	
 	private static Image tagsFull = new Image(Screen.class.getResourceAsStream("resources/creature_tags_full.png"));
 	public static Image spellcasterIcon = ImageCrop.cropImage(tagsFull, 0, 0, 32, 32);

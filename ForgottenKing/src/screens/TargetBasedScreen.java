@@ -12,6 +12,7 @@ import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import spells.TargetType;
 
@@ -26,12 +27,15 @@ public class TargetBasedScreen extends Screen {
 	protected List<Point> targets;
 	protected List<Creature> creatures;
 	protected TargetType targetType;
-	protected int spellRadius;
+	protected int radius;
 	protected int range;
+	private String captionBase;
+	Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
 
 	public TargetBasedScreen(Group root, Player player, String caption, int sx, int sy){
         this.player = player;
         this.caption = caption;
+        this.captionBase = caption;
         this.sx = sx;
         this.sy = sy;
         this.baseRoot = new Group(root);
@@ -48,7 +52,7 @@ public class TargetBasedScreen extends Screen {
 		else
 			handleTarget();
 	    displayTargets();
-	    write(root, caption, 64, 64, 20, Color.WHITE);
+	    writeWrapped(root, caption, 32, 72, 1000, font, Color.WHITE);
 	}
 	
 	private void handleTarget() {
@@ -117,8 +121,8 @@ public class TargetBasedScreen extends Screen {
 		
 	}
 	private void addTarget(Point p) {
-		for (int wx = -spellRadius; wx <= spellRadius; wx++) {
-			for (int wy = -spellRadius; wy <= spellRadius; wy++) {
+		for (int wx = -radius; wx <= radius; wx++) {
+			for (int wy = -radius; wy <= radius; wy++) {
 				if (wx+p.x < 0 || wx+p.x >= player.world().width() || wy+p.y < 0 || wy+p.y >= player.world().height() ||
 					!player.realTile(p.x+wx, p.y+wy, player.z).isGround() || 
 					(player.world().feature(p.x+wx, p.y+wy, player.z)!= null && player.world().feature(p.x+wx, p.y+wy, player.z).blockMovement()) ||
@@ -168,7 +172,12 @@ public class TargetBasedScreen extends Screen {
     }
 	
 	public void enterWorldCoordinate(int x, int y, int screenX, int screenY) {
-    }
+        Creature creature = player.creature(x, y, player.z);
+        if (creature != null)
+            caption = captionBase + " (" + creature.name() + creature.desc() + ")";
+        else
+        	caption = captionBase;
+	}
 	
 	public Screen selectWorldCoordinate(){
 		return null;

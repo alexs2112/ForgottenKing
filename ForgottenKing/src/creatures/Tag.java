@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import assembly.Abilities;
 import javafx.scene.image.Image;
 import screens.Loader;
 
@@ -43,6 +44,11 @@ public enum Tag {
 		public String prerequisites() { return "6 combined Will, Spellcasting and Intelligence"; }
 	},	//Starting perk for the elementalist
 	STRONG_ARROWS("Strong Arrows", "The chance for your fired arrows to break is reduced by 12%.", Loader.strongArrowsIcon),
+	UNARMED_TRAINING("Unarmed Training", "Melee attacks without a weapon gain additional attack and damage.", Loader.unarmedTrainingIcon),
+	SHIELD_TRAINING("Shield Training", "Shields do not decrease your attack modifier.", Loader.shieldTrainingIcon),
+	THICK_SKIN("Thick Skin", "Your toughness increases by 1 and you regenerate health faster.", Loader.thickSkinIcon) {
+		public void unlock(Creature player) { player.modifyStat(Stat.TOUGHNESS, 1); }
+	},
 	MEDIUM_ARMOR_MASTERY("Medium Armor Mastery", "Medium armor gives you +1 armor and +1 evasion while equipped.", Loader.mediumArmorSkillIcon),
 	LIGHT_ARMOR_MASTERY("Light Armor Mastery", "Equipping items with the Light Armor property increases your evasion by 2.", Loader.lightArmorProficiencyIcon) {
 		public boolean canUnlock(Creature player) { return (player.agility()+player.dexterity() >= 5); }
@@ -56,10 +62,24 @@ public enum Tag {
 		public boolean canUnlock(Creature player) { return (player.is(Tag.IMPROVED_CRITICAL) && player.accuracy() >= 5); }
 		public String prerequisites() { return "[Improved Critical] perk and 5 base Accuracy"; }
 	},
-	/*POLEARM_MASTER("Polearm Master", "When activating the reach attack ability, you can attack creatures 2 tiles away instead of 1.", null){//Loader.polearmMasterIcon) {
+	POLEARM_MASTER("Polearm Master", "When activating the reach attack ability, you can attack creatures 3 tiles away instead of 2.", Loader.polearmMasterIcon) {
 		public boolean canUnlock(Creature player) { return (player.brawn() + player.strength() >= 5); }
 		public String prerequisites() { return "5 combined Brawn and Strength"; }
-	}*/
+	},
+	STRONG_ARM("Strong Arm", "Throwing weapons deal additional damage equal to your level.", Loader.strongArmIcon) {
+		public boolean canUnlock(Creature player) { return player.brawn() >= 4 || player.accuracy() >= 4; }
+		public String prerequisites() { return "Either 4 base Brawn or 4 base Accuracy"; }
+	},
+	KNOCKBACK_ALL("Knockback All", "You gain the ability to knock back all enemies adjacent to you.", Loader.knockbackAllIcon) {
+		public boolean canUnlock(Creature player) { return player.brawn() >= 4; }
+		public String prerequisites() { return "4 base Brawn"; }
+		public void unlock(Creature player) { player.addAbility(Abilities.knockbackAll()); }
+	},
+	IMPROVED_KNOCKBACK_ALL("Improved Knockback All", "When you activate the knockback all ability, you also make an attack against each adjacent enemy.", Loader.improvedKnockbackAllIcon) {
+		public boolean canUnlock(Creature player) { return player.brawn() >= 6 && player.is(Tag.KNOCKBACK_ALL); }
+		public String prerequisites() { return "[Knockback All] perk and 6 base Brawn"; }
+		public void unlock(Creature player) { player.addAbility(Abilities.improvedKnockbackAll()); }
+	},
 	;
 	
 	private String text;
@@ -82,7 +102,7 @@ public enum Tag {
 	}
 	
 	public static List<Tag> listOfPerks() {
-		return new ArrayList<Tag>(EnumSet.range(QUICK_LEARNER, DEADLY_CRITICAL));
+		return new ArrayList<Tag>(EnumSet.range(QUICK_LEARNER, IMPROVED_KNOCKBACK_ALL));
 	}
 	
 	public boolean isPerk() {

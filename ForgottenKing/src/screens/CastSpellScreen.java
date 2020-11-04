@@ -12,7 +12,7 @@ public class CastSpellScreen extends TargetBasedScreen {
 		super(root, player, caption, sx, sy);
 		this.spell = spell;
 		this.targetType = spell.targetType();
-		this.spellRadius = spell.radius();
+		this.radius = spell.radius();
 		this.range = spell.range();
 		if (spell.targetType() != TargetType.SELF && !spell.isBeneficial()) {
 			x = player.getAutoTarget().x - player.x;

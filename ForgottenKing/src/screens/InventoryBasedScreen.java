@@ -45,10 +45,12 @@ public abstract class InventoryBasedScreen extends Screen {
 	    
         int x = 104;
         int y = 50;
-        write(root, "What would you like to " + getVerb() + "?", 48, y, font,  Color.WHITE);
+        write(root, "What would you like to " + getVerb() + "?", 64, y, font,  Color.WHITE);
         int num = 0;
-
-        for (int i = 0; i < items.length; i++) {
+        int top = Math.min(Math.max(0, select-14), Math.max(0, numOfItems(items) - height));
+        for (int i = top; i < items.length; i++) {
+        	if (num >= height)
+        		break;
         	Item item = items[i];
         	if (item == null)
         		continue;
@@ -83,9 +85,12 @@ public abstract class InventoryBasedScreen extends Screen {
         	if (select == i) {
         		draw(root, Loader.arrowRight, 20, 32*num+y+4);
         	}
-        			
         	num++;
         }
+        if (top > 0)
+        	draw(root, Loader.arrowUp, 20, 32);
+        if (top < numOfItems(items)-height)
+        	draw(root, Loader.arrowDown, 20, 744);
     }
     private Item[] getItems() {
     	Item[] items = null;
@@ -143,6 +148,14 @@ public abstract class InventoryBasedScreen extends Screen {
     			return i;
     	}
     	return select;
+    }
+    private int numOfItems(Item[] items) {
+    	int x = 0;
+    	for (int i = 0; i < items.length; i++) {
+    		if (items[i] != null && isAcceptable(items[i]))
+    			x++;
+    	}
+    	return x;
     }
 
 }

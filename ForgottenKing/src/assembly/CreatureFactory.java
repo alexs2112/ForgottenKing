@@ -139,7 +139,7 @@ public class CreatureFactory {
 		for (int i = 0; i < (int)(Math.random()*10)+1; i++)
 			goblin.addItemToInventory(itemFactory.ammo().newRock(-1));
 		if (z > 0 && Math.random()*100 < 20*z)
-	    	goblin.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
+	    	goblin.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
 		return goblin;
 	}
 
@@ -167,8 +167,8 @@ public class CreatureFactory {
 	    if (Math.random() * 100 < 60) {
 	    	for (int i = 0; i < 3 + (int)(Math.random()*2); i++)
 	    		lizardGrunt.addItemToInventory(itemFactory.ammo().newDart(-1));
-	    } if (z > 0 && Math.random()*100 < 20*z)
-	    		lizardGrunt.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
+	    } if (z > 0 && Math.random()*100 < 25*z)
+	    		lizardGrunt.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
 	    return lizardGrunt;
 	}
 	public Creature newSoldierAnt(int z) {
@@ -192,8 +192,6 @@ public class CreatureFactory {
 	    homunculus.addSpell(Spells.homunculiSlow());
 	    homunculus.addSpell(Spells.summonSimulacrum(this));
 	    homunculus.setDescription("The creation of a wizard, it wanders the dungeon for a purpose. Its bright blue eyes seem to cloud your vision and drain your energy.");
-	    if (z > 0 && Math.random()*100 < 40)
-	    	homunculus.addEquipment(itemFactory.equipment().newSpear(-1));
 	    world.addAtEmptyLocation(homunculus, z);
 	    return homunculus;
 	}
@@ -204,7 +202,7 @@ public class CreatureFactory {
 	    lizard.setStats(3,3,2,2,2,1);
 	    lizard.setDescription("A common foot soldier of the Lizardfolk. What they lose in intelligence they make up for with their strength and willingness to follow orders.");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
+	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
 	    return lizard;
 	}
 	public Creature newLizardHunter(int z) {
@@ -214,8 +212,8 @@ public class CreatureFactory {
 	    lizard.setStats(2,2,3,3,2,2);
 	    lizard.setDescription("A lizardfolk armed and trained with a bow. Quite deadly at a range, however noticably weaker when they are forced to fight hand to hand.");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.equipment().newShortbow(-1));
-	    for (int i = 0; i < 6 + (int)(Math.random()*3); i++)
+	    lizard.addEquipment(itemFactory.weapon().newShortbow(-1));
+	    for (int i = 0; i < 5 + (int)(Math.random()*3); i++)
 	    	lizard.addItemToInventory(itemFactory.ammo().newArrow(-1));
 	    return lizard;
 	}
@@ -244,8 +242,8 @@ public class CreatureFactory {
 	    lizard.modifyMovementDelay(-1);
 	    lizard.setDescription("Trained as an elite lizardfolk, the shadowblades are an order of lizard assassins armed with deadly daggers and hexing spells.");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.equipment().newDagger(-1));
-	    lizard.addEquipment(itemFactory.equipment().newLeatherArmor(-1));
+	    lizard.addEquipment(itemFactory.weapon().newDagger(-1));
+	    lizard.addEquipment(itemFactory.armor().newLeatherArmor(-1));
 	    lizard.addTag(Tag.SPELLCASTER);
 	    lizard.addTag(Tag.IMPROVED_CRITICAL);
 	    lizard.setMana(12, 12);
@@ -254,14 +252,14 @@ public class CreatureFactory {
 	    return lizard;
 	}
 	public Creature newLizardGuardian(int z) {
-		Creature lizard = new Creature(world, "Lizard Guardian",5,185, 30,7,2,3,2,4, lizardGuardianIcon);
+		Creature lizard = new Creature(world, "Lizard Guardian",5,185, 30,6,2,3,1,3, lizardGuardianIcon);
 		new BasicAI(lizard, player);
 		lizard.setAttributes(3,1,1);
-	    lizard.setStats(4,3,1,2,3,2);
+	    lizard.setStats(3,3,1,2,3,2);
 	    lizard.setDescription("A powerful and high ranking lizardfolk trained in the use of an impressive arsenal of arms and armour, they serve to guard the most important of their people. Why are they in the dungeon?");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.equipment().newRandomMeleeWeapon(-1));
-	    lizard.addEquipment(itemFactory.equipment().newStuddedLeatherArmor(-1));
+	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
+	    lizard.addEquipment(itemFactory.armor().newStuddedLeatherArmor(-1));
 	    return lizard;
 	}
 	public Creature newLizardPriest(int z) {

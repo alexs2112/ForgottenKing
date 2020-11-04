@@ -63,7 +63,7 @@ public class PerkScreen extends Screen {
 				draw(root, Loader.perkBoxSelection, x, y + 124*(i-top));
 			if (t.icon() != null)
 				draw(root, t.icon(), x+20, y+124*(i-top)+20);
-			Color textColour = Color.WHITE;
+			Color textColour = Color.ANTIQUEWHITE;
 			if (!t.canUnlock(player))
 				textColour = Color.DARKGREY;
 			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42 + 124*(i-top), 632, fontS, textColour);
@@ -83,7 +83,6 @@ public class PerkScreen extends Screen {
     	if (key.getCode().equals(KeyCode.ENTER)) {
 			if (player.perkPoints() > 0 && !player.is(perks.get(select)) && perks.get(select).canUnlock(player)) {
 				player.addTag(perks.get(select));
-				perks.get(select).unlock(player);
 				player.modifyPerkPoints(-1);
 				return this;
 			}

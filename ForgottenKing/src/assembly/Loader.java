@@ -26,6 +26,7 @@ public final class Loader {
 	private static Image abilitiesFull = new Image(ItemFactory.class.getResourceAsStream("resources/icons/abilities_full.png"));
 	public static Image rageIcon = ImageCrop.cropImage(abilitiesFull, 0, 0, 32, 32);
 	public static Image reachAttackIcon = ImageCrop.cropImage(abilitiesFull, 32, 0, 32, 32);
+	public static Image knockbackAllIcon = ImageCrop.cropImage(abilitiesFull, 64, 0, 32, 32);
 	
 	private static Image runestonesFull = new Image(ItemFactory.class.getResourceAsStream("resources/items/rune_stones_full.png"));
 	public static Image victoryItemIcon = ImageCrop.cropImage(runestonesFull, 0, 0, 32, 32);
