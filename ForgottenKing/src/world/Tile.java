@@ -71,6 +71,11 @@ public enum Tile {
 	public Image ESW;
 	public Image NESW;
 	
+	//Three additional directions for pits
+	public Image XNE;
+	public Image XNW;
+	public Image XNEW;
+	
 	Tile(String path, String type, String description) {
 		this(new Image(Tile.class.getResourceAsStream(path)), type, description);
 	}
@@ -133,6 +138,9 @@ public enum Tile {
 			this.NSW = NW;
 			this.ESW = EW;
 			this.NESW = NEW;
+			this.XNE = ImageCrop.cropImage(pitImage, x+160, y+0, 32, 32);
+			this.XNEW = ImageCrop.cropImage(pitImage, x+192, y+0, 32, 32);
+			this.XNW = ImageCrop.cropImage(pitImage, x+224, y+0, 32, 32);
 		}
 		this.icon = ALL;
 	}
@@ -152,6 +160,8 @@ public enum Tile {
 			return icon;
 		if (type.equals("Floor"))
 			return GetTileDirection.handleFloor(world, this, x, y, z);
+		else if (type.equals("Chasm"))
+			return GetTileDirection.handleChasm(world, this, x, y, z);
 		else
 			return GetTileDirection.handleWall(world, this, x, y, z);
 			

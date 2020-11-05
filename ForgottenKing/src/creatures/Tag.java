@@ -25,6 +25,7 @@ public enum Tag {
 	ERRATIC("Erratic", "This creature moves in a random direction 40% of the time.", Loader.erraticIcon),
 	VENOMOUS("Venomous", "This creature has a chance to poison you when they hit you.", Loader.venomousIcon),
 	UNDEAD("Undead", "This creature heals when inflicted with poison damage.", Loader.undeadIcon),
+	FLYING("Flying","This creature flies and can pass otherwise impassable terrain.", Loader.flyingIcon),
 	LEGENDARY("Legendary", ""),	//Maybe add a description and icon at some point, mostly here for grammar atm
 	
 	//Temporary Modifiers

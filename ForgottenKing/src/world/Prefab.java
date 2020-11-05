@@ -7,8 +7,10 @@ public class Prefab {
 	public char[][] chars() { return chars; }
 	private Tile[][] tiles;
 	public Tile[][] tiles() { return tiles; }
+	public Tile tile(int x, int y) { return tiles[x][y]; }
 	private Feature[][] features;
 	public Feature[][] features() { return features; }
+	public Feature feature(int x, int y) { return features[x][y]; }
 	private int width;
 	private int height;
 	public int width() { return width; }

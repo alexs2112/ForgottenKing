@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import assembly.Abilities;
+import audio.Audio;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -17,6 +18,7 @@ import creatures.ClassSelection;
 import creatures.Tag;
 
 public class CharacterSelectionScreen extends Screen {
+	public Audio audio() { return Audio.INTRO; }
 	private int selection;
 	private Font font;
 	private Font fontL;

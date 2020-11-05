@@ -6,6 +6,7 @@ import tools.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import audio.Audio;
 import creatures.Creature;
 import creatures.Player;
 import javafx.scene.Group;
@@ -19,6 +20,7 @@ import spells.TargetType;
 public class TargetBasedScreen extends Screen {
 	protected Player player;
 	protected String caption;
+	public Audio audio() { return player.songToPlayByEnemy(); }
 	private int sx;
 	private int sy;
 	protected int x;
@@ -65,7 +67,7 @@ public class TargetBasedScreen extends Screen {
 		creatures = new ArrayList<Creature>();
 		Line line = new Line(player.x, player.y, player.x + x, player.y + y);
 		for (Point p : line) {
-			if (!player.realTile(p.x, p.y, player.z).isGround() 
+			if (player.realTile(p.x, p.y, player.z).isWall() 
 				|| (player.world().feature(p.x, p.y, player.z)!= null && player.world().feature(p.x, p.y, player.z).blockMovement())
 				|| !(player.canSee(p.x, p.y, player.z))
 				|| !inRange(p, line))
@@ -88,7 +90,7 @@ public class TargetBasedScreen extends Screen {
 		creatures = new ArrayList<Creature>();
 		Line line = new Line(player.x, player.y, player.x + x, player.y + y);
 		for (Point p : line) {
-			if (!player.realTile(p.x, p.y, player.z).isGround() 
+			if (player.realTile(p.x, p.y, player.z).isWall() 
 				|| (player.world().feature(p.x, p.y, player.z)!= null && player.world().feature(p.x, p.y, player.z).blockMovement())
 				|| !player.canSee(p.x, p.y, player.z)
 				|| !inRange(p, line))
@@ -124,7 +126,7 @@ public class TargetBasedScreen extends Screen {
 		for (int wx = -radius; wx <= radius; wx++) {
 			for (int wy = -radius; wy <= radius; wy++) {
 				if (wx+p.x < 0 || wx+p.x >= player.world().width() || wy+p.y < 0 || wy+p.y >= player.world().height() ||
-					!player.realTile(p.x+wx, p.y+wy, player.z).isGround() || 
+					player.realTile(p.x+wx, p.y+wy, player.z).isWall() || 
 					(player.world().feature(p.x+wx, p.y+wy, player.z)!= null && player.world().feature(p.x+wx, p.y+wy, player.z).blockMovement()) ||
 					!(player.canSee(p.x+wx, p.y+wy, player.z)))
 					continue;

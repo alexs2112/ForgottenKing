@@ -22,4 +22,8 @@ public final class Loader {
 	public static Image cleavingTag = ImageCrop.cropImage(itemTagsFull, 128,0, 32, 32);
 	public static Image lightWeaponTag = ImageCrop.cropImage(itemTagsFull, 160,0, 32, 32);
 	public static Image highCritTag = ImageCrop.cropImage(itemTagsFull, 192,0, 32, 32);
+	public static Image shieldTag = ImageCrop.cropImage(itemTagsFull, 224,0, 32, 32);
+	public static Image twoHandedTag = ImageCrop.cropImage(itemTagsFull, 0,0, 32, 32);
+	public static Image versatileTag = ImageCrop.cropImage(itemTagsFull, 32,0, 32, 32);
+	public static Image victoryItemTag = ImageCrop.cropImage(itemTagsFull, 64,0, 32, 32);
 }

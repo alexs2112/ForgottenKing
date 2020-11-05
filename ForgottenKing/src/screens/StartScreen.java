@@ -1,5 +1,6 @@
 package screens;
 
+import audio.Audio;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -14,6 +15,7 @@ public class StartScreen extends Screen {
 	private Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 32);
 	private Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 20);
 	private String s;
+	public Audio audio() { return Audio.INTRO; }
 	
 	public StartScreen() {
 		switch((int)(Math.random()*3)) {

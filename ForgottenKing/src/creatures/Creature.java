@@ -13,6 +13,7 @@ import items.Item;
 import items.ItemType;
 import items.ItemTag;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import spells.Effect;
 import spells.Spell;
 import world.Tile;
@@ -598,16 +599,15 @@ public class Creature {
 	public void fireItem(Item item, int wx, int wy, int wz) {
 		Creature c = creature(wx,wy,wz);
 		putAt(item, wx, wy, wz);
-		Item i = quiver();
 		if (c != null) {
-			rangedWeaponAttack(i, c);
+			rangedWeaponAttack(item, c);
 			//20% chance the fired object breaks, 8% if you have the STRONG_ARROWS perk
 	        int breakChance = 20;
 	        if (is(Tag.STRONG_ARROWS))
 	        	breakChance = 8;
 	        if (Math.random()*100 < breakChance) {
-	        	world.notify(wx,wy,wz,"The " + i.name() + " broke!");
-	        	world.remove(i, wx, wy, wz);
+	        	world.notify(wx,wy,wz,"The " + item.name() + " broke!");
+	        	world.remove(item, wx, wy, wz);
 	        }
 		} else
 			doAction("fire your " + weapon().name());
@@ -644,7 +644,7 @@ public class Creature {
 		if (!items.contains(item)) {
 			notify("The " + item.name() + " isn't here!");
 		}*/
-		if (inventory.isFull() && !inventory.contains(item)) {
+		if (inventory.isFull() && !inventory.containsName(item.name())) {
 			notify("Your inventory is full");
 		}
 		if (items.contains(item) && !inventory.isFull()) {
@@ -812,10 +812,24 @@ public class Creature {
     	String s = builder.toString().trim();
     	return s.replaceAll("the Player", "you");
     }
-    
     public boolean canEnter(int mx, int my, int mz) {
-    	return (world.tile(mx, my, mz).isGround() && world.creature(mx, my, mz) == null &&
+    	if ((world.tile(mx, my, mz).isPit() && world.creature(mx, my, mz) != null && is(Tag.FLYING)))
+    		return true;
+    	return ((world.tile(mx, my, mz).isGround() && world.creature(mx, my, mz) == null) &&
     			!(world.feature(mx,my,mz) != null && world.feature(mx, my, mz).blockMovement()));
+    }
+    private HashMap<String, Color> statements;
+    public void addStatement(String s, Color c) {
+    	if (statements == null)
+    		statements = new HashMap<String, Color>();
+    	statements.put(s, c); 
+    }
+    public HashMap<String, Color> getStatements() {
+    	HashMap<String, Color> temp = statements;
+    	return temp;
+    }
+    public void clearStatements() {
+    	statements = null;
     }
     
     /**
@@ -973,16 +987,11 @@ public class Creature {
         if (effect == null)
             return;
         Effect newEffect = (Effect)(effect.clone());
+        if (newEffect.colour() != null)
+        	addStatement("*" + newEffect.name() + "*", newEffect.colour());
         for (Effect e : effects)
         	//If you get an effect with the same name as an effect already afflicting you, add its duration and remove the effect
         	if (e.name().equals(newEffect.name())) {
-//        		if (newEffect.strength() > e.strength()) {
-//        			int t = e.duration();					This is really broken right now
-//        			//e = newEffect;						It technically works, just if you buff up it doesnt
-//        			effects.remove(e);						add the difference to the buff at the start, so the end
-//        			effects.add(newEffect);					still reduces you by the full amount of a greater value
-//        			newEffect.modifyDuration(t);
-//        		} else
         			e.modifyDuration(newEffect.duration());
         		return;
         	}
@@ -1020,7 +1029,7 @@ public class Creature {
     	updateAbilities();
     	if (hp <= 0)
 			return;
-    	ai.onUpdate();  
+    	ai.onUpdate();
     }
 	private HashMap<Effect, Integer> effectsOnHit;
 	public HashMap<Effect, Integer> effectsOnHit() {

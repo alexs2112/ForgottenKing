@@ -15,7 +15,7 @@ public class ArmorFactory {
 	private Image copperBreastplateIcon = tools.ImageCrop.cropImage(armorFull, 0, 192, 32, 32);
 	
 	private Image bootFull = new Image(this.getClass().getResourceAsStream("resources/items/boot_full.png"));
-	private Image leatherBootIcon = tools.ImageCrop.cropImage(bootFull, 0, 0, 32, 32);
+	private Image leatherBootIcon = tools.ImageCrop.cropImage(bootFull, 160, 0, 32, 32);
 	
 	private Image gloveFull = new Image(this.getClass().getResourceAsStream("resources/items/gloves_full.png"));
 	private Image gloveIcon = tools.ImageCrop.cropImage(gloveFull, 0, 0, 32, 32);

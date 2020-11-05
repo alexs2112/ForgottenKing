@@ -88,6 +88,46 @@ public final class GetTileDirection {
 				return tile.NEW;
 		return tile.ALL;
 	}
+	
+	public static Image handleChasm(World world, Tile tile, int x, int y, int z) {
+		if (getAllDirections(world, tile, x,y,z,0,1,1,1))
+			return tile.N;
+		if (getAllDirections(world, tile, x,y,z,1,0,1,1))
+			return tile.E;
+		if (getAllDirections(world, tile, x,y,z,1,1,0,1))
+			return tile.S;
+		if (getAllDirections(world, tile, x,y,z,1,1,1,0))
+			return tile.W;
+		if (getAllDirections(world, tile, x,y,z,0,0,1,1))
+			return tile.NE;
+		if (getAllDirections(world, tile, x,y,z,0,1,0,1))
+			return tile.NS;
+		if (getAllDirections(world, tile, x,y,z,0,1,1,0))
+			return tile.NW;
+		if (getAllDirections(world, tile, x,y,z,0,0,0,1))
+			return tile.NES;
+		if (getAllDirections(world, tile, x,y,z,0,0,1,0))
+			return tile.NEW;
+		if (getAllDirections(world, tile, x,y,z,0,1,0,0))
+			return tile.NSW;
+		if (getAllDirections(world, tile, x,y,z,0,0,0,0))
+			return tile.NESW;
+		if (getAllDirections(world, tile, x,y,z,1,0,0,1))
+			return tile.ES;
+		if (getAllDirections(world, tile, x,y,z,1,0,1,0))
+			return tile.EW;
+		if (getAllDirections(world, tile, x,y,z,1,0,0,0))
+			return tile.ESW;
+		if (getAllDirections(world, tile, x,y,z,1,1,0,0))
+			return tile.SW;
+		if (getAllDirections(world, tile, x,y,z,1,1,1,-1,-1,-1,-1,0))
+			return tile.XNE;
+		if (getAllDirections(world, tile, x,y,z,1,0,1,-1,-1,-1,-1,0))
+			return tile.XNEW;
+		if (getAllDirections(world, tile, x,y,z,1,0,1,-1,-1,-1,-1,1))
+			return tile.XNW;
+		return tile.ALL;
+}
 
 	/**
 	 * A 1 in that direction means the tile in that direction is the same as the tile in question

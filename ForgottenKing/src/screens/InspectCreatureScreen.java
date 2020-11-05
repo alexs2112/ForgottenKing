@@ -91,7 +91,7 @@ public class InspectCreatureScreen extends Screen {
 				text.add("It is fast.");
 		}
 		if (creature.equipment().size() > 0) {
-			t = "It is the following equipment: ";
+			t = "It has the following equipment: ";
 			for (Item i : creature.equipment().values()) {
 				t += i.name() + ", ";
 			}

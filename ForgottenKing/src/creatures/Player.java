@@ -3,6 +3,7 @@ package creatures;
 import java.util.ArrayList;
 import java.util.List;
 
+import audio.Audio;
 import items.Item;
 import javafx.scene.image.Image;
 import spells.Spell;
@@ -136,8 +137,8 @@ public class Player extends Creature {
     public void setResting(boolean x) { resting = x; }
     
     public boolean creatureInSight() {
-    	for (int x = this.x - visionRadius(); x < this.x + visionRadius(); x++) {
-    		for (int y = this.y - visionRadius(); y < this.y + visionRadius(); y++) {
+    	for (int x = this.x - visionRadius(); x <= this.x + visionRadius(); x++) {
+    		for (int y = this.y - visionRadius(); y <= this.y + visionRadius(); y++) {
     			if (x < 0 || x >= world().width() || y < 0 || y >= world().height())
     				continue;
     			if (creature(x, y, z) != null && creature(x,y,z) != this && !creature(x,y,z).is(Tag.ALLY))
@@ -145,6 +146,23 @@ public class Player extends Creature {
     		}
     	}
     	return false;
+    }
+    public Audio songToPlayByEnemy() {
+    	Audio a = Audio.MAIN;
+    	for (int x = this.x - visionRadius(); x <= this.x + visionRadius(); x++) {
+    		for (int y = this.y - visionRadius(); y <= this.y + visionRadius(); y++) {
+    			if (x < 0 || x >= world().width() || y < 0 || y >= world().height())
+    				continue;
+    			Creature c = creature(x,y,z);
+    			if (c != null && c != this && !c.is(Tag.ALLY)) {
+    				if (c.is(Tag.LEGENDARY))
+    					a = Audio.BOSS;
+    				else
+    					a = Audio.COMBAT;
+    			}
+    		}
+    	}
+    	return a;
     }
 
 }

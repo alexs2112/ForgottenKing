@@ -30,6 +30,10 @@ public class World {
 	public Inventory[][][] items() { return items; }
 	public Inventory items(int x, int y, int z) { return items[x][y][z]; }
 	public void addItem(Item item, int x, int y, int z) {
+		if (tiles[x][y][z].isPit()) {
+			notify(x,y,z,"The " + item.name() + " falls into the void.");
+			return;
+		}
 		if (items[x][y][z] == null)
 			items[x][y][z] = new Inventory();
 		items[x][y][z].add(item); 

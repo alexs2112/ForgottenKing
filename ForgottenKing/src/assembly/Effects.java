@@ -5,6 +5,7 @@ import creatures.Creature;
 import creatures.Stat;
 import creatures.Tag;
 import creatures.Type;
+import javafx.scene.paint.Color;
 import spells.Effect;
 
 public final class Effects {
@@ -16,6 +17,7 @@ public final class Effects {
 			}
 		};
 		e.setDescription("Heals for " + amount + " health.");
+		e.setColour(Color.RED);
 		return e;
 	}
 	public static Effect damage(int amount, Type type) {
@@ -26,6 +28,7 @@ public final class Effects {
 			}
 		};
 		e.setDescription("Deals " + amount + " " + type.name() + " damage.");
+		e.setColour(Color.RED);
 		return e;
 	}
 	public static Effect healOverTime(int duration, int amount) {
@@ -44,6 +47,7 @@ public final class Effects {
 		e.setImage(Loader.healingIcon);
 		e.setStrength(amount);
 		e.setDescription("Heals for " + amount + " health every turn, for " + duration + " turns.");
+		e.setColour(Color.RED);
 		return e;
 	}
 	public static Effect mana(int amount) {
@@ -54,6 +58,7 @@ public final class Effects {
 	        }
 	    };
 	    e.setDescription("Regenerates " + amount + " mana.");
+	    e.setColour(Color.BLUE);
 	    return e;
 	}
 	public static Effect poisoned(int duration, int strength) {
@@ -83,6 +88,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.poisonedIcon);
 		e.setStrength(strength);
+		e.setColour(Color.GREEN);
 		e.setDescription("Poisoned creatures have a chance to resist based on their toughness. Poisoned creatures take " + strength + " poison damage per turn, for " + duration + " turns.");
 		return e;
 	}
@@ -104,6 +110,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.burningIcon);
 		e.setStrength(strength);
+		e.setColour(Color.ORANGE);
 		e.setDescription("Burning creatures catch fire, taking " + strength + " fire damage per turn for " + duration + " turns.");
 		return e;
 	}
@@ -120,6 +127,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.strongIcon);
 		e.setStrength(amount);
+		e.setColour(Color.RED);
 		e.setDescription("Strong creatures have increased strength by " + amount + " for " + duration + " turns.");
 		return e;
 	}
@@ -136,6 +144,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.weakIcon);
 		e.setStrength(amount);
+		e.setColour(Color.BLUEVIOLET);
 		e.setDescription("Weakened creatures have decreased Brawn by " + amount + " for " + duration + " turns.");
 		return e;
 	}
@@ -154,6 +163,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.slowedIcon);
 		e.setStrength(amount);
+		e.setColour(Color.BLUEVIOLET);
 		e.setDescription("Slowed creatures have increased movement and attack delay by " + amount + " for " + duration + " turns.");
 		return e;
 	}
@@ -170,6 +180,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.shockedIcon);
+		e.setColour(Color.BLUE);
 		e.setDescription("The next action of a shocked creature takes an additional 10 ticks.");
 		return e;
 	}
@@ -186,6 +197,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.swiftIcon);
 		e.setStrength(amount);
+		e.setColour(Color.BLUE);
 		e.setDescription("Swift creatures have decreased movement delay by " + amount + " for " + duration + " turns.");
 		return e;
 	}
@@ -205,6 +217,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.stunnedIcon);
+		e.setColour(Color.BLUE);
 		e.setDescription("Stunned creatures can take no options until it wears off.");
 		return e;
 	}
@@ -220,6 +233,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.confusedIcon);
+		e.setColour(Color.BLUEVIOLET);
 		e.setDescription("Confused creatures can only move in random directions every turn.");
 		return e;
 	}
@@ -237,6 +251,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.blindIcon);
+		e.setColour(Color.BLUEVIOLET);
 		e.setDescription("Blind creatures have their sight reduced to 0 for " + duration + " turns.");
 		return e;
 	}
@@ -253,6 +268,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.vulnerableIcon);
 		e.setStrength(strength);
+		e.setColour(Color.DARKORANGE);
 		e.setDescription("Vulnerable creatures have their Armor reduced by " + strength + " for " + duration + " turns.");
 		return e;
 	}
@@ -270,6 +286,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.glowingIcon);
 		e.setStrength(amount);
+		e.setColour(Color.YELLOW);
 		e.setDescription("Glowing creatures are easier to hit, reducing their evasion by " + amount + " for " + duration + " turns.");
 		return e;
 	}
@@ -286,6 +303,7 @@ public final class Effects {
 				}
 			}
 		};
+		e.setColour(Color.GREEN);
 		e.setDescription("Removes all Poisoned effects currently afflicting the creature.");
 		return e;
 	}
@@ -309,6 +327,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.ragingIcon);
+		e.setColour(Color.DARKRED);
 		e.setDescription("Raging creatures have increased strength and attack faster, while being unable to cast spells or quaff potions. When the rage ends, the creature is slowed and weakened.");
 		return e;
 	}
@@ -328,6 +347,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.armorOfFrostIcon);
+		e.setColour(Color.BLUE);
 		e.setDescription("Creatures with an armor of frost have increased armor, however they are slightly slowed by the weight of it.");
 		return e;
 	}

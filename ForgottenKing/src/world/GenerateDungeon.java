@@ -11,6 +11,7 @@ import tools.Point;
 public class GenerateDungeon {
 	private int[][] map;
 	private int[][] regions;
+	private int[][] rooms;
 	private Feature[][] features;
 	public Feature feat(int x, int y) { return features[x][y]; }
 	private int nextRegion;
@@ -18,13 +19,14 @@ public class GenerateDungeon {
 	private int width;
 	private ArrayList<Point> set;
 	
-	public GenerateDungeon(int[][] map) {
+	public GenerateDungeon(int[][] map, int[][] currentRooms) {
 		this.map = map;
 		this.width = map.length;
 		this.height = map[0].length;
 		this.nextRegion = 1;
 		this.set = new ArrayList<Point>();
 		this.features = new Feature[width][height];
+		this.rooms = currentRooms;	//1s mean a room is placed here, so that deleting dead ends doesnt delete them
 	}
 	
 	public int[][] generateDungeon() {
@@ -84,7 +86,7 @@ public class GenerateDungeon {
 		List<Point> n = s.neighbors4();
 		for (Point p : n) {
 			if (p.x > 0 && p.x < width & p.y > 0 && p.y < height)
-				if (map[p.x][p.y] == 0)
+				if (map[p.x][p.y] != 1)
 					parent = p;
 		}
 		n = s.neighbors8();
@@ -92,7 +94,7 @@ public class GenerateDungeon {
 		for (Point p : n) {
 			if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height) 
 				adjacency++;
-			else if (map[p.x][p.y] == 0 && !isNeighbors(parent,p))
+			else if (map[p.x][p.y] != 1 && !isNeighbors(parent,p))
 				adjacency++;
 		}
 		return adjacency;
@@ -115,15 +117,15 @@ public class GenerateDungeon {
 	}
 	private boolean isDeadEnd(int x, int y) {
 		int n = 0;
-		if (map[x][y] != 0)
+		if (map[x][y] == 1 || rooms[x][y] == 1)
 			return false;
-		if (map[x-1][y] == 0)
+		if (map[x-1][y] != 1)
 			n++;
-		if (map[x+1][y] == 0)
+		if (map[x+1][y] != 1)
 			n++;
-		if (map[x][y-1] == 0)
+		if (map[x][y-1] != 1)
 			n++;
-		if (map[x][y+1] == 0)
+		if (map[x][y+1] != 1)
 			n++;
 		return n == 1;
 	}
@@ -133,7 +135,7 @@ public class GenerateDungeon {
 	    
 		for (int x = 0; x < width; x++){
 			for (int y = 0; y < height; y++){
-				if (map[x][y] != 1 && regions[x][y] == 0){
+				if (map[x][y] == 0 && regions[x][y] == 0){
 					fillRegion(nextRegion++, x, y);
 				}
 			}
@@ -149,7 +151,7 @@ public class GenerateDungeon {
 
             for (Point neighbor : p.neighbors8()){
                 if (regions[neighbor.x][neighbor.y] > 0
-                  || map[neighbor.x][neighbor.y] == 1)
+                  || map[neighbor.x][neighbor.y] != 0)
                     continue;
 
                 regions[neighbor.x][neighbor.y] = region;

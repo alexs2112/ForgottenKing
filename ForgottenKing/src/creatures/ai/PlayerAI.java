@@ -3,6 +3,7 @@ package creatures.ai;
 import java.util.List;
 
 import creatures.Creature;
+import creatures.Tag;
 import features.Feature;
 import tools.FieldOfView;
 import world.Tile;
@@ -27,7 +28,7 @@ public class PlayerAI extends CreatureAI {
 			if (feat.blockMovement())
 				return;
 		}
-        if (tile.isGround()){
+        if (tile.isGround() || ((tile.isPit() && creature.is(Tag.FLYING)))){
             creature.x = x;
             creature.y = y;
             creature.z = z;

@@ -114,6 +114,7 @@ public class CreatureFactory {
 	    bat.modifyMovementDelay(-5);
 	    bat.modifyAttackDelay(-5);
 	    bat.addTag(Tag.ERRATIC);
+	    bat.addTag(Tag.FLYING);
 	    bat.setDescription("A large grey bat that, despite being herbivorous, is quite aggressive. It is myopic and uses echolocation to navigate.");//*
 	    world.addAtEmptyLocation(bat, z);
 	    new BasicAI(bat, player);
@@ -287,7 +288,7 @@ public class CreatureFactory {
 	    grisstok.addTag(Tag.SPELLCASTER);
 	    grisstok.addTag(Tag.LEGENDARY);
 	    grisstok.setResistance(Type.FIRE, 1);
-	    grisstok.addEffectOnHit(Effects.burning(3, 2), 40);
+	    grisstok.addEffectOnHit(Effects.burning(3, 1), 40);
 	    grisstok.addSpell(Spells.fireStomp());
 	    grisstok.addSpell(Spells.darksmite());
 	    grisstok.setMana(12, 12);

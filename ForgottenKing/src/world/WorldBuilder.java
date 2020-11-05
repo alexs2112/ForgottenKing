@@ -34,6 +34,7 @@ public class WorldBuilder {
 		int roomMod = 4;
 		for (int z = 0; z < depth; z++) {
 			int[][] nums = new int[width][height];
+			int[][] rooms = new int[width][height];	//Keeps track of where rooms are, so when deleting dead ends it doesnt delete vaults
 			for (int x = 0; x < width; x++)
 				for (int y = 0; y < height; y++)
 					nums[x][y] = 1;
@@ -55,8 +56,13 @@ public class WorldBuilder {
 									successes++;
 					if (successes == n.width()*n.height())
 						for (int x = 0; x < n.width(); x++)
-							for (int y = 0; y < n.height(); y++)
-								nums[x+sx][y+sy] = n.num(x,y);
+							for (int y = 0; y < n.height(); y++) {
+								tiles[x+sx][y+sy][z] = n.tile(x,y);
+								nums[x+sx][y+sy] = n.num(x, y);
+								features[x+sx][y+sy][z] = n.feature(x,y);
+								if (n.num(x,y) != 1)
+									rooms[x+sx][y+sy] = 1;
+							}
 				} else {
 					//Create a basic square room
 					int cx = (int)(Math.random() * roomMod) + roomMin;
@@ -71,15 +77,17 @@ public class WorldBuilder {
 									successes++;
 					if (successes == cx * cy)
 						for (int x = 1; x < cx-1; x++)
-							for (int y = 1; y < cy-1; y++)
+							for (int y = 1; y < cy-1; y++) {
 								nums[x+sx][y+sy] = 0;
+								rooms[x+sx][y+sy] = 1;
+							}
 				}
 			}
 			
-			GenerateDungeon g = new GenerateDungeon(nums);
+			GenerateDungeon g = new GenerateDungeon(nums, rooms);
 			nums = g.generateDungeon();
 			for (int x = 0; x < width; x++)
-				for (int y = 0; y < height; y++) {
+				for (int y = 0; y < height; y++) {	
 					if (nums[x][y] == 0)
 						tiles[x][y][z] = Tile.DUNGEON_FLOOR;
 					else if (nums[x][y] == -1)

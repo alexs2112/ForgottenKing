@@ -31,9 +31,9 @@ public class CreatureAI {
             return false;
     
         for (Point p : new Line(creature.x, creature.y, wx, wy)){
-        	if (creature.world().feature(p.x, p.y, wz) != null && creature.world().feature(p.x, p.y, wz).blockLineOfSight() == true)
+        	if (creature.world().feature(p.x, p.y, wz) != null && creature.world().feature(p.x, p.y, wz).blockLineOfSight())
         		return false;
-            if (creature.realTile(p.x, p.y, wz).isGround() || p.x == wx && p.y == wy)
+            if (!creature.realTile(p.x, p.y, wz).isWall() || p.x == wx && p.y == wy)
                 continue;
         
             return false;
@@ -48,7 +48,7 @@ public class CreatureAI {
 			creature.doAction("bump into a " + feat.name().toLowerCase());
 			return;
 		}
-        if (tile.isGround()){
+        if (tile.isGround() || ((tile.isPit() && creature.is(Tag.FLYING)))){
              creature.x = x;
              creature.y = y;
              creature.z = z;
@@ -152,7 +152,7 @@ public class CreatureAI {
 	protected boolean inRange(int range, int wx, int wy) {
 		if (range == 0)
 			return true;
-		return new Line(creature.x, creature.y, wx, wy).getPoints().size() <= range;
+		return new Line(creature.x, creature.y, wx, wy).getPoints().size() <= range+1;
 	}
 	
     public void onUpdate() { 

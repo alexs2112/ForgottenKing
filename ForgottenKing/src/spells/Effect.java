@@ -2,6 +2,7 @@ package spells;
 
 import creatures.Creature;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 public class Effect implements Cloneable {
 	protected int duration;
@@ -13,6 +14,9 @@ public class Effect implements Cloneable {
 	private Image image;
 	public Image image() { return image; }
 	public void setImage(Image x) { image = x; }
+	private Color colour;
+	public Color colour() { return colour; }
+	public void setColour(Color c) { colour = c; }
 	private int strength;
 	public int strength() { return strength; }
 	public void setStrength(int x) { strength = x; }

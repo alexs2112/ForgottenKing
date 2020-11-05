@@ -88,6 +88,12 @@ public class Inventory {
 				return true;
 		return false;
 	}
+	public boolean containsName(String s) {
+		for (Item i : getUniqueItems())
+			if (i.name().equals(s))
+				return true;
+		return false;
+	}
 	
 	public boolean isFull(){
 	    int size = 0;

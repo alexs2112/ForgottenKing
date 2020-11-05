@@ -1,4 +1,5 @@
 package screens;
+import audio.Audio;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.effect.ColorAdjust;
@@ -14,6 +15,7 @@ public abstract class Screen {
 	public Scene scene;
 	protected Group root;
 	public Group root() { return root; }
+	public Audio audio() { return Audio.PAUSE; }
 	
 	public boolean repeatKeyPress = false;
 

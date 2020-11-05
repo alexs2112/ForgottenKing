@@ -1,15 +1,19 @@
 package screens;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import assembly.CreatureFactory;
 import assembly.ItemFactory;
+import assembly.Spells;
+import audio.Audio;
 import creatures.Ability;
 import creatures.ClassSelection;
 import creatures.Creature;
 import creatures.Player;
 import creatures.Tag;
+import creatures.Type;
 import features.Feature;
 import items.Item;
 import items.ItemTag;
@@ -38,6 +42,11 @@ public class PlayScreen extends Screen {
     private FieldOfView fov;
     private Screen subscreen;
     private boolean devMode = false;
+    public Audio audio() {
+    	if (subscreen != null)
+    		return subscreen.audio();
+    	return player.songToPlayByEnemy();
+    }
 
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
@@ -69,9 +78,16 @@ public class PlayScreen extends Screen {
         if (character.abilities() != null)
         	for (Ability a : character.abilities())
         		player.addAbility(a);
+        if (player.is(Tag.ELEMENTALIST)) {
+        	player.magic().modify(Type.FIRE, 1);
+        	player.addSpell(Spells.embers());
+        }
         if (devMode) {
         	player.addEquipment(itemFactory.weapon().newDevSword(-1));
         	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
+        	player.addTag(Tag.FLYING);
+        	player.addSpell(Spells.chill());
+        	player.magic().modify(Type.COLD, 3);
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -101,6 +117,7 @@ public class PlayScreen extends Screen {
 	    return Math.max(0, Math.min(player.y - screenHeight / 2, world.height() - screenHeight));
 	}
 	
+	Font fontXS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 12);
 	private void displayTiles(int left, int top) {
 		fov.update(player.x, player.y, player.z, player.visionRadius());
 	    for (int x = 0; x < screenWidth; x++){
@@ -144,6 +161,15 @@ public class PlayScreen extends Screen {
         			draw(root, healthbar, (c.x-left)*32, (c.y-top)*32);
         		if (c.equipment().size() > 0 && !c.is(Tag.PLAYER))
         			draw(root, Loader.armedEnemyIcon, (c.x-left)*32, (c.y-top)*32);
+        		HashMap<String, Color> h = c.getStatements();
+        		c.clearStatements();
+        		if (h != null) {
+        			int i = 0;
+        			for (String s : h.keySet()) {
+        				writeCentered(root, s, (c.x-left)*32+20, (c.y-top)*32-4-(10*i), fontXS, h.get(s));
+        				i++;
+        			}
+        		}
         	}
         }
 	}
@@ -279,8 +305,6 @@ public class PlayScreen extends Screen {
     	if (code.equals(KeyCode.ESCAPE))
     		endAfterUserInput = false;
     	
-    	
-		
 		if (endAfterUserInput && subscreen == null) {
 			player.update();
 			if (player.time() <= 0) //If the players action did not modify their time, set their time to their movement delay

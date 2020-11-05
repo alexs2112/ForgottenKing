@@ -85,16 +85,18 @@ public class PrefabLoader {
 						features[x][y] = null;
 					if (chars[x][y] == '.')
 						tiles[x][y] = Tile.DUNGEON_FLOOR;
+					else if (chars[x][y] == ',')
+						tiles[x][y] = Tile.WOOD_FLOOR;
 					else if (chars[x][y] == '=')
 						tiles[x][y] = Tile.DUNGEON_PIT;
 					else if (chars[x][y] == '#')
 						tiles[x][y] = Tile.DUNGEON_WALL;
 					else if (chars[x][y] == '|') {
 						tiles[x][y] = Tile.DUNGEON_FLOOR;
-						features[x][y] = new Door(0);
+						features[x][y] = new Door(1);
 					} else if (chars[x][y] == '-') {
 						tiles[x][y] = Tile.DUNGEON_FLOOR;
-						features[x][y] = new Door(1);
+						features[x][y] = new Door(0);
 					}
 				}
 			}

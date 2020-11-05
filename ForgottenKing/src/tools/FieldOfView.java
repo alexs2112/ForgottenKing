@@ -54,8 +54,12 @@ public class FieldOfView {
                     visible[p.x][p.y] = true;
                     tiles[p.x][p.y][wz] = tile;
              
-                    if (!tile.isGround() || (world.feature(p.x, p.y, wz) != null && world.feature(p.x, p.y, wz).blockLineOfSight()))
+                    if ((world.feature(p.x, p.y, wz) != null && world.feature(p.x, p.y, wz).blockLineOfSight()))
                         break;
+                    if (!world.tile(p.x, p.y, wz).isWall())
+                        continue;
+                    
+                    break;
                 }
             }
         }
