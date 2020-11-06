@@ -1,18 +1,19 @@
 package creatures.ai;
 
-import java.util.List;
+import java.util.HashMap;
 
 import creatures.Creature;
 import creatures.Tag;
 import features.Feature;
+import javafx.scene.paint.Color;
 import tools.FieldOfView;
 import world.Tile;
 
 public class PlayerAI extends CreatureAI {
-	private List<String> messages;
+	private HashMap<String, Color> messages;
 	private FieldOfView fov;
 
-    public PlayerAI(Creature creature, List<String> messages, FieldOfView fov) {
+    public PlayerAI(Creature creature, HashMap<String, Color> messages, FieldOfView fov) {
     	super(creature);
     	this.messages = messages;
     	this.fov = fov;
@@ -37,8 +38,8 @@ public class PlayerAI extends CreatureAI {
         }
     }
     
-    public void onNotify(String message){
-        messages.add(message);
+    public void onNotify(String message, Color c){
+        messages.put(message, c);
         System.out.println(message);
     }
     

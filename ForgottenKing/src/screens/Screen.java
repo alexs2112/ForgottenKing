@@ -1,11 +1,14 @@
 package screens;
 import audio.Audio;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.effect.ColorAdjust;
 import javafx.stage.Stage;
+import tools.KeyBoardCommand;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -17,22 +20,38 @@ public abstract class Screen {
 	public Group root() { return root; }
 	public Audio audio() { return Audio.PAUSE; }
 	
-	public boolean repeatKeyPress = false;
+	protected Screen refreshScreen;
+	public Screen refreshScreen() { return refreshScreen; }
+	protected Screen returnThis() { return this; }
+	
+	public KeyBoardCommand nextCommand;
+	public KeyBoardCommand getNextCommand() { return nextCommand; }
 
 	public void displayOutput(Stage stage) {
 		stage.setScene(scene);
 		stage.show();
 	}
 
-    public Screen respondToUserInput(KeyEvent key) {
-    	return this;
-    }
+//    public Screen respondToUserInput(KeyEvent key) {
+//    	return this;
+//    }
+	public Screen respondToUserInput(KeyCode code, char c, boolean isShiftDown) {
+		return this;
+	}
     
     public static void draw(Group root, Image i, int x, int y) {
-    	draw(root, i, x, y, 0);
+    	draw(root, i, x, y, 0, null);
     }
     
     public static void draw(Group root, Image i, int x, int y, double adjust) {
+    	draw(root, i, x, y, adjust, null);
+    }
+    
+    public static void draw(Group root, Image i, int x, int y, EventHandler<MouseEvent> clickEvent) {
+    	draw(root, i, x, y, 0, clickEvent);
+    }
+    
+    public static void draw(Group root, Image i, int x, int y, double adjust, EventHandler<MouseEvent> clickEvent) {
     	ImageView j = new ImageView(i);
     	j.setX(x);
     	j.setY(y);
@@ -40,8 +59,35 @@ public abstract class Screen {
     	ColorAdjust value = new ColorAdjust();
     	value.setBrightness(adjust);
     	j.setEffect(value);
+    	if (clickEvent != null)
+    		j.setOnMousePressed(clickEvent);
     	root.getChildren().add(j);
     }
+    public static void draw(Group root, Image i, int x, int y, EventHandler<MouseEvent> clickEvent, EventHandler<MouseEvent> enteredEvent, EventHandler<MouseEvent> exitEvent) {
+    	ImageView j = new ImageView(i);
+    	j.setX(x);
+    	j.setY(y);
+    	j.setPreserveRatio(true);
+    	j.setOnMousePressed(clickEvent);
+    	j.setOnMouseEntered(enteredEvent);
+    	j.setOnMouseExited(exitEvent);
+    	root.getChildren().add(j);
+    }
+//    public static void button(Screen screen, Image notSelected, Image selected, int x, int y, EventHandler<MouseEvent> clickEvent) {
+//    	Image i = notSelected;
+//    	ImageView j = new ImageView(i);
+//    	j.setX(x);
+//    	j.setY(y);
+//    	j.setPreserveRatio(true);
+//    	j.setOnMousePressed(clickEvent);
+//    	j.setOnMouseMoved(new EventHandler<MouseEvent>() {
+//			public void handle(MouseEvent me) { 
+//				x++;
+//			}
+//		});
+//    	screen.root().getChildren().add(j);
+//    }
+    
     public static void write(Group root, String s, int x, int y, int fontSize, Color colour) {
     	Font f = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), fontSize);
     	write(root, s, x, y, f, colour);
@@ -70,6 +116,8 @@ public abstract class Screen {
     }
     public static void writeCentered(Group root, String s, int x, int y, Font font, Color colour) {
     	int startX = x - (int)(s.length() * (font.getSize()+1))/2;
+    	if (font.getName().contains("DejaVu"))
+    		startX = x - (int)(s.length()/2*(font.getSize()/2));
     	write(root, s, startX, y, font, colour);
     }
     

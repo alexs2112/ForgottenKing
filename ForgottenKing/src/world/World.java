@@ -117,6 +117,8 @@ public class World {
 	    creature.y = p.y;
 	    creature.z = p.z;
 	    creatures.add(creature);
+	    creature.fillMana();
+	    creature.fillHP();
 	}
 	
 	public Point getEmptyLocation(int z) {

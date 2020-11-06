@@ -50,6 +50,7 @@ public class TrinketFactory {
 		};
 		item.addResistance(Type.POISON, 1);
 		item.setDescription(descriptions.get(i) + ", it is etched with a serpentine design and glows a slight green.");
+		item.setWeight(0.2);
 		world.addAtEmptyLocation(item, z);
 		return item;
 	}
@@ -66,6 +67,7 @@ public class TrinketFactory {
 		Item item = new Item("+" + strength + " Ring of " + a.text(), ItemType.RING, i);
 		item.setDescription(descriptions.get(i) + ", you feel " + descText + " when you put it on.");
 		item.setAttribute(a, strength);
+		item.setWeight(0.2);
 		world.addAtEmptyLocation(item, z);
 		return item;
 	}
@@ -85,6 +87,7 @@ public class TrinketFactory {
 		Item item = new Item("+" + strength + " Ring of " + a.text(), ItemType.RING, i);
 		item.setDescription(descriptions.get(i) + ", you feel " + descText + " when you put it on.");
 		item.setStat(a, strength);
+		item.setWeight(0.2);
 		world.addAtEmptyLocation(item, z);
 		return item;
 	}

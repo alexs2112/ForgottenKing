@@ -11,7 +11,6 @@ import creatures.Creature;
 import creatures.Player;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -152,11 +151,8 @@ public class TargetBasedScreen extends Screen {
 		return p;
 	}
 	
-	public Screen respondToUserInput(KeyEvent key) {
-        KeyCode code = key.getCode();
-        char c = '-';
-    	if (key.getText().length() > 0)
-    		c = key.getText().charAt(0);
+	@Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
         if (code.equals(KeyCode.LEFT) || c == 'h' || code.equals(KeyCode.NUMPAD4)) { x--; }
     	else if (code.equals(KeyCode.RIGHT) || c == 'l' || code.equals(KeyCode.NUMPAD6)) { x++; }
     	else if (code.equals(KeyCode.UP) || c == 'k' || code.equals(KeyCode.NUMPAD8)) { y--; }

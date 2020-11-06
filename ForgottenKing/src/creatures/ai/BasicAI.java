@@ -13,12 +13,15 @@ public class BasicAI extends CreatureAI {
 	}
 
 	protected void action() {
+		isWandering = false;	//Always sets to false, then checks to see if it really is wandering
 		if (creature.canSee(player.x, player.y, player.z))
 			lastSeenAt = new Point(player.x, player.y, player.z);
 		
 		//Erratic creatures randomly wander on their turn 40% of the time
 		if (creature.is(Tag.ERRATIC) && Math.random()*100 < 40) {
 			wander();
+			if (lastSeenAt == null && getNearestEnemy() == null)
+				isWandering = true;
 			return;
 		}
 		
@@ -37,9 +40,9 @@ public class BasicAI extends CreatureAI {
 				lastSeenAt = null;
 			else if (lastSeenAt != null && !creature.canSee(player.x, player.y, player.z)) {
 				moveTo(lastSeenAt.x, lastSeenAt.y);
-				return;
 			} else {
 				wander();
+				isWandering = true;
 			}
 		}
 	}

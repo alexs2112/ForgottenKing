@@ -14,7 +14,6 @@ import items.ItemType;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -72,15 +71,14 @@ public class InspectItemScreen extends Screen {
     		write(root, useTexts(), 48, y, font, Color.WHITE);
     	
     }
-	public Screen respondToUserInput(KeyEvent key) {
-		if (key.getCode().equals(KeyCode.ESCAPE))
+	
+	@Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
+		if (code.equals(KeyCode.ESCAPE))
             return previousScreen;
 		if (player == null)
 			return this;
 		
-		char c = '-';
-    	if (key.getText().length() > 0)
-    		c = key.getText().charAt(0);
 		if (c == 'd') {
 			player.drop(item);
 			return previousScreen;

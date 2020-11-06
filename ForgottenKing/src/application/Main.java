@@ -1,11 +1,14 @@
 package application;
 import audio.AudioPlayer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import screens.Screen;
 import screens.StartScreen;
+import tools.KeyBoardCommand;
 
 public class Main extends Application {
 	private Screen screen;
@@ -18,9 +21,7 @@ public class Main extends Application {
 			this.primaryStage = primaryStage;
 			primaryStage.setTitle("Forgotten King");
 
-			
-			
-			//primaryStage.setResizable(false); 
+			primaryStage.setResizable(false); 
 			primaryStage.getIcons().add(new Image(Screen.class.getResourceAsStream("resources/icon.png")));
 			screen = new StartScreen();
 			screen.displayOutput(primaryStage);
@@ -41,16 +42,28 @@ public class Main extends Application {
 	}
 
 	public void keyPressed(KeyEvent key) {
-		Screen sc2 = screen.respondToUserInput(key); 
-		screen = sc2;
+		char c = '-';
+    	if (key.getText().length() > 0)
+    		c = key.getText().charAt(0);
+    	changeScreen(screen.respondToUserInput(key.getCode(), c, key.isShiftDown()));
+	}
+	private void mouseClicked() {
+		if (screen.refreshScreen() != null) {
+			changeScreen(screen.refreshScreen());
+		}
+	}
+	
+	private void changeScreen(Screen newScreen) {
+		screen = newScreen;
 		if (screen == null)
 			return;
 		repaint();
 		addKeyHandler(screen);
 		audio.update(screen);
-		if (screen.repeatKeyPress) {
-			screen.repeatKeyPress = false;
-			keyPressed(key);
+		if (screen.nextCommand != null) {
+			KeyBoardCommand c = screen.getNextCommand();
+			screen.nextCommand = null;
+			changeScreen(screen.respondToUserInput(c.code, c.c, c.shift));
 		}
 	}
 
@@ -58,6 +71,16 @@ public class Main extends Application {
 		screen.scene.setOnKeyPressed(key -> {
 			keyPressed(key);
         });
+		screen.scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			 public void handle(MouseEvent me) {
+			        mouseClicked();
+			    }
+		});
+		screen.scene.setOnMouseMoved(new EventHandler<MouseEvent>() {
+			 public void handle(MouseEvent me) {
+			        mouseClicked();
+			    }
+		});
 	}
 
 }

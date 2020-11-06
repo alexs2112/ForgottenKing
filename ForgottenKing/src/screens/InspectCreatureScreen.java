@@ -9,7 +9,6 @@ import items.Item;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -58,8 +57,10 @@ public class InspectCreatureScreen extends Screen {
     	y+=48;
     	write(root, "[esc] to exit", 48, y, font, Color.WHITE);
     }
-	public Screen respondToUserInput(KeyEvent key) {
-		if (key.getCode().equals(KeyCode.ESCAPE))
+
+	@Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
+		if (code.equals(KeyCode.ESCAPE))
             return null;
 		else
 			return this;

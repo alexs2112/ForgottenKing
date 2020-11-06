@@ -8,7 +8,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -36,8 +35,8 @@ public class LeaveScreen extends Screen {
 	}
 
 	@Override
-	public Screen respondToUserInput(KeyEvent key) {
-		if (key.getCode().equals(KeyCode.ENTER))
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
+		if (code.equals(KeyCode.ENTER))
 			return new StartScreen();
     	return this;
     }

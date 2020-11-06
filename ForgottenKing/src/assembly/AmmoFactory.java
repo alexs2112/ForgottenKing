@@ -36,6 +36,7 @@ public class AmmoFactory {
 		Item rock = new Item("Rock", ItemType.STONE, rockIcon);
 		rock.modifyThrownAttackValue(1);
 		rock.addTag(ItemTag.THROWING);
+		rock.setWeight(0.2);
 		rock.setDescription("A solid stone dredged from the earth. Fits perfectly in the palm of your hand, or perhaps a sling.");
 		world.addAtEmptyLocation(rock,z);
 		return rock;
@@ -45,6 +46,7 @@ public class AmmoFactory {
 		Item item = new Item("Arrow", ItemType.ARROW, arrowImage);
 		item.setDamageType(Type.PIERCING);
 		item.setRangedDamage(2, 2);
+		item.setWeight(0);
 		item.setDescription("A long shafted projectile intended to be shot with a shortbow or longbow, fletched with feathers at one end and a point at the other.");
 		int amount = (int)(Math.random()*5 + 2);
 		world.addAtEmptyLocation(item, z, amount);
@@ -55,6 +57,7 @@ public class AmmoFactory {
 		item.setDamageType(Type.PIERCING);
 		item.addTag(ItemTag.THROWING);
 		item.setThrownDamage(1, 3);
+		item.setWeight(0);
 		item.setDescription("A thin, razor sharp piece of metal. With skill it can be thrown with deadly accuracy. If coated with a harmful substance it can deliver poison directly into the bloodstream of its intended target.");
 		int amount = (int)(Math.random()*5 + 2);
 		world.addAtEmptyLocation(item, z, amount);

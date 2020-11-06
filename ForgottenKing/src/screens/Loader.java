@@ -11,12 +11,16 @@ public final class Loader {
 	public static Image yellowSelection = ImageCrop.cropImage(selectionBoxFull, 0, 0, 32, 32);
 	public static Image redSelection = ImageCrop.cropImage(selectionBoxFull, 32, 0, 32, 32);
 	private static Image startScreenMenuBoxFull = new Image(Screen.class.getResourceAsStream("resources/start-screen-menu-box.png"));
-	public static Image startScreenMenuBox = ImageCrop.cropImage(startScreenMenuBoxFull, 0, 0, 600, 78);
-	public static Image startScreenMenuBoxGold = ImageCrop.cropImage(startScreenMenuBoxFull, 0, 78, 600, 78);
+	public static Image startScreenNewGame = ImageCrop.cropImage(startScreenMenuBoxFull, 0, 0, 600, 78);
+	public static Image startScreenNewGameGold = ImageCrop.cropImage(startScreenMenuBoxFull, 0, 78, 600, 78);
+	public static Image startScreenQuitGame = ImageCrop.cropImage(startScreenMenuBoxFull, 600, 0, 600, 78);
+	public static Image startScreenQuitGameGold = ImageCrop.cropImage(startScreenMenuBoxFull, 600, 78, 600, 78);
 	public static Image startScreenFull = new Image(Screen.class.getResourceAsStream("resources/full-screens/start-screen.png"));
 	
 	public static Image multi_item_icon = new Image(Screen.class.getResourceAsStream("resources/multi_item_icon.png"));
-	public static Image armedEnemyIcon = new Image(Screen.class.getResourceAsStream("resources/armed_enemy.png"));
+	private static Image enemyIconsFull = new Image(Screen.class.getResourceAsStream("resources/enemy-icons.png"));
+	public static Image armedEnemyIcon = ImageCrop.cropImage(enemyIconsFull, 0, 0, 8, 8);
+	public static Image wanderingEnemyIcon = ImageCrop.cropImage(enemyIconsFull, 8, 0, 16, 16);
 	
 	public static Image healthBarIconFull = new Image(Screen.class.getResourceAsStream("resources/health_bar_icon_full.png"));
 	public static Image healthBarFull = ImageCrop.cropImage(healthBarIconFull, 0, 0, 32, 8);
@@ -43,6 +47,32 @@ public final class Loader {
 	public static Image accuracyIcon = ImageCrop.cropImage(statsFull, 32, 64, 32, 32);
 	public static Image willIcon = ImageCrop.cropImage(statsFull, 64, 32, 32, 32);
 	public static Image spellcastingIcon = ImageCrop.cropImage(statsFull, 64, 64, 32, 32);
+	
+	private static Image playerButtonsFull = new Image(Screen.class.getResourceAsStream("resources/player-buttons.png"));
+	public static Image inventoryIcon = ImageCrop.cropImage(playerButtonsFull, 0,0,40,40);
+	public static Image wearIcon = ImageCrop.cropImage(playerButtonsFull, 40,0,40,40);
+	public static Image quaffIcon = ImageCrop.cropImage(playerButtonsFull, 80,0,40,40);
+	public static Image readIcon = ImageCrop.cropImage(playerButtonsFull, 120,0,40,40);
+	public static Image meditateIcon = ImageCrop.cropImage(playerButtonsFull, 160,0,40,40);
+	public static Image statsIcon = ImageCrop.cropImage(playerButtonsFull, 200,0,40,40);
+	public static Image perksIcon = ImageCrop.cropImage(playerButtonsFull, 240,0,40,40);
+	public static Image restIcon = ImageCrop.cropImage(playerButtonsFull, 280,0,40,40);
+	public static Image throwIcon = ImageCrop.cropImage(playerButtonsFull, 320,0,40,40);
+	public static Image fireWeaponIcon = ImageCrop.cropImage(playerButtonsFull, 360,0,40,40);
+	public static Image castIcon = ImageCrop.cropImage(playerButtonsFull, 400,0,40,40);
+	public static Image swapWeaponIcon = ImageCrop.cropImage(playerButtonsFull, 440,0,40,40);
+	public static Image inventoryIconSelected = ImageCrop.cropImage(playerButtonsFull, 0,40,40,40);
+	public static Image wearIconSelected = ImageCrop.cropImage(playerButtonsFull, 40,40,40,40);
+	public static Image quaffIconSelected = ImageCrop.cropImage(playerButtonsFull, 80,40,40,40);
+	public static Image readIconSelected = ImageCrop.cropImage(playerButtonsFull, 120,40,40,40);
+	public static Image meditateIconSelected = ImageCrop.cropImage(playerButtonsFull, 160,40,40,40);
+	public static Image statsIconSelected = ImageCrop.cropImage(playerButtonsFull, 200,40,40,40);
+	public static Image perksIconSelected = ImageCrop.cropImage(playerButtonsFull, 240,40,40,40);
+	public static Image restIconSelected = ImageCrop.cropImage(playerButtonsFull, 280,40,40,40);
+	public static Image throwIconSelected = ImageCrop.cropImage(playerButtonsFull, 320,40,40,40);
+	public static Image fireWeaponIconSelected = ImageCrop.cropImage(playerButtonsFull, 360,40,40,40);
+	public static Image castIconSelected = ImageCrop.cropImage(playerButtonsFull, 400,40,40,40);
+	public static Image swapWeaponIconSelected = ImageCrop.cropImage(playerButtonsFull, 440,40,40,40);
 	
 	public static Image playerUIFull = new Image(Screen.class.getResourceAsStream("resources/player_ui.png"));
 	private static Image equipmentBoxFull = new Image(Screen.class.getResourceAsStream("resources/equipment_box.png"));
@@ -85,6 +115,10 @@ public final class Loader {
 	public static Image characterSelectionBox = ImageCrop.cropImage(characterSelectionFull, 0, 0, 104, 104);
 	public static Image characterSelectionUpArrow = ImageCrop.cropImage(characterSelectionFull, 104, 0, 104, 52);
 	public static Image characterSelectionDownArrow = ImageCrop.cropImage(characterSelectionFull, 104, 52, 104, 52);
+	public static Image characterSelectionUpArrowSelected = ImageCrop.cropImage(characterSelectionFull, 208, 0, 104, 52);
+	public static Image characterSelectionDownArrowSelected = ImageCrop.cropImage(characterSelectionFull, 208, 52, 104, 52);
+	public static Image characterSelectionSelectButton = ImageCrop.cropImage(characterSelectionFull, 0, 104, 300, 90);
+	public static Image characterSelectionSelectButtonSelected = ImageCrop.cropImage(characterSelectionFull, 0, 194, 300, 90);
 	private static Image tagBoxFull = new Image(Screen.class.getResourceAsStream("resources/tag_box_full.png"));
 	public static Image perkBoxSmall = ImageCrop.cropImage(tagBoxFull, 0, 0, 530, 122);
 	public static Image perkBox = ImageCrop.cropImage(tagBoxFull, 0, 122, 730, 122);
@@ -99,7 +133,6 @@ public final class Loader {
 	public static Image inventoryBoxGreen = ImageCrop.cropImage(inventoryBoxFull, 0, 192, 892, 64);
 	public static Image inventoryBoxDarkGreen = ImageCrop.cropImage(inventoryBoxFull, 0, 256, 892, 64);
 	
-	//public static Image statsScreenStatBox = new Image(Screen.class.getResourceAsStream("resources/stats-screen-stat-box.png"));
 	public static Image statsScreenFull = new Image(Screen.class.getResourceAsStream("resources/full-screens/stats-screen-full.png"));
 	/**
 	 * TAGS

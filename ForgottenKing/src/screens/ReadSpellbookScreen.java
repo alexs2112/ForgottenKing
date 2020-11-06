@@ -6,7 +6,6 @@ import creatures.Player;
 import items.Item;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -79,22 +78,20 @@ public class ReadSpellbookScreen extends Screen {
     	return spells;
     }
     
-    public Screen respondToUserInput(KeyEvent key) {
-    	char c = '-';
-    	if (key.getText().length() > 0)
-    		c = key.getText().charAt(0);
+    @Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
     	ArrayList<Spell> spells = getSpells();
     	if (letters.indexOf(c) > -1
     			&& spells.size() > letters.indexOf(c)) {
     		select = letters.indexOf(c);
-    	} else if (key.getCode().equals(KeyCode.ESCAPE)) {
+    	} else if (code.equals(KeyCode.ESCAPE)) {
             return null;
-    	} else if (key.getCode().equals(KeyCode.ENTER)) {
+    	} else if (code.equals(KeyCode.ENTER)) {
     		player.addSpell(spells.get(select));
     		return null;
-    	} else if (key.getCode().equals(KeyCode.DOWN))
+    	} else if (code.equals(KeyCode.DOWN))
     		select = Math.min(spells.size()-1, select+1);
-    	else if (key.getCode().equals(KeyCode.UP))
+    	else if (code.equals(KeyCode.UP))
     		select = Math.max(0, select-1);
         return this;
     }

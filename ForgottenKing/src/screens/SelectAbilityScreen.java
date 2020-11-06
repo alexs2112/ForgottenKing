@@ -6,7 +6,6 @@ import creatures.Player;
 import creatures.Ability;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -81,31 +80,31 @@ public class SelectAbilityScreen extends Screen {
         }
     }
     
-    public Screen respondToUserInput(KeyEvent key) {
-    	char c = '-';
-    	if (key.getText().length() > 0)
-    		c = key.getText().charAt(0);
+    @Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
     	if (letters.indexOf(c) > -1
     		&& abilities != null
     		&& abilities.size() > letters.indexOf(c)) {
-    		select = letters.indexOf(c);
-    	} else if (key.getCode().equals(KeyCode.ESCAPE))
+    		return activate(abilities.get(letters.indexOf(c)));
+    	} else if (code.equals(KeyCode.ESCAPE))
             return null;
-    	else if (key.getCode().equals(KeyCode.ENTER)) {
-    		Ability a = abilities.get(select);
-    		if (a.time() > 0) {
-    			player.notify(a.name() + " is still on cooldown.");
-    			return null;
-    		}
-    		return new ActivateAbilityScreen(playRoot, player, "Activate " + a.name(), sx, sy, a);
+    	else if (code.equals(KeyCode.ENTER)) {
+    		return activate(abilities.get(select));
     	}
-    	else if (key.getCode().equals(KeyCode.DOWN))
+    	else if (code.equals(KeyCode.DOWN))
     		select = Math.min(select+1, abilities.size()-1);
-    	else if (key.getCode().equals(KeyCode.UP))
+    	else if (code.equals(KeyCode.UP))
     		select = Math.max(select-1, 0);
         return this;
     }
     
+    private Screen activate(Ability a) {
+    	if (a.time() > 0) {
+			player.notify(a.name() + " is still on cooldown.");
+			return null;
+		}
+		return new ActivateAbilityScreen(playRoot, player, "Activate " + a.name(), sx, sy, a);
+    }
     
     
 

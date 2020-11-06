@@ -6,7 +6,6 @@ import creatures.Stat;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -69,24 +68,24 @@ public class LevelUpScreen extends Screen {
 	}
 
 	@Override
-	public Screen respondToUserInput(KeyEvent key) {
-    	if (key.getCode().equals(KeyCode.DOWN)) {
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
+    	if (code.equals(KeyCode.DOWN)) {
     		int max = -1;
     		if (player.statPoints() > 0)
     			max = 8;
     		else if (player.attributePoints() > 0)
     			max = 2;
     		select = Math.min(max, select+1);
-    	} else if (key.getCode().equals(KeyCode.UP)) {
+    	} else if (code.equals(KeyCode.UP)) {
     		int min = -1;
     		if (player.attributePoints() > 0)
     			min = 0;
     		else if (player.statPoints() > 0)
     			min = 3;
     		select = Math.max(min, select-1);
-    	} else if (key.getCode().equals(KeyCode.ESCAPE)) {
+    	} else if (code.equals(KeyCode.ESCAPE)) {
     		return null;
-    	} else if (key.getCode().equals(KeyCode.ENTER)) {
+    	} else if (code.equals(KeyCode.ENTER)) {
     		if (select > -1 && select < 3 && player.attributePoints() > 0) {
     			player.modifyAttributePoints(-1);
     			if (select == 0)

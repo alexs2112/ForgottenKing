@@ -7,6 +7,7 @@ import creatures.Tag;
 import features.Feature;
 import items.Item;
 import items.ItemTag;
+import javafx.scene.paint.Color;
 import spells.Spell;
 import spells.TargetType;
 import tools.Line;
@@ -17,6 +18,8 @@ import world.Tile;
 public class CreatureAI {
 	protected Creature creature;
 	protected Point lastSeenAt;
+	protected boolean isWandering;
+	public boolean isWandering() { return isWandering; }
 
     public CreatureAI(Creature creature){
         this.creature = creature;
@@ -165,7 +168,7 @@ public class CreatureAI {
     	action();
     }
     
-    public void onNotify(String s) { }
+    public void onNotify(String s, Color c) { }
     
     protected void action() { }
 }

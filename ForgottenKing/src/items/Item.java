@@ -26,6 +26,9 @@ public class Item {
 	private String description;
 	public String description() { return description; }
 	public void setDescription(String x) { description = x; }
+	private double weight;
+	public double weight() { return weight; }
+	public void setWeight(double x) { weight = x; }
 	private Type damageType;
 	public Type damageType() { return damageType; }
 	public void setDamageType(Type damageType) { this.damageType = damageType; }
@@ -46,6 +49,7 @@ public class Item {
 		this.image = image;
 		this.type = type;
 		damage = new int[2];
+		weight = 1;
 		if (type == ItemType.BOOK)
 			newSpellList();
 	}

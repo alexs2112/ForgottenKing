@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import creatures.Player;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -73,10 +72,8 @@ public class SelectSpellScreen extends Screen {
         }
     }
     
-    public Screen respondToUserInput(KeyEvent key) {
-    	char c = '-';
-    	if (key.getText().length() > 0)
-    		c = key.getText().charAt(0);
+    @Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
     	ArrayList<Spell> spells = player.spells();
     	if (letters.indexOf(c) > -1
     		&& spells != null
@@ -87,18 +84,18 @@ public class SelectSpellScreen extends Screen {
     		else
     			return null;
     	}
-    	else if (key.getCode().equals(KeyCode.DOWN))
+    	else if (code.equals(KeyCode.DOWN))
     		select = Math.min(select+1, spells.size()-1);
-    	else if (key.getCode().equals(KeyCode.UP))
+    	else if (code.equals(KeyCode.UP))
     		select = Math.max(select-1, 0);
-    	else if (key.getCode().equals(KeyCode.ENTER) && select != -1) {
+    	else if (code.equals(KeyCode.ENTER) && select != -1) {
     		Spell spell = spells.get(select);
     		if (canCastSpell(spell))
     			return new CastSpellScreen(playRoot, player, "Cast " + spell.name(), sx, sy, spell);
     		else
     			return null;
     	}
-    	else if (key.getCode().equals(KeyCode.ESCAPE)) {
+    	else if (code.equals(KeyCode.ESCAPE)) {
             return null;
     	}
         return this;

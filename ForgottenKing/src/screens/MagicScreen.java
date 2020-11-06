@@ -5,7 +5,6 @@ import creatures.Player;
 import creatures.Type;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -102,26 +101,23 @@ public class MagicScreen extends Screen {
 		}
 	}
 	
-	public Screen respondToUserInput(KeyEvent key) {
-		char c = '/';
-    	if (key.getText().length() > 0)
-    		c = key.getText().charAt(0);
-    	
-		if (key.getCode().equals(KeyCode.ESCAPE))
+	@Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
+		if (code.equals(KeyCode.ESCAPE))
             return null;
-		if (key.getCode().equals(KeyCode.ENTER)) {
+		if (code.equals(KeyCode.ENTER)) {
 			player.meditate(floatingValues);
 			return null;
 		}
 			
-		if (key.getCode().equals(KeyCode.DOWN)) {
+		if (code.equals(KeyCode.DOWN)) {
 			int i = letters.indexOf(selection);
 			int n = i + 1;
 			if (n > 5)
 				n = 0;
 			selection = letters.charAt(n);
 		}
-		if (key.getCode().equals(KeyCode.UP)) {
+		if (code.equals(KeyCode.UP)) {
 			int i = letters.indexOf(selection);
 			int n = i - 1;
 			if (n < 0)
@@ -130,7 +126,7 @@ public class MagicScreen extends Screen {
 		}
 		if (letters.indexOf(c) != -1)
 			selection = c;
-		if (key.isShiftDown() && c == '=' && letters.indexOf(selection) != -1)
+		if (shift && c == '=' && letters.indexOf(selection) != -1)
 			modifyType(letters.indexOf(selection), 1);
 		if (c == '-' && letters.indexOf(selection) != -1)
 			modifyType(letters.indexOf(selection), -1);

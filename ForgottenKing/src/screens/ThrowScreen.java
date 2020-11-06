@@ -18,10 +18,8 @@ public class ThrowScreen extends InventoryBasedScreen {
 		this.startAt = player.lastThrown();
 		if (startAt != null) {
     		select = inventory.indexOf(startAt);
-    		System.out.println(startAt.name());
     	} else {
-    		select = -1;
-    		System.out.println("Null");
+    		select = 0;
     	}
 	}
 

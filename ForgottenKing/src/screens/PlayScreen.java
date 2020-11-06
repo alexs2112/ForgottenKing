@@ -17,16 +17,18 @@ import creatures.Type;
 import features.Feature;
 import items.Item;
 import items.ItemTag;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import spells.Effect;
 import tools.FieldOfView;
+import tools.KeyBoardCommand;
 import tools.Point;
 import world.World;
 import world.WorldBuilder;
@@ -35,13 +37,13 @@ public class PlayScreen extends Screen {
     private int screenWidth;
     private int screenHeight;
     private World world;
-    private List<String> messages;
+    private HashMap<String, Color> messages;
     private Player player;
     private CreatureFactory creatureFactory;
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = false;
+    private boolean devMode = true;
     public Audio audio() {
     	if (subscreen != null)
     		return subscreen.audio();
@@ -51,7 +53,7 @@ public class PlayScreen extends Screen {
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
         screenHeight = 24;
-        messages = new ArrayList<String>();
+        messages = new HashMap<String, Color>();
         createWorld();
         fov = new FieldOfView(world);
         itemFactory = new ItemFactory(world);
@@ -59,6 +61,7 @@ public class PlayScreen extends Screen {
         itemFactory.setCreatureFactory(creatureFactory);
         setUpPlayer(character);
         populate();
+        prepareButtons();
     }
     private void createWorld(){
         world = new WorldBuilder(90, 31, 5)
@@ -72,6 +75,7 @@ public class PlayScreen extends Screen {
 		world.setEntrance(player.x, player.y);
 		player.setMagic();
         itemFactory.equipPlayer(player);
+        
         if (character.tags() != null)
         	for (Tag t : character.tags())
         		player.addTag(t);
@@ -85,9 +89,7 @@ public class PlayScreen extends Screen {
         if (devMode) {
         	player.addEquipment(itemFactory.weapon().newDevSword(-1));
         	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
-        	player.addTag(Tag.FLYING);
-        	player.addSpell(Spells.chill());
-        	player.magic().modify(Type.COLD, 3);
+        	player.addSpell(Spells.summonSimulacrum(creatureFactory));
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -101,6 +103,7 @@ public class PlayScreen extends Screen {
 	    scene = new Scene(root, 1280, 800, Color.BLACK);
 	    displayTiles(left, top);
 	    displayStats();
+	    handleButtons();
 		if (subscreen != null) {
 			subscreen.displayOutput(stage);
 			scene.setRoot(subscreen.root());
@@ -117,7 +120,7 @@ public class PlayScreen extends Screen {
 	    return Math.max(0, Math.min(player.y - screenHeight / 2, world.height() - screenHeight));
 	}
 	
-	Font fontXS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 12);
+	Font fontXS = Font.loadFont(this.getClass().getResourceAsStream("resources/DejaVuSansMono.ttf"), 14);
 	private void displayTiles(int left, int top) {
 		fov.update(player.x, player.y, player.z, player.visionRadius());
 	    for (int x = 0; x < screenWidth; x++){
@@ -159,14 +162,16 @@ public class PlayScreen extends Screen {
         		Image healthbar = getCreatureHealthIcon(c);
         		if (healthbar != null)
         			draw(root, healthbar, (c.x-left)*32, (c.y-top)*32);
-        		if (c.equipment().size() > 0 && !c.is(Tag.PLAYER))
-        			draw(root, Loader.armedEnemyIcon, (c.x-left)*32, (c.y-top)*32);
+        		if (c.weapon() != null && !c.is(Tag.PLAYER))
+        			draw(root, Loader.armedEnemyIcon, (c.x-left)*32 + 24, (c.y-top)*32);
+        		if (c.isWandering())
+        			draw(root, Loader.wanderingEnemyIcon, (c.x-left)*32 + 16, (c.y-top)*32+16);
         		HashMap<String, Color> h = c.getStatements();
         		c.clearStatements();
         		if (h != null) {
         			int i = 0;
         			for (String s : h.keySet()) {
-        				writeCentered(root, s, (c.x-left)*32+20, (c.y-top)*32-4-(10*i), fontXS, h.get(s));
+        				writeCentered(root, s, (c.x-left)*32+12, (c.y-top)*32-2-(14*i), fontXS, h.get(s));
         				i++;
         			}
         		}
@@ -175,16 +180,13 @@ public class PlayScreen extends Screen {
 	}
 	
 	@Override
-	public Screen respondToUserInput(KeyEvent key) {
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
+		messages.clear();
 		if (player.hp() < 1)
 		    return new LoseScreen(root);
-		KeyCode code = key.getCode();
     	boolean endAfterUserInput = true;
-    	char c = '-';
-    	if (key.getText().length() > 0)
-    		c = key.getText().charAt(0);
     	if (subscreen != null) {
-    		subscreen = subscreen.respondToUserInput(key);
+    		subscreen = subscreen.respondToUserInput(code, c, shift);
     		if (player.meditating() > 0)
     			meditatePlayer();
     	} else if (player.isStunned()) {
@@ -207,24 +209,20 @@ public class PlayScreen extends Screen {
     		else if (c == 'n' || code.equals(KeyCode.NUMPAD3)) { player.moveBy(1,1,0); }
     		else if (c == 'g') {
     			if (world.items(player.x,player.y, player.z) != null) {
-    				if(world.items(player.x,player.y, player.z).getUniqueItems().size() > 1)
-    					subscreen = new PickUpScreen(world, player);
-    				else
-    					player.pickup();
-    				player.modifyTime(5);
+    				pickupItems();
     			} else
     				endAfterUserInput = false;
-    		} else if (c == '.' && !key.isShiftDown()) { /*Wait 1 turn*/ } 
+    		} else if (c == '.' && !shift) { /*Wait 1 turn*/ } 
     		else if (c == 'd')
     			subscreen = new DropScreen(player);
-    		else if (c == 'q' && !key.isShiftDown()) {
+    		else if (c == 'q' && !shift) {
     			endAfterUserInput = false;
     			if (player.is(Tag.NOQUAFF))
     				player.notify("You cannot drink potions");
     			else
     				subscreen = new QuaffScreen(player);
     		}
-    		else if (c == 'q' && key.isShiftDown())
+    		else if (c == 'q' && shift)
     			subscreen = new QuiverScreen(player);
     		else if (c == 'i')
     			subscreen = new InventoryScreen(player);
@@ -234,10 +232,10 @@ public class PlayScreen extends Screen {
     			if (player.lastWielded() != null && player.inventory().contains(player.lastWielded()))
     				player.equip(player.lastWielded());
     		}
-    		else if (c == 'r' && key.isShiftDown()) {
+    		else if (c == 'r' && shift) {
     			player.setResting(true);
     			playerRest();
-    		} else if (c == 'r' && !key.isShiftDown())
+    		} else if (c == 'r' && !shift)
     			subscreen = new ReadScreen(player);
     		else if (c == 's')
     			subscreen = new StatsScreen(player);
@@ -245,9 +243,9 @@ public class PlayScreen extends Screen {
     			subscreen = new MagicScreen(player);
     		else if (c == 'p')
     			subscreen = new PerkScreen(player);
-    		else if (c == 'c' && key.isShiftDown())
+    		else if (c == 'c' && shift)
      			closeDoor();
-    		else if (c == 'c' && !key.isShiftDown()) {
+    		else if (c == 'c' && !shift) {
     			if (player.is(Tag.NOCAST)) {
     				player.notify("You cannot cast spells");
     				endAfterUserInput = false;
@@ -255,12 +253,12 @@ public class PlayScreen extends Screen {
     				subscreen = new SelectSpellScreen(root, player, getScrollX(), getScrollY());
     		} else if (c == 'a')
     			subscreen = new SelectAbilityScreen(root, player, getScrollX(), getScrollY());
-    		else if (key.isShiftDown() && c == '/') {
+    		else if (shift && c == '/') {
     			subscreen = new HelpScreen();
-    		} else if (key.isShiftDown() && code.equals(KeyCode.PERIOD)) {
+    		} else if (shift && code.equals(KeyCode.PERIOD)) {
     			if (world.feature(player.x, player.y, player.z) != null && world.feature(player.x, player.y, player.z).type().equals("DownStair"))
     				world.feature(player.x,player.y, player.z).interact(player, world, player.x, player.y, player.z);
-    		} else if (key.isShiftDown() && code.equals(KeyCode.COMMA)) {
+    		} else if (shift && code.equals(KeyCode.COMMA)) {
     			if (world.feature(player.x, player.y, player.z) != null && world.feature(player.x, player.y, player.z).type().equals("UpStair")) {
     				if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
     					return new LeaveScreen(player);	//If the player tries to leave
@@ -278,18 +276,17 @@ public class PlayScreen extends Screen {
     					getScrollX(),
     					getScrollY());
     		} else if (c == 'f') {
-    			if (player.weapon() == null || player.weapon().rangedAttackValue() == 0) {
-    				player.notify("You don't have a ranged weapon equipped");
-    				endAfterUserInput = false;
-    			} else  if (player.quiver() == null) {
-    				player.notify("You are out of ammo");
-    				endAfterUserInput = false;
+    			tryToFire();
+    		} else if (code.equals(KeyCode.SPACE)) {
+    			Feature f = world.feature(player.x, player.y, player.z);
+    			if (world.items(player.x,player.y, player.z) != null) {
+    				pickupItems();
+    			} else if (f != null && (f.type().equals("DownStair") || f.type().equals("UpStair"))) {
+    				if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
+    					return new LeaveScreen(player);
+    				f.interact(player, world, player.x, player.y, player.z);
     			} else {
-    				Point p = player.getAutoTarget();
-    				subscreen = new FireWeaponScreen(root, player,
-    						getScrollX(),
-    						getScrollY(),
-    						p);
+    				endAfterUserInput = false;
     			}
     		}
     		else if (c == '0' && devMode)
@@ -313,9 +310,12 @@ public class PlayScreen extends Screen {
 				world.update(player.z);
 				player.modifyTime(-1);
 			}
+			if (player.hp() < player.maxHP()/4)
+				player.notify("Low Health!", Color.ORANGERED);
 		}
+		//If the player is dead, hit a command to jumpstart to the next screen.
 		if (player.hp() <= 0)
-			repeatKeyPress = true;
+			nextCommand = new KeyBoardCommand(KeyCode.PERIOD, '.', false);
     	return this;
     }
 	
@@ -465,16 +465,20 @@ public class PlayScreen extends Screen {
     	}
     }
     
-    private void displayMessages(List<String> messages) {
+    private void displayMessages(HashMap<String, Color> messages) {
     	if (messages.size() == 0)
     		return;
     	int messageHeight = 24;
     	int top = 800 - messages.size() * messageHeight;
     	Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
-    	for (int i = 0; i < messages.size(); i++) {
-    		write(root, messages.get(i), 10, top+i*messageHeight, font, Color.ANTIQUEWHITE);
+    	//for (int i = 0; i < messages.size(); i++) {
+    	int i = 0;
+    	for (String message : messages.keySet()) {
+    		write(root, message, 10, top+i*messageHeight, font, messages.get(message));
+    		i++;
     	}
-    	messages.clear();
+    	//}
+    	//messages.clear();
     }
 	
 	private void populate() {
@@ -507,16 +511,12 @@ public class PlayScreen extends Screen {
 			}
 		}
 		creatureFactory.newGrisstok(world.depth()-1);	//Spawn in the boss, have a more interesting way of doing this later
-		for (Creature c : world.creatures()) {
-			c.fillHP();
-			c.fillMana();
-		}
 	}
 	
 	//A method that repeats the last key press (5) until the player is done resting
 	private void playerRest() {
 		if (player.resting() && !player.creatureInSight() && (player.hp() < player.maxHP()||player.mana() < player.maxMana()))
-    		repeatKeyPress = true;
+			nextCommand = new KeyBoardCommand(KeyCode.R, 'r', true);
     	else if (player.resting()) {
     		player.setResting(false);
     		if (player.creatureInSight())
@@ -530,7 +530,7 @@ public class PlayScreen extends Screen {
 		if (!player.creatureInSight() && player.meditating() > 0) {
 			player.modifyMeditating(-1);
 			if (player.meditating() > 0)
-				repeatKeyPress = true;
+				nextCommand = new KeyBoardCommand(KeyCode.PERIOD, '.', false);
 			else
 	    		player.notify("Done meditating");
 		} else {
@@ -539,5 +539,130 @@ public class PlayScreen extends Screen {
 				player.notify("Enemies interrupt your meditation!");
 		}
 	}
+	private void pickupItems() {
+		if(world.items(player.x,player.y, player.z).getUniqueItems().size() > 1)
+			subscreen = new PickUpScreen(world, player);
+		else
+			player.pickup();
+		player.modifyTime(5);
+	}
+	private void tryToFire() {
+		if (player.weapon() == null || player.weapon().rangedAttackValue() == 0) {
+			player.notify("You don't have a ranged weapon equipped");
+			//endAfterUserInput = false;
+		} else  if (player.quiver() == null) {
+			player.notify("You are out of ammo");
+			//endAfterUserInput = false;
+		} else {
+			Point p = player.getAutoTarget();
+			subscreen = new FireWeaponScreen(root, player,
+					getScrollX(),
+					getScrollY(),
+					p);
+		}
+	}
 	
+	
+	
+	//Button Handling can go all the way down here
+	private boolean[] mouseOverButtons = new boolean[12];
+	private List<Image> buttonIcons;
+	private List<Image> buttonIconsSelected;
+	private void handleButtons() {
+		for (int i = 0; i < 11; i++) {
+			Image image = buttonIcons.get(i);
+			if (mouseOverButtons[i])
+				image = buttonIconsSelected.get(i);
+			draw(root, image, 1040-(40*(i+1)), 760, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false));
+		}
+		//A special case for swapping weapons
+		int i = 11;
+		Image image = buttonIcons.get(i);
+		if (mouseOverButtons[i])
+			image = buttonIconsSelected.get(i);
+		draw(root, image, 1040-(40*(i+1)), 760, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false)); 
+		if (player.lastWielded() != null) {
+			for (ItemTag t : player.lastWielded().tags())
+				if (t.isWeapon() && t.icon() != null) {
+					draw(root, t.icon(), 1040-(40*(i+1))+4, 764, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false));
+					break;
+				}
+		}
+	}
+	private void prepareButtons() {
+		buttonIcons = new ArrayList<Image>();
+		buttonIcons.add(Loader.inventoryIcon);
+		buttonIcons.add(Loader.wearIcon);
+		buttonIcons.add(Loader.quaffIcon);
+		buttonIcons.add(Loader.readIcon);
+		buttonIcons.add(Loader.meditateIcon);
+		buttonIcons.add(Loader.statsIcon);
+		buttonIcons.add(Loader.perksIcon);
+		buttonIcons.add(Loader.restIcon);
+		buttonIcons.add(Loader.throwIcon);
+		buttonIcons.add(Loader.fireWeaponIcon);
+		buttonIcons.add(Loader.castIcon);
+		buttonIcons.add(Loader.swapWeaponIcon);
+		buttonIconsSelected = new ArrayList<Image>();
+		buttonIconsSelected.add(Loader.inventoryIconSelected);
+		buttonIconsSelected.add(Loader.wearIconSelected);
+		buttonIconsSelected.add(Loader.quaffIconSelected);
+		buttonIconsSelected.add(Loader.readIconSelected);
+		buttonIconsSelected.add(Loader.meditateIconSelected);
+		buttonIconsSelected.add(Loader.statsIconSelected);
+		buttonIconsSelected.add(Loader.perksIconSelected);
+		buttonIconsSelected.add(Loader.restIconSelected);
+		buttonIconsSelected.add(Loader.throwIconSelected);
+		buttonIconsSelected.add(Loader.fireWeaponIconSelected);
+		buttonIconsSelected.add(Loader.castIconSelected);
+		buttonIconsSelected.add(Loader.swapWeaponIconSelected);
+	}
+	private EventHandler<MouseEvent> setMouseOver(int index, boolean b) {
+		return new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) { 
+				mouseOverButtons[index] = b;
+				refreshScreen = returnThis();
+			}
+		};
+	}
+	private EventHandler<MouseEvent> setMouseClick(int index) {
+		return new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) { 
+				refreshScreen = mouseClick(index);
+			}
+		};
+	}
+	/**
+	 * Returns a screen depending what button the player clicks
+	 * By Index, Right to Left:
+	 * 0: Inventory [i]
+	 * 1: Wield [w]
+	 * 2: Quaff [q]
+	 * 3: Read [r]
+	 * 4: Meditate [m]
+	 * 5: Stats [s]
+	 * 6: Perks [p]
+	 * 7: Rest [R]
+	 * 8: Throw [t]
+	 * 9: Fire? [f]
+	 * 10: Cast [c]
+	 * 11: Swap to last weapon [tab]
+	 */
+	private Screen mouseClick(int index) {
+		switch(index) {
+		case 0: return respondToUserInput(KeyCode.I, 'i', false);
+		case 1: return respondToUserInput(KeyCode.W, 'w', false);
+		case 2: return respondToUserInput(KeyCode.Q, 'q', false);
+		case 3: return respondToUserInput(KeyCode.R, 'r', false);
+		case 4: return respondToUserInput(KeyCode.M, 'm', false);
+		case 5: return respondToUserInput(KeyCode.S, 's', false);
+		case 6: return respondToUserInput(KeyCode.P, 'p', false);
+		case 7: return respondToUserInput(KeyCode.R, 'r', true);
+		case 8: return respondToUserInput(KeyCode.T, 't', false);
+		case 9: return respondToUserInput(KeyCode.F, 'f', false);
+		case 10: return respondToUserInput(KeyCode.C, 'c', false);
+		case 11: return respondToUserInput(KeyCode.TAB, '-', false);
+		}
+		return returnThis();
+	}
 }

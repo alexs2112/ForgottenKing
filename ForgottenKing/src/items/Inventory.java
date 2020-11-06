@@ -66,21 +66,22 @@ public class Inventory {
 	    for (int i = 0; i < items.length; i++){
 	        if (items[i] == item){
 	        	quantity[i] -= 1;
-	        	if (quantity[i] <= 0)
+	        	if (quantity[i] <= 0) {
 	        		items[i] = null;
+	        	}
 	            return;
 	        }
 	    }
 	}
-	public void removeAll(Item item){
-	    for (int i = 0; i < items.length; i++){
-	        if (items[i] == item){
-	        	quantity[i] = 0;
-	        	items[i] = null;
-	            return;
-	        }
-	    }
-	}
+//	public void removeAll(Item item){
+//	    for (int i = 0; i < items.length; i++){
+//	        if (items[i] == item){
+//	        	quantity[i] = 0;
+//	        	items[i] = null;
+//	            return;
+//	        }
+//	    }
+//	}
 	
 	public boolean contains(Item item) {
 		for (Item i : getUniqueItems())
@@ -102,6 +103,13 @@ public class Inventory {
 	             size++;
 	    }
 	    return size == items.length;
+	}
+	public boolean isEmpty(){
+	    for (int i = 0; i < items.length; i++){
+	        if (items[i] != null)
+	             return false;
+	    }
+	    return true;
 	}
 	
 	public Item getFirstItem() {
@@ -144,6 +152,15 @@ public class Inventory {
 				return quantity[i];
 			}
 		return 0;
+	}
+	public double totalWeight() {
+		double x = 0;
+		for (int i = 0; i < items.length; i++) {
+			if (items[i] != null)
+				x += items[i].weight() * quantity[i];
+		}
+		int scale = (int) Math.pow(10, 1);
+	    return (double) Math.round(x * scale) / scale;
 	}
 
 }

@@ -5,11 +5,12 @@ import java.util.List;
 
 import assembly.Abilities;
 import audio.Audio;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -54,14 +55,13 @@ public class CharacterSelectionScreen extends Screen {
 				double darken = 0;
 				if (i != 0)
 					darken = -0.7;
-				draw(root, Loader.characterSelectionBox, x, y + i*124);
-				draw(root, classes.get(i+selection).largeIcon, x+4, y + i*124, darken);
+				
+				EventHandler<MouseEvent> onClick = handleClick(i);
+				draw(root, Loader.characterSelectionBox, x, y + i*124, onClick);
+				draw(root, classes.get(i+selection).largeIcon, x+4, y + i*124, darken, onClick);
 			}
 		}
-		if (selection-2 >= 0)
-			draw(root, Loader.characterSelectionUpArrow, x, y - 196);
-		if (selection+2 < classes.size())
-			draw(root, Loader.characterSelectionDownArrow, x, y + 248);
+		handleButtons();
 		
 		ClassSelection c = classes.get(selection);
 		
@@ -112,12 +112,13 @@ public class CharacterSelectionScreen extends Screen {
 		stage.show();
 	}
 	
-	public Screen respondToUserInput(KeyEvent key) {
-    	if (key.getCode().equals(KeyCode.DOWN))
+	@Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
+    	if (code.equals(KeyCode.DOWN))
     		selection = Math.min(classes.size()-1, selection+1);
-    	if (key.getCode().equals(KeyCode.UP))
+    	if (code.equals(KeyCode.UP))
     		selection = Math.max(0, selection-1);
-    	if (key.getCode().equals(KeyCode.ENTER))
+    	if (code.equals(KeyCode.ENTER))
 			return new PlayScreen(classes.get(selection));
 		return this;
 	}
@@ -171,5 +172,80 @@ public class CharacterSelectionScreen extends Screen {
 		c.addTag(Tag.ACOLYTES_MANA);
 		return c;
 	}
-
+	
+	
+	private EventHandler<MouseEvent> handleClick(int index) {
+		return new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) { 
+				selection = index+selection;
+				refreshScreen = returnThis();
+			}
+		};
+	}
+	
+	private boolean mouseOverUp;
+	private boolean mouseOverDown;
+	private boolean mouseOverSelect;
+	private void handleButtons() {
+		if (selection-1 >= 0) {
+			Image up = Loader.characterSelectionUpArrow;
+			if (mouseOverUp)
+				up = Loader.characterSelectionUpArrowSelected;
+			draw(root, up, 136, 160, new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent me) { 
+					selection--;
+					refreshScreen = returnThis();
+				}
+			}, new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent me) { 
+					mouseOverUp = true;
+					refreshScreen = returnThis();
+				}
+			}, new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent me) { 
+					mouseOverUp = false;
+					refreshScreen = returnThis();
+				}
+			});
+		}
+		if (selection+1 < classes.size()){
+			Image down = Loader.characterSelectionDownArrow;
+			if (mouseOverDown)
+				down = Loader.characterSelectionDownArrowSelected;
+			draw(root, down, 136, 604, new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent me) { 
+					selection++;
+					refreshScreen = returnThis();
+				}
+			}, new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent me) { 
+					mouseOverDown = true;
+					refreshScreen = returnThis();
+				}
+			}, new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent me) { 
+					mouseOverDown = false;
+					refreshScreen = returnThis();
+				}
+			});
+		}
+		Image select = Loader.characterSelectionSelectButton;
+		if (mouseOverSelect)
+			select = Loader.characterSelectionSelectButtonSelected;
+		draw(root, select, 38, 670, new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) { 
+				refreshScreen = new PlayScreen(classes.get(selection));
+			}
+		}, new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) { 
+				mouseOverSelect = true;
+				refreshScreen = returnThis();
+			}
+		}, new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) { 
+				mouseOverSelect = false;
+				refreshScreen = returnThis();
+			}
+		});
+	}
 }

@@ -5,7 +5,6 @@ import items.Inventory;
 import items.Item;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -46,6 +45,8 @@ public abstract class InventoryBasedScreen extends Screen {
         int x = 104;
         int y = 50;
         write(root, "What would you like to " + getVerb() + "?", 64, y, font,  Color.WHITE);
+        if (player != null)
+        	writeCentered(root, inventory.totalWeight() + "/" + player.carryWeight(), 1000, 50, fontS, Color.WHITE);
         int num = 0;
         int top = Math.min(Math.max(0, select-14), Math.max(0, numOfItems(items) - height));
         for (int i = top; i < items.length; i++) {
@@ -81,7 +82,7 @@ public abstract class InventoryBasedScreen extends Screen {
             }
             draw(root, item.image(), x-44, 32*num + y + 4);
         	write(root, line, x, 32*num + y + 32, fontS, equipColour);
-        	
+        	writeCentered(root, ""+(item.weight()*inventory.quantityOf(item)), 1000, 32*num+y+32, fontS, Color.WHITE);
         	if (select == i) {
         		draw(root, Loader.arrowRight, 20, 32*num+y+4);
         	}
@@ -105,21 +106,18 @@ public abstract class InventoryBasedScreen extends Screen {
     	return list;
     }
     
-    public Screen respondToUserInput(KeyEvent key) {
-    	char c = '-';
-    	if (key.getText().length() == 1)
-    		c = key.getText().charAt(0);
-
+    @Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
     	Item[] items = null;
     	if (player == null)
     		items = inventory.items();
     	else
     		items = player.inventory().items();
     	
-    	if (key.getCode().equals(KeyCode.DOWN)) {
+    	if (code.equals(KeyCode.DOWN)) {
     		select = getNextIndex(items);
     		return this;
-    	} else if (key.getCode().equals(KeyCode.UP)) {
+    	} else if (code.equals(KeyCode.UP)) {
     		select = getPrevIndex(items);
     		return this;
     	} else if (letters.indexOf(c) > -1
@@ -127,10 +125,10 @@ public abstract class InventoryBasedScreen extends Screen {
              && items[letters.indexOf(c)] != null
              && isAcceptable(items[letters.indexOf(c)])) {
     		return use(items[letters.indexOf(c)]);
-    	} else if (key.getCode().equals(KeyCode.ENTER)) {
+    	} else if (code.equals(KeyCode.ENTER)) {
     		if (select != -1)
     			return use(items[select]);
-    	} else if (key.getCode().equals(KeyCode.ESCAPE))
+    	} else if (code.equals(KeyCode.ESCAPE))
             return null;
         return this;
     }

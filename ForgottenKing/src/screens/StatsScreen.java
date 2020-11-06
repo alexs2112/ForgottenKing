@@ -7,7 +7,6 @@ import creatures.Tag;
 import creatures.Type;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -107,20 +106,17 @@ public class StatsScreen extends Screen {
 			int n = player.getResistance(t);
 			if (n != 0) {
 				Color temp = Color.WHITE;
-				String s = t.text() + ": ";
+				String s = t.text();
 				if (n <= -1) {
-					s += "150%";
+					s += "-";
 					temp = Color.RED;
-				} else if (n == 1)
-					s += "66%";
-				else if (n == 2)
-					s += "33%";
-				else if (n == 3)
-					s += "0%";
-				else if (n >= 4) {
-					s += "-33%";
-					temp = Color.LAWNGREEN;
+				} else if (n >= 0) {
+					for (int z = 0; z < Math.min(n, 4); z++)
+						s += "+";
+					temp = Color.FORESTGREEN;
 				}
+				if (n >= 4)
+					temp = Color.LIMEGREEN;
 				write(root, s, 50, 530 + i*32, fontL, temp);
 				i++;
 			}
@@ -132,10 +128,11 @@ public class StatsScreen extends Screen {
 			writeCentered(root, "[enter] to Level Up!", 640, 764, fontL, Color.AQUA);
 	}
 	
-	public Screen respondToUserInput(KeyEvent key) {
-		if (key.getCode().equals(KeyCode.ENTER))
+	@Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
+		if (code.equals(KeyCode.ENTER))
 			return new LevelUpScreen(player);
-	    else if (key.getCode().equals(KeyCode.ESCAPE))
+	    else if (code.equals(KeyCode.ESCAPE))
             return null;
         else
             return this;

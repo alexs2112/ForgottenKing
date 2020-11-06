@@ -6,6 +6,7 @@ import java.util.List;
 import audio.Audio;
 import items.Item;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import spells.Spell;
 import tools.Point;
 import world.World;
@@ -43,7 +44,7 @@ public class Player extends Creature {
     public int attributePoints() { return attributePoints; }
     public void modifyAttributePoints(int x) { attributePoints += x; }
     private void levelUp() {
-    	notify("You level up!");
+    	notify("You level up!", Color.GOLD);
     	modifyXP(-nextLevelXP());
 		modifyLevel(1);
 		int x = (int)(Math.random() * 6) + 1;
@@ -105,6 +106,18 @@ public class Player extends Creature {
     		magic.modify(Type.LIGHT, magicChanges[4]);
     		magic.modify(Type.DARK, magicChanges[5]);
     	}
+    }
+    
+    /**
+     * INVENTORY
+     */
+    public double carryWeight() { return 17 + getBrawn(); }
+    public void pickup(Item item) {
+    	if (item.weight() + inventory().totalWeight() > carryWeight()) {
+    		notify("You can't carry more weight.");
+    		return;
+    	}
+    	super.pickup(item);
     }
     
     /**

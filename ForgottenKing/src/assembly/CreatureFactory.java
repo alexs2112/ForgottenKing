@@ -1,6 +1,6 @@
 package assembly;
 
-import java.util.List;
+import java.util.HashMap;
 
 import creatures.Ally;
 import creatures.ClassSelection;
@@ -10,6 +10,7 @@ import creatures.Type;
 import creatures.Tag;
 import creatures.ai.*;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import tools.FieldOfView;
 import tools.ImageCrop;
 import world.World;
@@ -87,7 +88,7 @@ public class CreatureFactory {
 		return newGoblin(z);
 	}
 	
-	public Player newPlayer(List<String> messages, int z, FieldOfView fov, ClassSelection c){
+	public Player newPlayer(HashMap<String, Color> messages, int z, FieldOfView fov, ClassSelection c){
 	    Player player = new Player(world, "Player", 1, 0, c.hp, c.evasion, c.armor, c.attack, c.damageMin, c.damageMax, c.icon);
 	    player.setAttributes(c.strength,c.dexterity,c.intelligence);
 	    player.setStats(c.toughness,c.brawn,c.agility,c.accuracy,c.will,c.spellcasting);
@@ -302,10 +303,10 @@ public class CreatureFactory {
 	/**
 	 * SUMMONS
 	 */
-	public Creature newFriendlySimulacrum(int z) {
-		Ally simulacrum = new Ally(world, "Simulacrum",1, 0, 13, 9, 0, 2, 1, 3, simulacrumIcon);
+	public Creature newFriendlySimulacrum(int z, int casterAbility) {
+		Ally simulacrum = new Ally(world, "Simulacrum",1, 0, 13+casterAbility, 9, 0, 2, 1, 3, simulacrumIcon);
 		new AllyAI(simulacrum, player);
-		simulacrum.setAttributes(1, 1, 1);
+		simulacrum.setAttributes(1+casterAbility, 1+casterAbility, 1+casterAbility);
 		simulacrum.setStats(2, 2, 2, 2, 2, 2);
 		simulacrum.setDescription("A small humanoid being made purely of ice and elemental cold.");
 		simulacrum.addTag(Tag.ALLY);

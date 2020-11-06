@@ -241,7 +241,7 @@ public class Creature {
 				r = resistances.get(type);
 		for (Item i : equipment.values()) {
 			r += i.getResistance(type);
-			if (type.physical() && i.is(ItemTag.HEAVYARMOR))
+			if (is(Tag.HEAVY_ARMOR_MASTERY) && type.physical() && i.is(ItemTag.HEAVYARMOR))
 				r += 1;
 		}
 		
@@ -401,18 +401,29 @@ public class Creature {
         Creature other = world.creature(mx, my, mz);
         if (other == null) {
             ai.onEnter(mx, my, mz, world.tile(mx, my, mz));
-            if (world.items(x,y,z) != null)
-            	if (world.items(x,y,z).getFirstItem() != null) {
-            		String s = "You see here ";
-            		Inventory i = world.items(x,y,z);
-            		if (i.quantityOf(i.getFirstItem()) == 1)
-            			s += "a ";
-            		s += i.listOfItems();
-            		notify(s);
-            	}
+            seeItemsOnGround();
+        } else if (other != null && is(Tag.PLAYER) && other.is(Tag.ALLY)) {
+        	//If the player bumps into an ally, swap places
+        	int sx = x;
+        	int sy = y;
+        	ai.onEnter(mx, my, mz, world.tile(mx, my, mz));
+        	other.moveTo(sx, sy, z);
+        	doAction("swap places");
+            seeItemsOnGround();
         }
         else
             attack(other);
+    }
+    private void seeItemsOnGround() {
+    	if (world.items(x,y,z) != null)
+        	if (world.items(x,y,z).getFirstItem() != null) {
+        		String s = "You see here ";
+        		Inventory i = world.items(x,y,z);
+        		if (i.quantityOf(i.getFirstItem()) == 1)
+        			s += "a ";
+        		s += i.listOfItems();
+        		notify(s);
+        	}
     }
     
     /**
@@ -449,6 +460,7 @@ public class Creature {
     	else
     		return null;
     }
+    public boolean isWandering() { return ai.isWandering(); }
 
     /**
      * Combat methods
@@ -640,10 +652,6 @@ public class Creature {
 		if (items == null) {
 			notify("There is nothing here");
 		}
-		/*
-		if (!items.contains(item)) {
-			notify("The " + item.name() + " isn't here!");
-		}*/
 		if (inventory.isFull() && !inventory.containsName(item.name())) {
 			notify("Your inventory is full");
 		}
@@ -660,7 +668,7 @@ public class Creature {
 			else
 				doAction("pick up " + n + " "+ item.name() + "s");
 		}
-		if (items.getItems().size() == 0)
+		if (items.isEmpty())
 			world.removeInventory(x,y,z);
 	}
 
@@ -761,6 +769,8 @@ public class Creature {
 	public Item lastWielded() {
 		if (!inventory.contains(lastWielded))
 			lastWielded = null;
+		if (weapon() != null && weapon() == lastWielded)
+			lastWielded = null;
 		return lastWielded; 
 	}
 	public boolean hasItemTag(ItemTag t) {
@@ -774,7 +784,10 @@ public class Creature {
      * Notifications
      */
     public void notify(String message){
-        ai.onNotify(message);
+        ai.onNotify(message, Color.ANTIQUEWHITE);
+    }
+    public void notify(String message, Color colour) {
+    	ai.onNotify(message, colour);
     }
     
     public void doAction(String message){
@@ -820,9 +833,19 @@ public class Creature {
     }
     private HashMap<String, Color> statements;
     public void addStatement(String s, Color c) {
-    	if (statements == null)
-    		statements = new HashMap<String, Color>();
-    	statements.put(s, c); 
+    	int r = 9;
+    	for (int ox = -r; ox < r+1; ox++){
+    		for (int oy = -r; oy < r+1; oy++){
+    			if (ox*ox + oy*oy > r*r)
+    				continue;
+    			Creature other = world.creature(x+ox, y+oy, z);
+    			if (other != null && other.is(Tag.PLAYER) && other.canSee(x, y, z)) {
+    				if (statements == null)
+    					statements = new HashMap<String, Color>();
+    				statements.put(s, c); 
+    			}
+    		}
+    	}
     }
     public HashMap<String, Color> getStatements() {
     	HashMap<String, Color> temp = statements;

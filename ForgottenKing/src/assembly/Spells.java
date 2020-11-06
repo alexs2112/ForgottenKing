@@ -99,7 +99,7 @@ public final class Spells {
                 	return;
                 }
                 if (caster.is(Tag.PLAYER)) {
-                	Creature c = f.newFriendlySimulacrum(caster.z);
+                	Creature c = f.newFriendlySimulacrum(caster.z, caster.getSpellcasting()/2 + caster.magic().get(Type.COLD));
                 	c.x = mx + caster.x;
                 	c.y = my + caster.y;
                 } else {

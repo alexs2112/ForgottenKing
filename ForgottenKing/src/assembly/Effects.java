@@ -144,7 +144,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.weakIcon);
 		e.setStrength(amount);
-		e.setColour(Color.BLUEVIOLET);
+		e.setColour(Color.DARKBLUE);
 		e.setDescription("Weakened creatures have decreased Brawn by " + amount + " for " + duration + " turns.");
 		return e;
 	}
@@ -163,7 +163,7 @@ public final class Effects {
 		};
 		e.setImage(Loader.slowedIcon);
 		e.setStrength(amount);
-		e.setColour(Color.BLUEVIOLET);
+		e.setColour(Color.DARKBLUE);
 		e.setDescription("Slowed creatures have increased movement and attack delay by " + amount + " for " + duration + " turns.");
 		return e;
 	}
@@ -233,7 +233,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.confusedIcon);
-		e.setColour(Color.BLUEVIOLET);
+		e.setColour(Color.DARKBLUE);
 		e.setDescription("Confused creatures can only move in random directions every turn.");
 		return e;
 	}
@@ -251,7 +251,7 @@ public final class Effects {
 			}
 		};
 		e.setImage(Loader.blindIcon);
-		e.setColour(Color.BLUEVIOLET);
+		e.setColour(Color.DARKBLUE);
 		e.setDescription("Blind creatures have their sight reduced to 0 for " + duration + " turns.");
 		return e;
 	}

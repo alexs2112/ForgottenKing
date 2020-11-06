@@ -31,7 +31,6 @@ public class AllyAI extends CreatureAI {
 			else if (creature.canSee(c.x, c.y, c.z))
 				moveTo(c.x, c.y);
 		} else {
-		
 			//If there is nothing to kill, your ally follows you
 			if (creature.canSee(player.x, player.y, player.z)) {
 				lastSeenAt = new Point(player.x, player.y, player.z);

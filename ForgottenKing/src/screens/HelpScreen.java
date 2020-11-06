@@ -6,7 +6,6 @@ import java.util.List;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -49,10 +48,8 @@ public class HelpScreen extends Screen {
 		}
 	}
 	
-	public Screen respondToUserInput(KeyEvent key) {
-		char c = '-';
-    	if (key.getText().length() > 0)
-    		c = key.getText().charAt(0);
+	@Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
 		if (c == '1')
 			currentScreen = 1;
 		else if (c == '2')
@@ -63,15 +60,15 @@ public class HelpScreen extends Screen {
 			currentScreen = 4;
 		else if (c == '5')
 			currentScreen = 5;
-		else if (key.getCode().equals(KeyCode.ESCAPE)) {
+		else if (code.equals(KeyCode.ESCAPE)) {
 			if (currentScreen == 0)
 				return null;
 			else
 				currentScreen = 0;
 		}
-		else if (key.getCode().equals(KeyCode.DOWN) && currentScreen == 1)
+		else if (code.equals(KeyCode.DOWN) && currentScreen == 1)
 			top= Math.min(top + 1, strings.size()-height);
-		else if (key.getCode().equals(KeyCode.UP) && currentScreen == 1)
+		else if (code.equals(KeyCode.UP) && currentScreen == 1)
 			top= Math.max(top - 1, 0);
         return this;
 	}
@@ -108,7 +105,8 @@ public class HelpScreen extends Screen {
 		strings.add("[c] to Cast a memorized spell");
 		strings.add("[m] to Meditate on spell points");
 		strings.add("");
-		strings.add("Character Stats:");
+		strings.add("Misc Controls:");
+		strings.add("[space] to pick up items or use staircases");
 		strings.add("[s] to view your (very basic) character Stats");
 		strings.add("[x] to eXamine your surroundings");
 		strings.add("[p] to open the Perk menu");

@@ -49,6 +49,7 @@ public class ArmorFactory {
 		item.modifyArmorValue(2);
 		item.addTag(ItemTag.LIGHTARMOR);
 		item.setDescription("A suit made from layers of tanned animal hide, this light armour provides basic protection with almost no hindrance to movement.");
+		item.setWeight(2);
 		world.addAtEmptyLocation(item,z);
 		return item;
 	}
@@ -56,6 +57,7 @@ public class ArmorFactory {
 		Item item = new Item("Studded Leather Armor", ItemType.ARMOR, studdedLeatherArmorIcon);
 		item.modifyArmorValue(4);
 		item.addTag(ItemTag.MEDIUMARMOR);
+		item.setWeight(2);
 		item.setDescription("A set of leather armor enhanced with metal studs providing additional defense, at the sake of swift movement.");
 		world.addAtEmptyLocation(item,z);
 		return item;
@@ -64,6 +66,7 @@ public class ArmorFactory {
 		Item item = new Item("Copper Breastplate", ItemType.ARMOR, copperBreastplateIcon);
 		item.modifyArmorValue(6);
 		item.addTag(ItemTag.HEAVYARMOR);
+		item.setWeight(3);
 		item.setDescription("A set of interlocking copper plates. It is decent armor for the dungeon, if a bit heavy.");
 		world.addAtEmptyLocation(item,z);
 		return item;

@@ -7,7 +7,6 @@ import creatures.Player;
 import creatures.Tag;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -75,19 +74,20 @@ public class PerkScreen extends Screen {
 			draw(root, Loader.arrowUp, 20, 62);
 	}
 	
-	public Screen respondToUserInput(KeyEvent key) {
-		if (key.getCode().equals(KeyCode.DOWN))
+	@Override
+	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
+		if (code.equals(KeyCode.DOWN))
     		select = Math.min(perks.size()-1, select+1);
-    	if (key.getCode().equals(KeyCode.UP))
+    	if (code.equals(KeyCode.UP))
     		select = Math.max(0, select-1);
-    	if (key.getCode().equals(KeyCode.ENTER)) {
+    	if (code.equals(KeyCode.ENTER)) {
 			if (player.perkPoints() > 0 && !player.is(perks.get(select)) && perks.get(select).canUnlock(player)) {
 				player.addTag(perks.get(select));
 				player.modifyPerkPoints(-1);
 				return this;
 			}
     	}
-    	if (key.getCode().equals(KeyCode.ESCAPE))
+    	if (code.equals(KeyCode.ESCAPE))
 			return null;
 		return this;
     }
