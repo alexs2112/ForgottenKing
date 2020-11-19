@@ -29,15 +29,15 @@ public class Ally extends Creature {
 				if (x < 0 || x >= world().width() || y < 0 || y >= world().height())
 					continue;
 				Creature c = creature(x,y,z);
-				if (c != null && c != this && !c.is(Tag.PLAYER)) {
+				if (c != null && c != this && !c.is(Tag.PLAYER) && !c.is(Tag.ALLY)) {
 					if (nearest == null) {
 						nearest = c;
-						distance = Math.max(Math.abs(x - c.x), Math.abs(y - c.y));
+						distance = Math.max(Math.abs(this.x - c.x), Math.abs(this.y - c.y));
 						continue;
 					}
-					if (Math.max(Math.abs(x - c.x), Math.abs(y - c.y)) < distance) {
+					if (Math.max(Math.abs(this.x - c.x), Math.abs(this.y - c.y)) < distance) {
 						nearest = c;
-						distance = Math.max(Math.abs(x - c.x), Math.abs(y - c.y));
+						distance = Math.max(Math.abs(this.x - c.x), Math.abs(this.y - c.y));
 					}
 				}
 			}

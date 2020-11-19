@@ -1,6 +1,7 @@
 package screens;
 
 import audio.Audio;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,29 +14,14 @@ import javafx.stage.Stage;
 
 public class StartScreen extends Screen {
 	private int select = 0;
-	private Stage stage;
 	//private Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 32);
 	private Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 20);
-	private String s;
 	public Audio audio() { return Audio.INTRO; }
-	
-	public StartScreen() {
-		switch((int)(Math.random()*3)) {
-		case 1: s = "Beware of Lizardfolk!"; break;
-		case 2: s = "Welcome!"; break;
-		default: s = "Enter the Dungeon!"; break;
-		}
-	}
-	
 	public void displayOutput(Stage stage) {
-		this.stage = stage;
 		Group root = new Group();
 		scene = new Scene(root,1280,800);
 		draw(root, Loader.startScreenFull, 0, 0);
-		
-		writeCentered(root, s, 640, 354, fontS, Color.ANTIQUEWHITE);
-		
-		int y = 474;
+		int y = 514;
 		Image start = Loader.startScreenNewGame;
 		Image quit = Loader.startScreenQuitGame;
 		if (select == 0)
@@ -69,7 +55,7 @@ public class StartScreen extends Screen {
 			}
 		}, null);
 		
-		writeCentered(root, "[?] in game for help", 640, 700, fontS, Color.WHITE);
+		writeCentered(root, "[?] in game for help", 640, 740, fontS, Color.WHITE);
 		stage.setScene(scene);
 	    stage.show();
 	}
@@ -80,7 +66,7 @@ public class StartScreen extends Screen {
 			if (select == 0)
 				return new CharacterSelectionScreen();
 			else if (select == 1) {
-				stage.close();
+				Platform.exit();
 				return null;
 			}
 		}

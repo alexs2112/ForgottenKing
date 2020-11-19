@@ -21,7 +21,7 @@ public class CastSpellScreen extends TargetBasedScreen {
 	}
 	
 	public Screen selectWorldCoordinate(){
-        player.castSpell(spell, getCreatureLocations());
+        player.castSpell(spell, getCreatureLocations(), targets);
         return null;
     }
 

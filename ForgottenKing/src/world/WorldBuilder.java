@@ -22,13 +22,28 @@ public class WorldBuilder {
 		loader = new PrefabLoader("Dungeon");
 	}
 
+	/**
+	 * Turns the worldbuilder into a proper world
+	 * Also sets up all features that need to know their locations
+	 */
 	public World build() {
-		return new World(tiles, features);
-	}
-	public WorldBuilder makeDungeon() {
-		return generateRooms(200).addStairs(3);
+		World w = new World(tiles, features);
+		w.setUpFeatureLocations();
+		return w;
 	}
 	
+	/**
+	 * The basic dungeon generation algorithm intializer, tries to place 300 rooms and then adds 3 stairs each level
+	 */
+	public WorldBuilder makeDungeon() {
+		return generateRooms(300).addStairs(3);
+	}
+	
+	/**
+	 * An algorithm that tries to place a ton of rooms, either rectangular ones or ones from a prefab file
+	 * This should be cut down in the future
+	 * @param trials: The number of times it tries to place a room, once it runs out of trials then the algorithm halts
+	 */
 	public WorldBuilder generateRooms(int trials) {
 		int roomMin = 6;
 		int roomMod = 4;
@@ -42,7 +57,6 @@ public class WorldBuilder {
 				int sx = (int)(Math.random() * width - 5);
 				int sy = (int)(Math.random() * height - 5);
 				
-				//This is only partially working right now, pretty broken by dead ends removing tiles from prefabs
 				double chanceToLoad = 0.3;
 				if (!loader.canLoad())
 					chanceToLoad = 0;
@@ -59,7 +73,8 @@ public class WorldBuilder {
 							for (int y = 0; y < n.height(); y++) {
 								tiles[x+sx][y+sy][z] = n.tile(x,y);
 								nums[x+sx][y+sy] = n.num(x, y);
-								features[x+sx][y+sy][z] = n.feature(x,y);
+								if (n.feature(x,y) != null)
+									features[x+sx][y+sy][z] = n.feature(x,y).clone();
 								if (n.num(x,y) != 1)
 									rooms[x+sx][y+sy] = 1;
 							}
@@ -95,16 +110,23 @@ public class WorldBuilder {
 					else
 						tiles[x][y][z] = Tile.DUNGEON_WALL;
 					if (g.feat(x,y) != null)
-						features[x][y][z] = g.feat(x,y);
+						features[x][y][z] = g.feat(x,y).clone();
 				}
 		}
 		
 		return this;
 	}
 	
+	/**
+	 * Basic cave builder intializer, randomizes all the tiles and then smooths a bunch of times before adding stairs
+	 */
 	public WorldBuilder makeCaves() {
 	    return randomizeTiles().smooth(8).addStairs(3);
 	}
+	
+	/**
+	 * Goes through every single tile and randomly makes it either a dirt floor or a cave wall
+	 */
 	private WorldBuilder randomizeTiles() {
 		for (int z = 0; z < depth; z++) {
 			for (int x = 0; x < width; x++) {
@@ -115,6 +137,11 @@ public class WorldBuilder {
 		}
 		return this;
 	}
+	
+	/**
+	 * Goes across every tile and tries to smooth it to match its neighbours
+	 * @param times: The number of times it smooths the cave
+	 */
 	private WorldBuilder smooth(int times) {
 		Tile[][][] tiles2 = new Tile[width][height][depth];
 		for (int time = 0; time < times; time++) {
@@ -145,6 +172,12 @@ public class WorldBuilder {
 		return this;
 	}
 	
+	
+	/**
+	 * Go through each level a few times to place a staircase leading down, and then a connected staircase leading up on
+	 * the next level
+	 * @param amount: Amount of stairs per floor
+	 */
 	private WorldBuilder addStairs(int amount) {
 		for (int z = 0; z < depth-1; z++) {
 			for (int i = 0; i < amount; i++) {
@@ -162,6 +195,10 @@ public class WorldBuilder {
 		return this;
 	}
 	
+	/**
+	 * Randomly finds a point that is on the ground or has a non-null feature
+	 * @param z: Z-level to search
+	 */
 	private Point getEmptyLocation(int z) {
 		int x = (int)(Math.random() * width);
 	    int y = (int)(Math.random() * height);

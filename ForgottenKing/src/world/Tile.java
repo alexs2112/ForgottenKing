@@ -34,7 +34,7 @@ public enum Tile {
 	DUNGEON_WALL("Wall", "The wall", 0, 192),
 	DUNGEON_FLOOR("Floor", "The floor", 0, 192),
 	DUNGEON_FLOOR_CENTER(ImageCrop.cropImage(new Image(Tile.class.getResourceAsStream("resources/floor_full.png")), 32, 224,32,32), "Floor", "The floor"),
-	DUNGEON_PIT("Chasm", "A yawning chasm", 0, 64),
+	DUNGEON_PIT("Chasm", "A pit leading to nothing", 0, 64),
 	WOOD_WALL("Wall", "The wall", 224, 192),
 	GRASS_FLOOR("Floor", "The floor", 224, 192),
 	

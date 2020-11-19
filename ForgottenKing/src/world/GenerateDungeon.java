@@ -196,13 +196,13 @@ public class GenerateDungeon {
 				changeRegion(regions[p.x+1][p.y], n);
 				regions[p.x][p.y] = n;
 				map[p.x][p.y] = 0; 
-				features[p.x][p.y] = new Door(1); 
+				features[p.x][p.y] = new Door(); 
 			} else if (regions[p.x][p.y-1] != regions[p.x][p.y+1] && regions[p.x][p.y-1]!= 0 && regions[p.x][p.y+1]!=0) {
 				int n = regions[p.x][p.y-1];
 				changeRegion(regions[p.x][p.y+1], n);
 				regions[p.x][p.y] = n;
 				map[p.x][p.y] = 0; 
-				features[p.x][p.y] = new Door(0);
+				features[p.x][p.y] = new Door();
 			}
 
 		}

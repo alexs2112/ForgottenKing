@@ -35,7 +35,7 @@ public class ExamineScreen extends TargetBasedScreen {
         }
     
         Tile tile = player.tile(x, y, player.z);
-        caption = tile.type() + " " + tile.desc();
+        caption = tile.type() + ": " + tile.desc();
     }
     
     public Screen selectWorldCoordinate() {

@@ -12,7 +12,10 @@ public enum Type {
 	AIR("Air", Loader.airIcon, Loader.largeAirIcon),
 	POISON("Poison", Loader.poisonIcon, Loader.largePoisonIcon),
 	LIGHT("Light", Loader.lightIcon, Loader.largeLightIcon),
-	DARK("Dark", Loader.darkIcon, Loader.largeDarkIcon);
+	DARK("Dark", Loader.darkIcon, Loader.largeDarkIcon),
+	
+	BLUE("Blue", null, null),	//
+	GREEN("Green", null, null);	//Two additional types used for enchantments
 	
 	private String type;
 	public String text() { return type; }

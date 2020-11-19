@@ -32,22 +32,14 @@ public class Magic {
 		int og = get(type);
 		set.put(type, og+num);
 	}
-	public void reduce(Type type) {
-		if (get(type) > 0)
-			change(type, -1);
-	}
-	public void add(Type type) {
-		if (floatingPoints() > 0)
-			change(type, 1);
-	}
 	public void modify(Type type, int num) {
 		if (num > 0) {
 			for (int i = 0; i < num; i++)
-				add(type);
+				change(type, 1);
 		}
 		if (num < 0) {
 			for (int i = 0; i > num; i--)
-				reduce(type);
+				change(type, -1);
 		}
 	}
 	public int pointsInUse() {

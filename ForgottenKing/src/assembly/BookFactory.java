@@ -28,11 +28,12 @@ public class BookFactory {
 	
 	public Item newRandomBook(int z) {
 		if (z < 3) {
-			switch( (int)(Math.random()*4) ) {
+			switch( (int)(Math.random()*5) ) {
 			case 0: return newBookOfKindling(z);
 			case 1: return newBookOfChills(z);
 			case 2: return newBookOfStatic(z);
 			case 3: return newBookOfVitality(z);
+			case 4: return newBookOfDebilitation(z);
 			}
 		} else if (z < 7) {
 			switch((int)(Math.random()*4)) {
@@ -51,7 +52,7 @@ public class BookFactory {
 	public Item newBookOfKindling(int z) {
 		Item item = new Item("Book of Kindling", ItemType.BOOK, kindlingIcon);
 		item.addSpell(Spells.embers());
-		item.addSpell(Spells.innerGlow());
+		item.addSpell(Spells.flameWave());
 		item.addSpell(Spells.moltenFire());
 		item.setDescription("A thin dark book, the cover is coated in ash and the pages feel brittle to the touch.");
 		world.addAtEmptyLocation(item, z);
@@ -59,7 +60,7 @@ public class BookFactory {
 	}
 	public Item newBookOfFlames(int z) {
 		Item item = new Item("Book of Flames", ItemType.BOOK, flamesIcon);
-		item.addSpell(Spells.flameWave());
+		item.addSpell(Spells.summonImp(creatureFactory));
 		item.addSpell(Spells.heatbeam());
 		item.addSpell(Spells.fireball());
 		item.setDescription("A large, charred tome. This book seems to give off an inner heat and burns your fingers to the touch.");
@@ -117,7 +118,7 @@ public class BookFactory {
 	public Item newBookOfDebilitation(int z) {
 		Item item = new Item("Book of Debilitation", ItemType.BOOK, debilitationIcon);
 		item.addSpell(Spells.sting());
-		//item.addSpell(Spells.());	//Summon a poison cloud, need clouds
+		item.addSpell(Spells.toxicCloud());
 		item.addSpell(Spells.minorConfuse());
 		item.setDescription("A thin book consisting of few pages. The pages are sickly pale and the entire thing is brittle.");
 		world.addAtEmptyLocation(item, z);
@@ -130,6 +131,7 @@ public class BookFactory {
 	public Item newBookOfVitality(int z) {
 		Item item = new Item("Book of Vitality", ItemType.BOOK, vitalityIcon);
 		item.addSpell(Spells.curePoison());
+		item.addSpell(Spells.innerGlow());
 		item.addSpell(Spells.regenerateHealth());
 		item.addSpell(Spells.heroism());
 		item.setDescription("A plain, leather-bound book describing simple light spells of healing and strength.");

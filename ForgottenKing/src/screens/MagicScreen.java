@@ -1,5 +1,8 @@
 package screens;
 
+import java.util.Arrays;
+import java.util.List;
+
 import creatures.Magic;
 import creatures.Player;
 import creatures.Type;
@@ -18,7 +21,7 @@ public class MagicScreen extends Screen {
 	private String letters;
 	private char selection;
 	private int[] floatingValues;
-	private Type[] types;
+	private List<Type> types;
 	private int points;
 
 	public MagicScreen(Player player) {
@@ -29,14 +32,8 @@ public class MagicScreen extends Screen {
 		letters = "abcdef";
 		selection = '-';
 		floatingValues = new int[6];
-		types = new Type[6];
 		points = magic.floatingPoints();
-		types[0] = Type.FIRE;
-		types[1] = Type.COLD;
-		types[2] = Type.AIR;
-		types[3] = Type.POISON;
-		types[4] = Type.LIGHT;
-		types[5] = Type.DARK;
+		types = Arrays.asList(Type.FIRE, Type.COLD, Type.AIR, Type.POISON, Type.LIGHT, Type.DARK);
 	}
 	
 	public void displayOutput(Stage stage) {
@@ -52,16 +49,16 @@ public class MagicScreen extends Screen {
 		x+=36;
 		for (int i = 0; i < 6; i++) {
 			draw(root, Loader.magicTypeBox, x, y + 72*i);
-			draw(root, types[i].largeIcon(), x+6, y+5 + 72*i);
-			write(root, types[i].text(), x+100, y+48 + 72*i, font, Color.WHITE);
+			draw(root, types.get(i).largeIcon(), x+6, y+5 + 72*i);
+			write(root, types.get(i).text(), x+100, y+48 + 72*i, font, Color.WHITE);
 			int wx = x+334;
-			int value = magic.get(types[i]) + floatingValues[i];
+			int value = magic.get(types.get(i)) + floatingValues[i];
 			if (value > 9)
 				wx-= 10;
 			Color c = Color.WHITE;
-			if (value > magic.get(types[i]))
+			if (value > magic.get(types.get(i)))
 				c = Color.LIMEGREEN;
-			else if (value < magic.get(types[i]))
+			else if (value < magic.get(types.get(i)))
 				c = Color.RED;
 			write(root, ""+value, wx, y + 48 + 72*i, font, c);
 			if (i == letters.indexOf(selection)) {
@@ -85,20 +82,21 @@ public class MagicScreen extends Screen {
 		for (int i = 0; i < player.spells().size(); i++) {
 			Spell s = player.spells().get(i);
 			Color c = Color.WHITE;
-			if (magic.get(s.type()) < s.level())
+			if (magic.get(s.type()) + floatingValues[types.indexOf(s.type())] < s.level())
 				c = Color.DARKGREY;
 			write(root, s.name() + " [" + s.type() + ":" + s.level()+"]", x, y+=22, fontS, c);
 		}
 		
 		write(root, "Spell Slots: " + (player.totalSpellSlots() - player.remainingSpellSlots()) + "/" + player.totalSpellSlots(), 64, 664, font, Color.WHITE);
 		
-		write(root, "[esc] to exit", 600, 700, font, Color.WHITE);
+		writeCentered(root, "[esc] to exit", 640, 700, font, Color.WHITE);
 		if (changesPresent()) {
 			if (player.creatureInSight())
-				write(root, "Enemies in sight!", 600, 732, font, Color.GREY);
+				writeCentered(root, "Enemies in sight!", 640, 732, font, Color.GREY);
 			else
-				write(root, "[enter] to start meditating", 600, 732, font, Color.WHITE);
+				writeCentered(root, "[enter] to start meditating", 640, 732, font, Color.WHITE);
 		}
+		constructCloseButton();
 	}
 	
 	@Override
@@ -109,7 +107,6 @@ public class MagicScreen extends Screen {
 			player.meditate(floatingValues);
 			return null;
 		}
-			
 		if (code.equals(KeyCode.DOWN)) {
 			int i = letters.indexOf(selection);
 			int n = i + 1;
@@ -128,13 +125,13 @@ public class MagicScreen extends Screen {
 			selection = c;
 		if (shift && c == '=' && letters.indexOf(selection) != -1)
 			modifyType(letters.indexOf(selection), 1);
-		if (c == '-' && letters.indexOf(selection) != -1)
+		if (code.equals(KeyCode.MINUS) && c == '-' && letters.indexOf(selection) != -1)
 			modifyType(letters.indexOf(selection), -1);
 		return this;
 	}
 	private void modifyType(int index, int x) {
 		if (x < 0) {
-			if (magic.get(types[index]) + floatingValues[index] > 0) {
+			if (magic.get(types.get(index)) + floatingValues[index] > 0) {
 				floatingValues[index]--;
 				points++;
 			}

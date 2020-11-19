@@ -22,6 +22,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,6 +31,7 @@ import javafx.stage.Stage;
 import spells.Effect;
 import tools.FieldOfView;
 import tools.KeyBoardCommand;
+import tools.Message;
 import tools.Point;
 import world.World;
 import world.WorldBuilder;
@@ -37,13 +40,13 @@ public class PlayScreen extends Screen {
     private int screenWidth;
     private int screenHeight;
     private World world;
-    private HashMap<String, Color> messages;
+    private List<Message> messages;
     private Player player;
     private CreatureFactory creatureFactory;
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = true;
+    private boolean devMode = false;
     public Audio audio() {
     	if (subscreen != null)
     		return subscreen.audio();
@@ -53,7 +56,7 @@ public class PlayScreen extends Screen {
     public PlayScreen(ClassSelection character){
         screenWidth = 32;
         screenHeight = 24;
-        messages = new HashMap<String, Color>();
+        messages = new ArrayList<Message>();
         createWorld();
         fov = new FieldOfView(world);
         itemFactory = new ItemFactory(world);
@@ -75,7 +78,6 @@ public class PlayScreen extends Screen {
 		world.setEntrance(player.x, player.y);
 		player.setMagic();
         itemFactory.equipPlayer(player);
-        
         if (character.tags() != null)
         	for (Tag t : character.tags())
         		player.addTag(t);
@@ -87,9 +89,10 @@ public class PlayScreen extends Screen {
         	player.addSpell(Spells.embers());
         }
         if (devMode) {
-        	player.addEquipment(itemFactory.weapon().newDevSword(-1));
-        	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
-        	player.addSpell(Spells.summonSimulacrum(creatureFactory));
+//        	player.addEquipment(itemFactory.weapon().newDevSword(-1));
+//        	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
+        	for (int i = 0; i < 10; i++)
+        		player.addItemToInventory(itemFactory.weapon().getRandomEnchant());
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -102,14 +105,35 @@ public class PlayScreen extends Screen {
 	    root = new Group();
 	    scene = new Scene(root, 1280, 800, Color.BLACK);
 	    displayTiles(left, top);
-	    displayStats();
-	    handleButtons();
+	    displayHazards(left, top);
+		displayCreatures(left, top);
+		displayStats();
+		displayMouse(left, top);
+		handleButtons();
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {public void handle(KeyEvent me) { messages.clear(); } });
 		if (subscreen != null) {
 			subscreen.displayOutput(stage);
 			scene.setRoot(subscreen.root());
+			scene.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent me) {
+					if (subscreen != null && subscreen.refreshScreen() != null)
+						subscreen = subscreen.refreshScreen();
+					if (subscreen != null && subscreen.exitThis())
+						subscreen = null;
+				}
+			});
+			scene.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent me) {
+					if (subscreen != null && subscreen.refreshScreen() != null)
+						subscreen = subscreen.refreshScreen();
+				}
+			});
 		} else {
 			displayMessages(messages);
+			scene.addEventFilter(MouseEvent.MOUSE_MOVED, getMouseTile());
+			scene.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouse());
 		}
+		
 		stage.setScene(scene);
 		stage.show();
 	}
@@ -131,28 +155,39 @@ public class PlayScreen extends Screen {
 	            	draw(root, world.tileImage(wx,wy, player.z), x*32, y*32);
 	            	if (world.feature(wx, wy, player.z) != null)
 	            		draw(root, world.feature(wx, wy, player.z).getImage(), x*32, y*32);
-	            	if (world.items(wx,wy,player.z) != null)
-	            		if (world.items(wx,wy,player.z).getFirstItem() != null) {
-	            			draw(root, world.items(wx,wy,player.z).getFirstItem().image(), x*32, y*32);
+	            	if (world.items(wx,wy,player.z) != null) {
+	            		Item i = world.items(wx,wy,player.z).getFirstItem();
+	            		if (i != null) {
+	            			draw(root, i.image(), x*32, y*32);
+	            			if (i.effectImage() != null)
+	            	    		draw(root, i.effectImage(), x*32, y*32);
 	            			if (world.items(wx,wy,player.z).numberOfItems() > 1)
 	            				draw(root, Loader.multi_item_icon, x*32, y*32);
 	            		}
+	            	}
 	            } else {
 	            	if (fov.hasSeen(wx, wy, player.z)) {
 	            		draw(root, fov.tileImage(wx,wy, player.z), x*32, y*32, -0.7);
 	            		if (world.feature(wx, wy, player.z) != null)
 	            			draw(root, world.feature(wx, wy, player.z).getImage(), x*32, y*32, -0.7);
-	            		if (world.items(wx,wy,player.z) != null)
-	            			if (world.items(wx,wy,player.z).getFirstItem() != null) {
-	            				draw(root, world.items(wx,wy,player.z).getFirstItem().image(), x*32, y*32, -0.7);
+	            		if (world.items(wx,wy,player.z) != null) {
+	            			Item i = world.items(wx,wy,player.z).getFirstItem();
+	            			if (i != null) {
+	            				draw(root, i.image(), x*32, y*32, -0.7);
+	            				if (i.effectImage() != null)
+	            					draw(root, i.effectImage(), x*32, y*32, -0.7);
 	            				if (world.items(wx,wy,player.z).numberOfItems() > 1)
 	            					draw(root, Loader.multi_item_icon, x*32, y*32, -0.7);
 	            			}
+	            		}
 	            	}
 	            }
 	        }
 	    }
-	    for (Creature c : world.creatures()) {
+	}
+	
+	private void displayCreatures(int left, int top) {
+		for (Creature c : world.creatures()) {
 	    	if (c.z != player.z)
 	    		continue;
         	if (c.x >= left && c.x < left + screenWidth &&
@@ -178,10 +213,23 @@ public class PlayScreen extends Screen {
         	}
         }
 	}
+	private void displayHazards(int left, int top) {
+		for (int x = 0; x < screenWidth; x++){
+	        for (int y = 0; y < screenHeight; y++){
+	            int wx = x + left;
+	            int wy = y + top;
+	            if (player.canSee(wx,wy,player.z)) {
+	            	if (world.hazard(wx, wy, player.z) != null) {
+	            		draw(root, world.hazard(wx, wy, player.z).image(),x*32, y*32);
+	            	}
+	            }
+	        }
+		}
+	}
 	
 	@Override
 	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
-		messages.clear();
+		//messages.clear();
 		if (player.hp() < 1)
 		    return new LoseScreen(root);
     	boolean endAfterUserInput = true;
@@ -276,7 +324,14 @@ public class PlayScreen extends Screen {
     					getScrollX(),
     					getScrollY());
     		} else if (c == 'f') {
-    			tryToFire();
+    			if (player.canFire(-1,-1)) {
+    				Point p = player.getAutoTarget();
+    				subscreen = new FireWeaponScreen(root, player,
+    						getScrollX(),
+    						getScrollY(),
+    						p);
+    			} else
+    				endAfterUserInput = false;
     		} else if (code.equals(KeyCode.SPACE)) {
     			Feature f = world.feature(player.x, player.y, player.z);
     			if (world.items(player.x,player.y, player.z) != null) {
@@ -286,7 +341,7 @@ public class PlayScreen extends Screen {
     					return new LeaveScreen(player);
     				f.interact(player, world, player.x, player.y, player.z);
     			} else {
-    				endAfterUserInput = false;
+    				//Wait 1 turn
     			}
     		}
     		else if (c == '0' && devMode)
@@ -310,7 +365,7 @@ public class PlayScreen extends Screen {
 				world.update(player.z);
 				player.modifyTime(-1);
 			}
-			if (player.hp() < player.maxHP()/4)
+			if (player.hp() < player.maxHP()/4 && !player.resting())
 				player.notify("Low Health!", Color.ORANGERED);
 		}
 		//If the player is dead, hit a command to jumpstart to the next screen.
@@ -378,25 +433,26 @@ public class PlayScreen extends Screen {
         for (Item i : player.equipment().values()) {
         	draw(root, Loader.equipmentBox, 1040, 408 + 48*num);
         	draw(root, i.image(), 1049, 417 + 48*num);
+			if (i.effectImage() != null)
+	    		draw(root, i.effectImage(), 1049, 417 + 48*num);
         	write(root, i.shortDesc(player), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
         	num++;
         	if (player.quiver() != null && i.isRanged()) {
         		draw(root, Loader.equipmentBoxBlue, 1040, 408 + 48*num);
             	draw(root, player.quiver().image(), 1049, 417 + 48*num);
+    			if (i.effectImage() != null)
+    	    		draw(root, player.quiver().effectImage(), 1049, 417 + 48*num);
             	write(root, "[" + player.inventory().quantityOf(player.quiver()) + "] " + player.quiver().shortDesc(player), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
             	num++;
         	}
         }
         num = 0;
-        int modX = 0;
         for (Effect e : player.effects()) {
         	draw(root, Loader.effectBox, 764, num * 48);
         	if (e.image() != null)
         		draw(root, e.image(), 774, num*48 + 9);
         	write(root, e.name(), 814, num * 48 + 34, statFontS, Color.WHITE);
-        	if (e.duration() > 9)
-        		modX = -9;
-        	write(root, "" + e.duration(), 1008 + modX, num*48 + 34, statFontS, Color.WHITE);
+        	writeCentered(root, "" + e.duration(), 1015, num*48 + 34, statFontS, Color.WHITE);
         	num++;
         }
         int notificationY = 0;
@@ -431,54 +487,65 @@ public class PlayScreen extends Screen {
     
     private Image getCreatureHealthIcon(Creature creature) {
     	boolean poisoned = false;
-    	for (String n : creature.getEffectNames())
+    	boolean burning = false;
+    	for (String n : creature.getEffectNames()) {
     		if (n.equals("Poisoned"))
     			poisoned = true;
+    		else if (n.equals("Burning"))
+    			burning = true;
+    	}
     	if (creature.hp() == creature.maxHP()) {
     		if (poisoned)
     			return Loader.poisonedHealthBarFull;
+    		else if (burning)
+    			return Loader.burningHealthBarFull;
     		return null;
     	} if (creature.hp() > 4*creature.maxHP()/5) {
     		if (poisoned)
     			return Loader.poisonedHealthBarFull;
+    		else if (burning)
+    			return Loader.burningHealthBarFull;
     		if (creature.is(Tag.ALLY))
     			return Loader.allyHealthBarFull;
     		return Loader.healthBarFull;
     	} else if (creature.hp() > 3 * (creature.maxHP()/5)) {
     		if (poisoned)
     			return Loader.poisonedHealthBarThreeQuarter;
+    		else if (burning)
+    			return Loader.burningHealthBarThreeQuarter;
     		if (creature.is(Tag.ALLY))
     			return Loader.allyHealthBarThreeQuarter;
     		return Loader.healthBarThreeQuarter;
     	} else if (creature.hp() > 1*creature.maxHP()/4) {
     		if (poisoned)
     			return Loader.poisonedHealthBarHalf;
+    		else if (burning)
+    			return Loader.burningHealthBarHalf;
     		if (creature.is(Tag.ALLY))
     			return Loader.allyHealthBarHalf;
     		return Loader.healthBarHalf;
     	} else {
     		if (poisoned)
     			return Loader.poisonedHealthBarQuarter;
+    		else if (burning)
+    			return Loader.burningHealthBarQuarter;
     		if (creature.is(Tag.ALLY))
     			return Loader.allyHealthBarQuarter;
     		return Loader.healthBarQuarter;
     	}
     }
     
-    private void displayMessages(HashMap<String, Color> messages) {
+    private void displayMessages(List<Message> messages) {
     	if (messages.size() == 0)
     		return;
     	int messageHeight = 24;
-    	int top = 800 - messages.size() * messageHeight;
+    	int top = 780 - messages.size() * messageHeight;
     	Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
-    	//for (int i = 0; i < messages.size(); i++) {
     	int i = 0;
-    	for (String message : messages.keySet()) {
-    		write(root, message, 10, top+i*messageHeight, font, messages.get(message));
+    	for (Message m : messages) {
+    		write(root, m.message(), 10, top+i*messageHeight, font, m.colour());
     		i++;
     	}
-    	//}
-    	//messages.clear();
     }
 	
 	private void populate() {
@@ -546,29 +613,15 @@ public class PlayScreen extends Screen {
 			player.pickup();
 		player.modifyTime(5);
 	}
-	private void tryToFire() {
-		if (player.weapon() == null || player.weapon().rangedAttackValue() == 0) {
-			player.notify("You don't have a ranged weapon equipped");
-			//endAfterUserInput = false;
-		} else  if (player.quiver() == null) {
-			player.notify("You are out of ammo");
-			//endAfterUserInput = false;
-		} else {
-			Point p = player.getAutoTarget();
-			subscreen = new FireWeaponScreen(root, player,
-					getScrollX(),
-					getScrollY(),
-					p);
-		}
-	}
-	
-	
 	
 	//Button Handling can go all the way down here
+	Font tooltipFont = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
 	private boolean[] mouseOverButtons = new boolean[12];
 	private List<Image> buttonIcons;
 	private List<Image> buttonIconsSelected;
+	private List<String> tooltips;
 	private void handleButtons() {
+		draw(root, Loader.buttonBar, 518, 756);
 		for (int i = 0; i < 11; i++) {
 			Image image = buttonIcons.get(i);
 			if (mouseOverButtons[i])
@@ -616,12 +669,31 @@ public class PlayScreen extends Screen {
 		buttonIconsSelected.add(Loader.fireWeaponIconSelected);
 		buttonIconsSelected.add(Loader.castIconSelected);
 		buttonIconsSelected.add(Loader.swapWeaponIconSelected);
+		tooltips = new ArrayList<String>();
+		tooltips.add("[i]nventory");
+		tooltips.add("[w]ear/[w]ield");
+		tooltips.add("[q]uaff");
+		tooltips.add("[r]ead");
+		tooltips.add("[m]editate");
+		tooltips.add("[s]tats");
+		tooltips.add("[p]erks");
+		tooltips.add("[R]est");
+		tooltips.add("[t]hrow");
+		tooltips.add("[a]bility");
+		tooltips.add("[c]ast Spell");
+		tooltips.add("Swap Weapon");
 	}
 	private EventHandler<MouseEvent> setMouseOver(int index, boolean b) {
 		return new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent me) { 
-				mouseOverButtons[index] = b;
-				refreshScreen = returnThis();
+				if (mouseOverButtons[index] != b) {
+					mouseOverButtons[index] = b;
+					refreshScreen = returnThis();
+				}
+				if (b)
+					tooltip = tooltips.get(index);
+				else
+					tooltip = null;
 			}
 		};
 	}
@@ -644,7 +716,7 @@ public class PlayScreen extends Screen {
 	 * 6: Perks [p]
 	 * 7: Rest [R]
 	 * 8: Throw [t]
-	 * 9: Fire? [f]
+	 * 9: Activate [a]
 	 * 10: Cast [c]
 	 * 11: Swap to last weapon [tab]
 	 */
@@ -659,10 +731,142 @@ public class PlayScreen extends Screen {
 		case 6: return respondToUserInput(KeyCode.P, 'p', false);
 		case 7: return respondToUserInput(KeyCode.R, 'r', true);
 		case 8: return respondToUserInput(KeyCode.T, 't', false);
-		case 9: return respondToUserInput(KeyCode.F, 'f', false);
+		case 9: return respondToUserInput(KeyCode.A, 'a', false);
 		case 10: return respondToUserInput(KeyCode.C, 'c', false);
 		case 11: return respondToUserInput(KeyCode.TAB, '-', false);
 		}
 		return returnThis();
 	}
+	
+	//The X and Y coordinates of the mouse, in terms of tiles
+	private int mouseX = -1;
+	private int mouseY = -1;
+	private int mouseSX = 0;
+	private int mouseSY = 0;
+	private EventHandler<MouseEvent> getMouseTile() {
+		return new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) {
+				//First get the mouse coordinates
+				if(setMouseCoordinates((int)me.getX(), (int)me.getY()))		
+					refreshScreen = returnThis();
+				
+				//Then find and display any tooltips
+				int x = getScrollX() + mouseX;
+				int y = getScrollY() + mouseY;
+				if (mouseX != -1 && mouseY != -1) {
+					if (player.creature(x, y, player.z) != null)
+						tooltip = player.creature(x, y, player.z).name();
+					else if (player.items(x, y, player.z) != null && !player.items(x, y, player.z).isEmpty())
+						tooltip = player.items(x, y, player.z).getFirstItem().name();
+					else if (player.feature(x,y,player.z) != null)
+						tooltip = player.feature(x, y, player.z).name();
+					else if (player.hazard(x,y,player.z) != null)
+						tooltip = player.hazard(x, y, player.z).name();
+					else
+						tooltip = null;
+				}
+			}
+		};
+	}
+	private boolean setMouseCoordinates(int x, int y) {
+		mouseSX = x;
+		mouseSY = y;
+		if (x > screenWidth*32 || y > screenHeight*32 || x < 0 || y < 0) {
+			mouseX = -1;
+			mouseY = -1;
+			return false;
+		}
+		for (int wx = screenWidth-1; wx >= 0; wx--) {
+			for (int wy = screenHeight-1; wy >= 0; wy--) {
+				if (x > wx * 32 && y > wy * 32) {
+					boolean r = false;
+					if (mouseY != wy) {
+						mouseY = wy;
+						r = true;
+					}
+					if (mouseX != wx) {
+						mouseX = wx;
+						r = true;
+					}
+					return r;
+				}
+			}
+		}
+		return false;
+	}
+	private String tooltip;
+	private void displayMouse(int left, int top) {
+		if (tooltip != null)
+			writeCentered(root, tooltip, mouseSX, mouseSY-32, tooltipFont, Color.WHITE);
+		if (mouseX == -1 || mouseY == -1)
+			return;
+		Image i = Loader.yellowSelection;
+		if (player.creature(left+mouseX, top+mouseY, player.z) != null && player.creature(left+mouseX, top+mouseY, player.z) != player)
+			i = Loader.redSelection;
+		draw(root, i, mouseX*32, mouseY*32);
+	}
+//	private EventHandler<MouseEvent> getTooltip(String s, boolean enter) {
+//		return new EventHandler<MouseEvent>() {
+//			public void handle(MouseEvent me) {
+//				if (enter)
+//					tooltip = s;
+//				else
+//					tooltip = null;
+//			}
+//		};
+//	}
+	private EventHandler<MouseEvent> handleMouse() {
+		return new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) {
+				if (mouseX == -1 || mouseY == -1)
+					return;
+				messages.clear();
+				if (me.getButton() == MouseButton.SECONDARY) {
+					int x = getScrollX() + mouseX;
+					int y = getScrollY() + mouseY;
+					Creature c = player.creature(x, y, player.z);
+					if (c != null) {
+						if (c == player)
+							subscreen = new StatsScreen(player);
+						else
+							subscreen = new InspectCreatureScreen(c);
+						refreshScreen = returnThis();
+						return;
+					}
+					if (player.items(x, y, player.z) != null) {
+						Item i = player.items(x, y, player.z).getFirstItem();
+						subscreen = new InspectItemScreen(i);
+						refreshScreen = returnThis();
+						return;
+					}
+
+				} else if (me.getButton() == MouseButton.PRIMARY){
+					int x = getScrollX() + mouseX;
+					int y = getScrollY() + mouseY;
+					Creature c = player.creature(x, y, player.z);
+					if (c != null) {
+						if (c == player) {
+							respondToUserInput(KeyCode.SPACE, ' ', false);
+							return;
+						}
+						if (player.distanceTo(c.x, c.y) <= player.meleeRange()+1) {
+							player.attack(c);
+							respondToUserInput(KeyCode.PERIOD, '.', false);
+							return;
+						}
+//						if (player.canFire(x, y)) {
+//							player.fireItem(player.quiver(), c.x, c.y, c.z);
+//							respondToUserInput(KeyCode.PERIOD, '.', false);
+//							return;
+//						}
+//					} else {
+//						player.moveTo(x,y,player.z);
+//						return;
+					}
+				}
+			}
+		};
+	}
+	
+	
 }

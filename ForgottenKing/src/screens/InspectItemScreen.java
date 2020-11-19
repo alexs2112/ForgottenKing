@@ -11,6 +11,7 @@ import creatures.Type;
 import items.Item;
 import items.ItemTag;
 import items.ItemType;
+import items.Trigger;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -44,6 +45,8 @@ public class InspectItemScreen extends Screen {
     	write(root, item.name(), 96, y, titleFont, Color.WHITE);
     	draw(root, new Image(this.getClass().getResourceAsStream("resources/icon_box.png")), 40, y-36);
     	draw(root, item.image(), 48, y-28);
+    	if (item.effectImage() != null)
+    		draw(root, item.effectImage(), 48, y-28);
     	y += 48;
     	writeWrapped(root, item.description(), 48, y, 1184, font, Color.ANTIQUEWHITE);
     	y += 64;
@@ -69,7 +72,7 @@ public class InspectItemScreen extends Screen {
     	y+=48;
     	if (player != null)
     		write(root, useTexts(), 48, y, font, Color.WHITE);
-    	
+    	constructCloseButton();
     }
 	
 	@Override
@@ -163,6 +166,11 @@ public class InspectItemScreen extends Screen {
 				text.add("It increases your " + a.text() + " by " + item.stats().get(a) + ".");
 		if (item.ability() != null)
 			text.add("It gives you the [" + item.ability().name() + "] ability, accessible by [a].");
+		if (item.triggers() != null && item.triggers().size() > 0) {
+			for (Trigger t : item.triggers())
+				if (t.description() != null)
+					text.add(t.description());
+		}
 		return text;
 	}
 

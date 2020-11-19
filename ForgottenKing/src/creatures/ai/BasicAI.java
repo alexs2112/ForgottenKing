@@ -50,20 +50,20 @@ public class BasicAI extends CreatureAI {
 	public Creature getNearestEnemy() {
 		Creature nearest = null;
 		int distance = 100;
-		for (int x = creature.x - creature.visionRadius(); x < creature.x + creature.visionRadius(); x++) {
-			for (int y = creature.y - creature.visionRadius(); y < creature.y + creature.visionRadius(); y++) {
+		for (int x = creature.x - creature.visionRadius(); x <= creature.x + creature.visionRadius(); x++) {
+			for (int y = creature.y - creature.visionRadius(); y <= creature.y + creature.visionRadius(); y++) {
 				if (x < 0 || x >= creature.world().width() || y < 0 || y >= creature.world().height())
 					continue;
 				Creature c = creature.creature(x,y,creature.z);
 				if (c != null && c != creature && (c.is(Tag.PLAYER) || c.is(Tag.ALLY))) {
 					if (nearest == null) {
 						nearest = c;
-						distance = Math.max(Math.abs(x - c.x), Math.abs(y - c.y));
+						distance = Math.max(Math.abs(creature.x - c.x), Math.abs(creature.y - c.y));
 						continue;
 					}
-					if (Math.max(Math.abs(x - c.x), Math.abs(y - c.y)) < distance) {
+					if (Math.max(Math.abs(creature.x - c.x), Math.abs(creature.y - c.y)) < distance) {
 						nearest = c;
-						distance = Math.max(Math.abs(x - c.x), Math.abs(y - c.y));
+						distance = Math.max(Math.abs(creature.x - c.x), Math.abs(creature.y - c.y));
 					}
 				}
 			}

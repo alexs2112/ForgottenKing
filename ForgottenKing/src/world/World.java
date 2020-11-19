@@ -11,6 +11,7 @@ import features.Feature;
 import items.Inventory;
 import items.Item;
 import javafx.scene.image.Image;
+import spells.Hazard;
 
 public class World {
 	private Tile[][][] tiles;
@@ -25,6 +26,10 @@ public class World {
 	public Feature[][][] features() { return features; }
 	public Feature feature(int x, int y, int z) { return features[x][y][z]; }
 	public void setFeature(Feature f, int x, int y, int z) { features[x][y][z] = f; }
+	
+	private Hazard[][][] hazards;
+	public Hazard hazard(int x, int y, int z) { return hazards[x][y][z]; }
+	public void setHazard(Hazard h, int x, int y, int z) { hazards[x][y][z] = h.clone(); hazards[x][y][z].modifyTime((int)(Math.random()*h.variance()));}
 	
 	private Inventory[][][] items;
 	public Inventory[][][] items() { return items; }
@@ -90,7 +95,7 @@ public class World {
 		this.depth = tiles[0][0].length;
 		this.creatures = new ArrayList<Creature>();
 		this.items = new Inventory[width][height][depth];
-		//this.features = new Feature[width][height][depth];
+		this.hazards = new Hazard[width][height][depth];
 		this.features = features;
 	}
 	
@@ -144,11 +149,31 @@ public class World {
 	    		}
 	    	}
 	    }
+	    for (int x = 0; x < width; x++) {
+	    	for (int y = 0; y < height; y++) {
+	    		Hazard h = hazards[x][y][z];
+	    		if (h != null) {
+	    			h.update();
+	    			if (h.time() <= 0)
+	    				hazards[x][y][z] = null;
+	    		}
+	    	}
+	    }
 	}
 	
 	public void setEntrance(int x, int y) {
 		features[x][y][0] = new Entrance(x,y,0);
 		tiles[x][y][0] = Tile.DUNGEON_FLOOR_CENTER;
+	}
+	public void setUpFeatureLocations() {
+		for (int z = 0; z < depth; z++) {
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					if (features[x][y][z] != null)
+						features[x][y][z].setLocation(this, x, y, z);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -171,5 +196,4 @@ public class World {
     		}
     	}
 	}
-	
 }

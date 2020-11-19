@@ -1,6 +1,7 @@
 package spells;
 
 import creatures.Creature;
+import creatures.Tag;
 import creatures.Type;
 
 public class Spell {
@@ -39,6 +40,12 @@ public class Spell {
 	private int effectChance;
 	public int effectChance() { return effectChance; }
 	public void setEffectChance(int x) { effectChance = x; }
+	
+	private Hazard hazard;
+	public Hazard hazard() { return hazard; }
+	private int hazardChance;
+	public int hazardChance() { return hazardChance; }
+	public void setHazard(Hazard h, int chance) { hazard = h; hazardChance = chance; }
 	
 	private int attackValue;
 	public void setAttackValue(int x) { attackValue = x; }
@@ -115,13 +122,17 @@ public class Spell {
 			damage = target.getDamageReceived(damage, damageType);
 			
 			String text = actionText;
-			if (text == null)
-				text = "hit the " + target.name();
-			if (damage >= 0)
-				text += " (dealing " + damage + " damage!)";
-			else
-				text += " (healing for " + (-damage) + "!)";
-			owner.doAction(text);
+			if (text == null) {
+				text = "";
+				if (!target.is(Tag.LEGENDARY))
+					text += "The ";
+				text += target.name();
+				if (damage >= 0)
+					text += " takes " + damage + " damage!";
+				else
+					text += " heals for " + (-damage) + "!";
+			}
+			owner.world().notify(target.x, target.y, target.z, text);
 			
 			target.modifyHP(-damage, owner);
 		}

@@ -17,7 +17,8 @@ public enum ItemType {
 	BOOTS("Boots"),				//
 	CLOAK("Cloak"),				//
 	GLOVES("Gloves"),			//
-	HEAD("Head");				//
+	HEAD("Head"),				//
+	;
 	
 	private String text;
 	public String text() { return text; }

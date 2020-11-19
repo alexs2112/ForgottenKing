@@ -16,3 +16,4 @@ Shocked
 Swift
 Stunned
 Confused
+Drained

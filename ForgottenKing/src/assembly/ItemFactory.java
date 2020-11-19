@@ -23,6 +23,7 @@ public class ItemFactory {
 	public AmmoFactory ammo() { return ammo; }
 	public void setCreatureFactory(CreatureFactory f) { 
 		book.setCreatureFactory(f);
+		weapon.setCreatureFactory(f);
 	}	//For summons and stuff
 
 	public ItemFactory(World world) {
@@ -43,6 +44,7 @@ public class ItemFactory {
 		Item item = new Item("Glowing Runestone", ItemType.RUNESTONE, Loader.victoryItemIcon);
 		item.addTag(ItemTag.VICTORYITEM);
 		item.setDescription("What you need to complete your quest. All that you have to do now is return it to the surface");
+		item.setWeight(0);
 		world.addAtEmptyLocation(item, z);
 		return item;
 	}

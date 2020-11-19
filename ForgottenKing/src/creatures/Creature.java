@@ -11,10 +11,12 @@ import features.Feature;
 import items.Inventory;
 import items.Item;
 import items.ItemType;
+import items.Trigger;
 import items.ItemTag;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import spells.Effect;
+import spells.Hazard;
 import spells.Spell;
 import world.Tile;
 import world.World;
@@ -408,6 +410,7 @@ public class Creature {
         	int sy = y;
         	ai.onEnter(mx, my, mz, world.tile(mx, my, mz));
         	other.moveTo(sx, sy, z);
+        	other.modifyTime(other.getMovementDelay());
         	doAction("swap places");
             seeItemsOnGround();
         }
@@ -452,10 +455,18 @@ public class Creature {
     	return world.tile(wx, wy, wz);
     }
     public Feature feature(int wx, int wy, int wz) {
-    	return world.feature(wx, wy, wz);
+    	if (canSee(wx,wy,wz) || ai.rememberedTile(wx, wy, wz) != Tile.UNKNOWN)
+    		return world.feature(wx, wy, wz);
+    	else
+    		return null;
+    }
+    public Hazard hazard(int wx, int wy, int wz) {
+    	if (canSee(wx,wy,wz))
+    		return world.hazard(wx, wy, wz);
+    	return null;
     }
     public Inventory items(int wx, int wy, int wz) {
-    	if (canSee(wx,wy,wz))
+    	if (canSee(wx,wy,wz) || ai.rememberedTile(wx, wy, wz) != Tile.UNKNOWN)
     		return world.items(wx,wy,wz);
     	else
     		return null;
@@ -498,21 +509,26 @@ public class Creature {
 			critChance += 10;
 		return critChance;
 	}
-	private Creature lastAttacked;
+	protected Creature lastAttacked;
 	public Creature lastAttacked() { return lastAttacked; }
 	public void setLastAttacked(Creature x) { lastAttacked = x; }
 	public Point getAutoTarget() {
 		if (lastAttacked != null) {
 			if (creature(lastAttacked.x, lastAttacked.y, lastAttacked.z) == lastAttacked)
 				return new Point(lastAttacked.x, lastAttacked.y, lastAttacked.z);
-			else
+			else {
 				lastAttacked = null;
+				return getAutoTarget();
+			}
 		}
 		return new Point(x,y,z);
 	}
 	public void attack(Creature other) {
 		modifyTime(attackDelay());
-		basicAttack(other, weapon(), getCurrentAttackValue(), getDamageValue() + getCurrentDamageMod(), "attack the " + other.name());
+		String s = "attack ";
+		if (!other.is(Tag.LEGENDARY))
+			s += "the ";
+		basicAttack(other, weapon(), getCurrentAttackValue(), getDamageValue() + getCurrentDamageMod(), s + other.name());
 
 		/**
 		 * Handling for the CLEAVING weapon tag
@@ -524,8 +540,16 @@ public class Creature {
 			if (is(Tag.IMPROVED_CLEAVE))
 				value = 0.8;
 			for (Point t : target.neighbors8()) {
-				if (neighbours.contains(t) && creature(t.x,t.y,t.z) != null)
-					basicAttack(creature(t.x,t.y,t.z), weapon(), getCurrentAttackValue(), (int)((getDamageValue() + getCurrentDamageMod())*value), "attack the " + creature(t.x,t.y,t.z).name());
+				Creature c = creature(t.x,t.y,t.z);
+				if (c == null)
+					continue;
+				if (this.is(Tag.PLAYER) && c.is(Tag.ALLY))
+					continue;
+				s = "attack ";
+				if (!c.is(Tag.LEGENDARY))
+					s += "the ";
+				if (neighbours.contains(t) && c != null)
+					basicAttack(c, weapon(), getCurrentAttackValue(), (int)((getDamageValue() + getCurrentDamageMod())*value), s + creature(t.x,t.y,t.z).name());
 			}
 		}
 	}
@@ -535,7 +559,10 @@ public class Creature {
 		if (is(Tag.STRONG_ARM)) {
 			damage += level();
 		}
-        basicAttack(other, item, attack, damage, "throw a " + item.name() + " at the " + other.name());
+		String s = "throw a " + item.name() + " at ";
+		if (!other.is(Tag.LEGENDARY))
+			s += "the ";
+        basicAttack(other, item, attack, damage, s + other.name());
         if (item.type() == ItemType.POTION) {
         	Effect effect = item.effect();
         	effect.setOwner(this);
@@ -545,7 +572,10 @@ public class Creature {
     }
 	public void rangedWeaponAttack(Item item, Creature other){
 		modifyTime(attackDelay());
-        basicAttack(other, item, getCurrentRangedAttackValue(), getCurrentRangedDamageValue(), "fire at the " + other.name());
+		String s = "fire at ";
+		if (!other.is(Tag.LEGENDARY))
+			s += "the ";
+        basicAttack(other, item, getCurrentRangedAttackValue(), getCurrentRangedDamageValue(), s + other.name());
     }
 	
 	private void basicAttack(Creature other, Item item, int attackModifier, int damage, String action) {
@@ -559,6 +589,8 @@ public class Creature {
 				damage = other.reduceDamageByArmor(damage);
 				damage = other.getDamageReceived(damage, type);
 			}
+			if (critDie > 100 - critChance() && is(Tag.DEADLY_CRITICAL))
+				damage += (int)(Math.random()*(getAccuracy() - dexterity()) + dexterity());
 			if (damage > 0)
 				action += " for " + damage + " damage!";
 			else if (damage == 0)
@@ -570,11 +602,16 @@ public class Creature {
 				action += " **Critical Hit**";
 			}
 			doAction(action);
-			if (effectsOnHit() != null && item == weapon())
+			if (item == weapon() && effectsOnHit() != null) {
 				for (Effect e : effectsOnHit().keySet()) {
 					if (Math.random() < effectsOnHit().get(e))
 						other.addEffect(e);
 				}
+			}
+			if (item != null)
+				if (item.triggers() != null)
+					for (Trigger t : item.triggers())
+						t.trigger(this, other);
 			other.modifyHP(-damage, this);
 		} else {
 			if (is(Tag.PLAYER))
@@ -806,7 +843,9 @@ public class Creature {
     				other.notify(("You " + message + ".").replaceAll(" look ", " feel "));
     			} else if (other.canSee(x, y, z)) {
     				String s = "";
-    				if (!is(Tag.LEGENDARY))
+    				if (is(Tag.ALLY))
+    					s += "Your ";
+    				else if (!is(Tag.LEGENDARY))
     					s += "The ";
     				other.notify(s + name + " " + makeSecondPerson(message));
     			}
@@ -826,7 +865,7 @@ public class Creature {
     	return s.replaceAll("the Player", "you");
     }
     public boolean canEnter(int mx, int my, int mz) {
-    	if ((world.tile(mx, my, mz).isPit() && world.creature(mx, my, mz) != null && is(Tag.FLYING)))
+    	if ((world.tile(mx, my, mz).isPit() && world.creature(mx, my, mz) == null && is(Tag.FLYING)))
     		return true;
     	return ((world.tile(mx, my, mz).isGround() && world.creature(mx, my, mz) == null) &&
     			!(world.feature(mx,my,mz) != null && world.feature(mx, my, mz).blockMovement()));
@@ -875,9 +914,9 @@ public class Creature {
 	public void castSpell(Spell spell, int x, int y) {
 		ArrayList<Point> temp = new ArrayList<Point>();
 		temp.add(new Point(x,y,z));
-		castSpell(spell, temp);
+		castSpell(spell, temp, temp);
 	}
-	public void castSpell(Spell spell, List<Point> points) {
+	public void castSpell(Spell spell, List<Point> points, List<Point> allSpaces) {
 		if (is(Tag.PLAYER) && spell.level() > magic.get(spell.type())) {
 			notify("Your " + spell.type().text() + " skill is not high enough to cast " + spell.name());
 			return;
@@ -894,7 +933,6 @@ public class Creature {
 			doAction(spell.useText());
 		else
 			doAction("cast " + spell.name());
-		
 		for (Point p : points)
 			if (creature(p.x,p.y,z) != null) {
 				lastAttacked = creature(p.x,p.y,z);
@@ -903,6 +941,16 @@ public class Creature {
 		
 		for (Point p : points)
 			spellEffects(spell, p.x, p.y);
+		
+		if (spell.hazard() != null) {
+			System.out.println(spell.hazard().name());
+			for (Point p : allSpaces) {
+				if (p.x == x && p.y == y)
+					continue;
+				if ((int)(Math.random()*100) < spell.hazardChance())
+					world.setHazard(spell.hazard(), p.x,p.y, z);
+			}
+		}
 		
 		spell.casterEffect(this);
 	}
@@ -927,7 +975,7 @@ public class Creature {
 	/**
 	 * Abilities
 	 */
-	private ArrayList<Ability> abilities;
+	protected ArrayList<Ability> abilities;
 	public ArrayList<Ability> abilities() { return abilities; }
 	public void addAbility(Ability newAbility) {
 		int i = -1;
@@ -1050,6 +1098,7 @@ public class Creature {
 		regenerate();
     	updateEffects();
     	updateAbilities();
+    	updateHazard();
     	if (hp <= 0)
 			return;
     	ai.onUpdate();
@@ -1142,6 +1191,12 @@ public class Creature {
     	if (weapon() != null)
     		s += " Wielding a " + weapon().name();
     	return s;
+    }
+    private void updateHazard() {
+    	Hazard h = world.hazard(x, y, z);
+    	if (h != null && h.takeEffect(this)) {
+    		addEffect(h.effect());
+    	}
     }
 	
 }

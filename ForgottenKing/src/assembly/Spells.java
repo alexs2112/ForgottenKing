@@ -32,9 +32,10 @@ public final class Spells {
 	public static Spell flameWave() {
 		Spell s = new Spell("Flame Wave", 4, 2);
 		s.setType(Type.FIRE);
-		s.setDamage(3, 7);
+		s.setDamage(1, 3);
 		s.setEffect(Effects.burning(4, 2), 60);
 		s.setTargetType(TargetType.SELF);
+		s.setHazard(Hazards.smallFire(1), 60);
 		s.setDescription("You blast a wave of fire around yourself, dealing MINDAMAGE - MAXDAMAGE fire damage to each adjacent creature, with a chance to light them on fire.");
 		s.setRadius(1);
 		return s;
@@ -48,12 +49,28 @@ public final class Spells {
 		s.setRange(4);
 		return s;
 	}
+	public static Spell summonImp(CreatureFactory f) {
+		Spell s = new Spell("Summon Imp", 3, 2) {
+			public void casterEffect(Creature caster) {
+				if (caster.is(Tag.PLAYER))
+					summonCreature(caster, f.newFriendlyImp(caster.z, caster.getSpellcasting()/2 + caster.magic().get(Type.FIRE)));
+				else
+					summonCreature(caster, f.newImp(caster.z));
+			}
+		};
+		s.setType(Type.FIRE);
+		s.setTargetType(TargetType.SELF);
+		s.setDescription("Summon a lesser imp, a small fire elemental that can cast spells and fight alongside you for a short time.");
+		s.setUseText("summon a lesser imp");
+		return s;
+	}
 	public static Spell fireball() {
 		Spell s = new Spell("Fireball", 6, 3);
 		s.setType(Type.FIRE);
 		s.setDamage(7, 10);
 		s.setTargetType(TargetType.TARGET);
 		s.setRadius(1);
+		s.setHazard(Hazards.smallFire(1), 80);
 		s.setDescription("You flick a tiny globe of fire towards your target, which quickly blossoms into a fiery explosion dealing MINDAMAGE - MAXDAMAGE fire damage to every creature caught in the blast.");
 		return s;
 	}
@@ -83,30 +100,10 @@ public final class Spells {
 	public static Spell summonSimulacrum(CreatureFactory f) {
 		Spell s = new Spell("Summon Simulacrum", 3, 2) {
 			public void casterEffect(Creature caster) {
-				int mx = 0;
-                int my = 0;
-                int trials = 0;
-                do
-                {
-                    mx = (int)(Math.random() * 5) - 2;
-                    my = (int)(Math.random() * 5) - 2;
-                    trials++;
-                }
-                while ((!caster.canEnter(caster.x+mx, caster.y+my, caster.z)
-                        || !caster.canSee(caster.x+mx, caster.y+my, caster.z)) && trials < 50);
-                if (trials >= 50) {
-                	caster.notify("Your simulacrum failed to materialize!");
-                	return;
-                }
-                if (caster.is(Tag.PLAYER)) {
-                	Creature c = f.newFriendlySimulacrum(caster.z, caster.getSpellcasting()/2 + caster.magic().get(Type.COLD));
-                	c.x = mx + caster.x;
-                	c.y = my + caster.y;
-                } else {
-                	Creature c = f.newSimulacrum(caster.z);
-                	c.x = mx + caster.x;
-                	c.y = my + caster.y;
-                }
+				if (caster.is(Tag.PLAYER))
+					summonCreature(caster, f.newFriendlySimulacrum(caster.z, caster.getSpellcasting()/2 + caster.magic().get(Type.COLD)));
+				else
+					summonCreature(caster, f.newSimulacrum(caster.z));
 			}
 		};
 		s.setType(Type.COLD);
@@ -133,7 +130,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell massChill() {
-		Spell s = new Spell("Chill", 4, 3);
+		Spell s = new Spell("Mass Chill", 4, 3);
 		s.setType(Type.COLD);
 		s.setDamage(0, 1);
 		s.setTargetType(TargetType.SELF);
@@ -157,7 +154,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell swiftness() {
-		Spell s = new Spell("Swiftness", 2, 2);
+		Spell s = new Spell("Swiftness", 2, 1);
 		s.setType(Type.AIR);
 		s.setTargetType(TargetType.SELF);
 		s.setEffect(Effects.swift(6,5),100);
@@ -169,7 +166,7 @@ public final class Spells {
 		s.setType(Type.AIR);
 		s.setTargetType(TargetType.TARGET);
 		s.setRange(4);
-		s.setEffect(Effects.stun(4),70);
+		s.setEffect(Effects.stun(3),70);
 		s.setDescription("Use an unseen electrical current to try to stun a creature that you can see for a few turns.");
 		return s;
 	}
@@ -185,7 +182,7 @@ public final class Spells {
                     my = (int)(Math.random() * 13) - 6;
                 }
                 while (!caster.canEnter(caster.x+mx, caster.y+my, caster.z)
-                        && !caster.canSee(caster.x+mx, caster.y+my, caster.z));
+                        || !caster.canSee(caster.x+mx, caster.y+my, caster.z));
                 caster.moveTo(caster.x + mx, caster.y + my, caster.z);
                 caster.doAction("blink");
 			}
@@ -241,10 +238,19 @@ public final class Spells {
 		s.setDescription("A short range poison spell, sting deals MINDAMAGE-MAXDAMAGE poison damage, with a high chance to poison the target for several turns.");
 		return s;
 	}
+	public static Spell toxicCloud() {
+		Spell s = new Spell("Toxic Cloud", 3, 2);
+		s.setType(Type.POISON);
+		s.setTargetType(TargetType.TARGET);
+		s.setRadius(1);
+		s.setHazard(Hazards.poisonCloud(1), 80);
+		s.setDescription("You manipulate matter to create a cloud of toxic poison, dealing damage and poisoning all who stand within.");
+		return s;
+	}
 	public static Spell minorConfuse() {
 		Spell s = new Spell("Minor Confuse", 3, 2);
 		s.setType(Type.POISON);
-		s.setEffect(Effects.confused(4), 70);
+		s.setEffect(Effects.confused(3), 70);
 		s.setRange(4);
 		s.setTargetType(TargetType.TARGET);
 		s.setDescription("Cause a small amount of toxic fog to infect your targets brain, confusing them for a few turns.");
@@ -273,7 +279,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell regenerateHealth() {
-		Spell s = new Spell("Regenerate", 5, 2);
+		Spell s = new Spell("Regenerate", 4, 2);
 		s.setType(Type.LIGHT);
 		s.setEffect(Effects.healOverTime(8, 2), 100);
 		s.setTargetType(TargetType.TARGET);
@@ -388,5 +394,31 @@ public final class Spells {
 		s.setEffect(Effects.burning(3, 2), 5);
 		s.setUseText("stomp the ground");
 		return s;
+	}
+	
+	
+	/**
+	 * HELPER METHODS
+	 */
+	
+	private static void summonCreature(Creature caster, Creature c) {
+		int mx = 0;
+        int my = 0;
+        int trials = 0;
+        do
+        {
+            mx = (int)(Math.random() * 5) - 2;
+            my = (int)(Math.random() * 5) - 2;
+            trials++;
+        }
+        while ((!caster.canEnter(caster.x+mx, caster.y+my, caster.z)
+                || !caster.canSee(caster.x+mx, caster.y+my, caster.z)) && trials < 50);
+        if (trials >= 50) {
+        	caster.notify("Your simulacrum failed to materialize!");
+        	caster.world().remove(c);
+        	return;
+        }
+        c.x = mx + caster.x;
+        c.y = my + caster.y;
 	}
 }

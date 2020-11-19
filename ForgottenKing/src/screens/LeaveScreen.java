@@ -8,7 +8,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class LeaveScreen extends Screen {
@@ -21,14 +20,6 @@ public class LeaveScreen extends Screen {
 		Group root = new Group();
 		String s = getWinOrLose(player);
 		Screen.draw(root, new Image(this.getClass().getResourceAsStream(s)), 0, 0);
-		write(root, "[enter] to start a new game", 370, 632, 22, Color.WHITE);
-		if (s.equals("resources/win_screen.png")) {
-			write(root, "Congratulations!", 470, 530, 22, Color.WHITE);
-			write(root, "You have succeeded in your quest!", 290, 580, 22, Color.WHITE);
-		} else {
-			write(root, "Cowardice!", 510, 530, 22, Color.WHITE);
-			write(root, "You will be remembered for failing!", 290, 580, 22, Color.WHITE);
-		}
 		scene = new Scene(root,1280,800);
 		stage.setScene(scene);
 		stage.show();

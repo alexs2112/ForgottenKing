@@ -56,6 +56,7 @@ public class InspectCreatureScreen extends Screen {
     		}
     	y+=48;
     	write(root, "[esc] to exit", 48, y, font, Color.WHITE);
+    	constructCloseButton();
     }
 
 	@Override

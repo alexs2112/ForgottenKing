@@ -64,6 +64,7 @@ public class ReadSpellbookScreen extends Screen {
     	if (player.remainingSpellSlots() < s.level())
     		c = Color.GREY;
         writeCentered(root, "Press [enter] to learn " + s.name(), 640, 764, fontS, c);
+        constructCloseButton();
     }
     
     private ArrayList<Spell> getSpells() {

@@ -3,8 +3,11 @@ package screens;
 import creatures.Player;
 import items.Inventory;
 import items.Item;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -19,7 +22,7 @@ public abstract class InventoryBasedScreen extends Screen {
 	protected abstract String getVerb();
     protected abstract boolean isAcceptable(Item item);
     protected abstract Screen use(Item item);
-
+    
     public InventoryBasedScreen(Player player){
         this.player = player;
         this.inventory = player.inventory();
@@ -44,9 +47,9 @@ public abstract class InventoryBasedScreen extends Screen {
 	    
         int x = 104;
         int y = 50;
-        write(root, "What would you like to " + getVerb() + "?", 64, y, font,  Color.WHITE);
+        write(root, "What would you like to " + getVerb() + "?", 64, y, font);
         if (player != null)
-        	writeCentered(root, inventory.totalWeight() + "/" + player.carryWeight(), 1000, 50, fontS, Color.WHITE);
+        	writeCentered(root, String.format("%.1f/%.1f", inventory.totalWeight(), player.carryWeight()), 1000, 50, fontS, Color.WHITE);
         int num = 0;
         int top = Math.min(Math.max(0, select-14), Math.max(0, numOfItems(items) - height));
         for (int i = top; i < items.length; i++) {
@@ -66,7 +69,6 @@ public abstract class InventoryBasedScreen extends Screen {
 				else
 					line += "s";
 			}
-
         	Color equipColour = Color.WHITE;
             if (player != null && player.hasEquipped(item)) {
             	line += " (Equipped)";
@@ -81,17 +83,23 @@ public abstract class InventoryBasedScreen extends Screen {
             	equipColour = Color.FORESTGREEN;
             }
             draw(root, item.image(), x-44, 32*num + y + 4);
+            if (item.effectImage() != null)
+        		draw(root, item.effectImage(), x-44, 32*num + y + 4);
         	write(root, line, x, 32*num + y + 32, fontS, equipColour);
-        	writeCentered(root, ""+(item.weight()*inventory.quantityOf(item)), 1000, 32*num+y+32, fontS, Color.WHITE);
+        	writeCentered(root, String.format("%.1f",item.weight()*inventory.quantityOf(item)), 1000, 32*num+y+32, fontS, Color.WHITE);
         	if (select == i) {
         		draw(root, Loader.arrowRight, 20, 32*num+y+4);
         	}
+        	draw(root, Loader.inventoryEmptyLine, 0, 32*num + y + 4, click(item), enter(inventory.indexOf(item)), null);
         	num++;
         }
         if (top > 0)
         	draw(root, Loader.arrowUp, 20, 32);
         if (top < numOfItems(items)-height)
         	draw(root, Loader.arrowDown, 20, 744);
+        
+        
+        constructCloseButton();
     }
     private Item[] getItems() {
     	Item[] items = null;
@@ -113,7 +121,6 @@ public abstract class InventoryBasedScreen extends Screen {
     		items = inventory.items();
     	else
     		items = player.inventory().items();
-    	
     	if (code.equals(KeyCode.DOWN)) {
     		select = getNextIndex(items);
     		return this;
@@ -128,6 +135,9 @@ public abstract class InventoryBasedScreen extends Screen {
     	} else if (code.equals(KeyCode.ENTER)) {
     		if (select != -1)
     			return use(items[select]);
+    	} else if (code.equals(KeyCode.SLASH) && shift) {
+    		if (select != -1)
+    			return new InspectItemScreen(player, items[select], this);
     	} else if (code.equals(KeyCode.ESCAPE))
             return null;
         return this;
@@ -154,6 +164,27 @@ public abstract class InventoryBasedScreen extends Screen {
     			x++;
     	}
     	return x;
+    }
+    
+    private EventHandler<MouseEvent> click(Item item) {
+    	return new EventHandler<MouseEvent>() {
+    		public void handle(MouseEvent me) {
+    			if (me.getButton() == MouseButton.PRIMARY)
+    				refreshScreen = respondToUserInput(KeyCode.ENTER, '-', false);
+    			else
+    				refreshScreen = respondToUserInput(KeyCode.SLASH, '/', true);
+			}
+    	};
+    }
+    private EventHandler<MouseEvent> enter(int index) {
+    	return new EventHandler<MouseEvent>() {
+    		public void handle(MouseEvent me) {
+    			if (index != select) {
+    				select = index;
+    				refreshScreen = returnThis();
+    			}
+			}
+    	};
     }
 
 }

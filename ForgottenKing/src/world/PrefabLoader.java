@@ -93,10 +93,10 @@ public class PrefabLoader {
 						tiles[x][y] = Tile.DUNGEON_WALL;
 					else if (chars[x][y] == '|') {
 						tiles[x][y] = Tile.DUNGEON_FLOOR;
-						features[x][y] = new Door(1);
+						features[x][y] = new Door();//Door.SIDE);
 					} else if (chars[x][y] == '-') {
 						tiles[x][y] = Tile.DUNGEON_FLOOR;
-						features[x][y] = new Door(0);
+						features[x][y] = new Door();//Door.UP);
 					}
 				}
 			}

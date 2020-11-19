@@ -78,6 +78,7 @@ public class SelectAbilityScreen extends Screen {
         		c = Color.LIGHTGREY;
         	writeCentered(root, "[enter] to activate " + a.name(), 640, 764, fontS, c);
         }
+        constructCloseButton();
     }
     
     @Override

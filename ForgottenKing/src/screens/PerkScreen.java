@@ -72,6 +72,7 @@ public class PerkScreen extends Screen {
 			draw(root, Loader.arrowDown, 20, y+662);
 		if (top > 0)
 			draw(root, Loader.arrowUp, 20, 62);
+		constructCloseButton();
 	}
 	
 	@Override

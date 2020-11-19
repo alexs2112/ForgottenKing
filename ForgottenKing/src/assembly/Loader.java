@@ -22,6 +22,7 @@ public final class Loader {
 	public static Image swiftIcon = ImageCrop.cropImage(effectsFull, 64, 32, 32, 32);
 	public static Image stunnedIcon = ImageCrop.cropImage(effectsFull, 96, 32, 32, 32);
 	public static Image confusedIcon = ImageCrop.cropImage(effectsFull, 128, 32, 32, 32);
+	public static Image drainedIcon = ImageCrop.cropImage(effectsFull, 160, 32, 32, 32);
 	
 	private static Image abilitiesFull = new Image(ItemFactory.class.getResourceAsStream("resources/icons/abilities_full.png"));
 	public static Image rageIcon = ImageCrop.cropImage(abilitiesFull, 0, 0, 32, 32);
@@ -30,4 +31,7 @@ public final class Loader {
 	
 	private static Image runestonesFull = new Image(ItemFactory.class.getResourceAsStream("resources/items/rune_stones_full.png"));
 	public static Image victoryItemIcon = ImageCrop.cropImage(runestonesFull, 0, 0, 32, 32);
+	
+	public static Image fire = new Image(ItemFactory.class.getResourceAsStream("resources/hazards/fire.gif"));
+	public static Image poisonCloud = new Image(ItemFactory.class.getResourceAsStream("resources/hazards/poisonCloud.gif"));
 }

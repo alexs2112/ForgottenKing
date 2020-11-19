@@ -4,7 +4,7 @@ import creatures.Creature;
 import javafx.scene.image.Image;
 import world.World;
 
-public abstract class Feature {
+public abstract class Feature implements Cloneable {
 	protected String name;
 	protected String desc;
 	protected String type;
@@ -28,6 +28,16 @@ public abstract class Feature {
 		this.type = "";
 	}
 	
+	public Feature clone() {
+		try {
+			return (Feature)super.clone();
+		}
+		catch (CloneNotSupportedException e) {
+			// This should never happen
+			throw new InternalError(e.toString());
+		}
+	}
+	
 	public Image getImage() { return image; }
 	
 	public abstract boolean blockLineOfSight();
@@ -35,5 +45,8 @@ public abstract class Feature {
 	public abstract boolean blockMovement();
 
 	public abstract void interact(Creature creature, World world, int x, int y, int z);
+	
+	//To be overridden, for features that need to know their location (doors)
+	public void setLocation(World world, int x, int y, int z) { }
 
 }

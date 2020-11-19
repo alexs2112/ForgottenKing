@@ -95,7 +95,10 @@ public final class Effects {
 	public static Effect burning(int duration, int strength) {
 		Effect e = new Effect("Burning", duration){
 			public void start(Creature creature){
-				creature.doAction("catch fire");
+				if (creature.is(Tag.PLAYER))
+					creature.doAction("catch fire");
+				else
+					creature.doAction("catche fire");	//Annoying grammar of the english language
 			}
 
 			public void update(Creature creature){
@@ -202,7 +205,7 @@ public final class Effects {
 		return e;
 	}
 	public static Effect stun(int duration) {
-		Effect e = new Effect("Stunned", duration) {
+		Effect e = new Effect("Stunned", duration+1) {
 			public void start(Creature creature) {
 				creature.addTag(Tag.STUNNED);
 				creature.doAction("become stunned");
@@ -222,7 +225,7 @@ public final class Effects {
 		return e;
 	}
 	public static Effect confused(int duration) {
-		Effect e = new Effect("Confused", duration) {
+		Effect e = new Effect("Confused", duration+1) {
 			public void start(Creature creature) {
 				creature.addTag(Tag.CONFUSED);
 				creature.doAction("become confused");
@@ -270,6 +273,27 @@ public final class Effects {
 		e.setStrength(strength);
 		e.setColour(Color.DARKORANGE);
 		e.setDescription("Vulnerable creatures have their Armor reduced by " + strength + " for " + duration + " turns.");
+		return e;
+	}
+	public static Effect drained(int duration, int strength) {
+		Effect e = new Effect("Drained", duration) {
+			public void start(Creature creature) {
+				creature.modifyStat(Stat.ACCURACY, -strength);
+				creature.modifyStat(Stat.BRAWN, -strength);
+				creature.modifyStat(Stat.SPELLCASTING, -strength);
+				creature.doAction("look sickly");
+			}
+			public void end(Creature creature) {
+				creature.modifyStat(Stat.ACCURACY, strength);
+				creature.modifyStat(Stat.BRAWN, strength);
+				creature.modifyStat(Stat.SPELLCASTING, strength);
+				creature.doAction("look better");
+			}
+		};
+		e.setImage(Loader.drainedIcon);
+		e.setStrength(strength);
+		e.setColour(Color.DARKORANGE);
+		e.setDescription("Drained creatures have their offensive stats reduced by " + strength + " for " + duration + " turns.");
 		return e;
 	}
 	
@@ -351,7 +375,6 @@ public final class Effects {
 		e.setDescription("Creatures with an armor of frost have increased armor, however they are slightly slowed by the weight of it.");
 		return e;
 	}
-	
 	public static Effect temporarySummon(int duration) {
 		Effect e = new Effect("Temporary", duration) {
 			public void end(Creature creature) {

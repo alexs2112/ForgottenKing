@@ -3,11 +3,13 @@ package creatures;
 import java.util.ArrayList;
 import java.util.List;
 
+import assembly.Abilities;
 import audio.Audio;
 import items.Item;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import spells.Spell;
+import tools.Line;
 import tools.Point;
 import world.World;
 
@@ -15,6 +17,7 @@ public class Player extends Creature {
     public Player(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Image image) {
     	super(world,name,level,xp,hp,evasion,armorValue,baseAttackValue,baseDamageMin,baseDamageMax,image);
     	spells = new ArrayList<Spell>();
+    	abilities = new ArrayList<Ability>();
     }
     
     /**
@@ -113,7 +116,7 @@ public class Player extends Creature {
      */
     public double carryWeight() { return 17 + getBrawn(); }
     public void pickup(Item item) {
-    	if (item.weight() + inventory().totalWeight() > carryWeight()) {
+    	if (item != null && item.weight() + inventory().totalWeight() > carryWeight()) {
     		notify("You can't carry more weight.");
     		return;
     	}
@@ -131,8 +134,10 @@ public class Player extends Creature {
     }
     private Spell lastCast;
     public Spell lastCast() { return lastCast; }
-    public void castSpell(Spell spell, List<Point> points) {
-    	super.castSpell(spell, points);
+    
+    @Override
+    public void castSpell(Spell spell, List<Point> points, List<Point> allPoints) {
+    	super.castSpell(spell, points, allPoints);
     	lastCast = spell;
     }
     private Ability lastActivated;
@@ -177,5 +182,69 @@ public class Player extends Creature {
     	}
     	return a;
     }
+    public int distanceTo(int x, int y) {
+    	return new Line(this.x, this.y, x, y).getPoints().size();
+    }
+    
+    /**
+     * COMBAT
+     */
+    public boolean canFire(int x, int y) {
+    	if (weapon() == null || weapon().rangedAttackValue() == 0) {
+			notify("You don't have a ranged weapon equipped");
+			return false;
+    	} else  if (quiver() == null) {
+			notify("You are out of ammo");
+			return false;
+    	}
+    	if (x != -1 && y != -1) {
+    		for (Point p : new Line(this.x,this.y,x,y))
+    			if (p.x != x && p.y != y && creature(p.x,p.y,z) != null && creature(p.x,p.y,z) != this) {
+    				notify("There is a " + creature(p.x,p.y,z).name() + " in your line of fire!");
+    				return false;
+    			}
+    	}
+		return true;
+    }
+    public int meleeRange() {
+    	int r = 1;
+    	if (abilities().contains(Abilities.reach()))
+			r++;
+    	else if (abilities().contains(Abilities.improvedReach()))
+			r+=2;
+    	return r;
+    }
+    public Creature getNearestEnemy() {
+		Creature nearest = null;
+		int distance = 100;
+		for (int x = this.x - visionRadius(); x <= this.x + visionRadius(); x++) {
+			for (int y = this.y - visionRadius(); y <= this.y + visionRadius(); y++) {
+				if (x < 0 || x >= world().width() || y < 0 || y >= world().height())
+					continue;
+				Creature c = creature(x,y,z);
+				if (c != null && c != this && !c.is(Tag.ALLY)) {
+					if (nearest == null) {
+						nearest = c;
+						distance = Math.max(Math.abs(this.x - c.x), Math.abs(this.y - c.y));
+						continue;
+					}
+					if (Math.max(Math.abs(this.x - c.x), Math.abs(this.y - c.y)) < distance) {
+						nearest = c;
+						distance = Math.max(Math.abs(this.x - c.x), Math.abs(this.y - c.y));
+					}
+				}
+			}
+		}
+		return nearest;
+	}
+    
+    @Override
+    public Point getAutoTarget() {
+    	if (lastAttacked() == null || lastAttacked() == this)
+    		setLastAttacked(getNearestEnemy());
+    	System.out.println(lastAttacked());
+    	return super.getAutoTarget();
+    }
+    	
 
 }

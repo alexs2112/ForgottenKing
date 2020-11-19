@@ -10,6 +10,9 @@ import audio.Audio;
 import creatures.Creature;
 import creatures.Player;
 import javafx.scene.Group;
+//import javafx.event.EventHandler;
+//import javafx.scene.Scene;
+//import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -40,10 +43,12 @@ public class TargetBasedScreen extends Screen {
         this.sx = sx;
         this.sy = sy;
         this.baseRoot = new Group(root);
+        handleTarget();
 	}
 	
 	public void displayOutput(Stage stage) {
 		root = new Group(baseRoot);
+		//root.addEventFilter(MouseEvent.MOUSE_MOVED, getMouseTile());
 		if (targetType == TargetType.PROJECTILE)
 			handleProjectile();
 		else if (targetType == TargetType.BEAM)
@@ -182,6 +187,43 @@ public class TargetBasedScreen extends Screen {
     }
 	
 	
-
+	//Copied and Pasted from PlayScreen
+//	private int mouseX = -1;
+//	private int mouseY = -1;
+//	private boolean setMouseCoordinates(int x, int y) {
+//		if (x > 32*32 || y > 24*32 || x < 0 || y < 0) {
+//			mouseX = -1;
+//			mouseY = -1;
+//			return false;
+//		}
+//		for (int wx = 31; wx >= 0; wx--) {
+//			for (int wy = 23; wy >= 0; wy--) {
+//				if (x > wx * 32 && y > wy * 32) {
+//					boolean r = false;
+//					if (mouseY != wy) {
+//						mouseY = wy;
+//						r = true;
+//					}
+//					if (mouseX != wx) {
+//						mouseX = wx;
+//						r = true;
+//					}
+//					return r;
+//				}
+//			}
+//		}
+//		return false;
+//	}
+//	private EventHandler<MouseEvent> getMouseTile() {
+//		return new EventHandler<MouseEvent>() {
+//			public void handle(MouseEvent me) {
+//				if(setMouseCoordinates((int)me.getX(), (int)me.getY()))	 {	
+//					refreshScreen = returnThis();
+//					x = mouseX + sx;
+//					y = mouseY + sy;
+//				}
+//			}
+//		};
+//	}
 
 }

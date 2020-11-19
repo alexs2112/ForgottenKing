@@ -70,6 +70,7 @@ public class SelectSpellScreen extends Screen {
         		c = Color.DARKGREY;
         	writeCentered(root, "[enter] to cast " + s.name(), 640, 764, font, c);
         }
+        constructCloseButton();
     }
     
     @Override

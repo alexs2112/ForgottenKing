@@ -136,6 +136,8 @@ public class Inventory {
 				}
 				line += ", ";
 			}
+		if (line.length() <= 3)
+			return "";
 		return line.substring(0,line.length()-2);
 	}
 	

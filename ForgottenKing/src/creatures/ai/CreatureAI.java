@@ -131,7 +131,7 @@ public class CreatureAI {
 		if (!creature.canSee(x,y,z))
 			return false;
 		for (Point p : new Line(creature.x, creature.y, x, y)) {
-			if (!creature.realTile(p.x, p.y, z).isGround() ||
+			if (creature.realTile(p.x, p.y, z).isWall() ||
 				(creature.world().feature(p.x, p.y, z) != null && creature.world().feature(p.x, p.y, z).blockMovement()) ||
 				(creature.creature(p.x, p.y, z) != null && p.x != x && p.y != y && creature.creature(p.x, p.y, z) != creature)) 
 				return false;
@@ -142,7 +142,7 @@ public class CreatureAI {
 		return new Line(creature.x, creature.y, x, y).getPoints().size() <= 2;
 	}
 	protected boolean canCastSpell(Spell spell, int x, int y, int z) {
-		if (spell.cost() > creature.mana() || !inRange(spell.range(), x, y))
+		if (spell.cost() > creature.mana() || !inRange(spell.range(), x, y) || creature.is(Tag.NOCAST))
 			return false;
 		if (spell.targetType() == TargetType.PROJECTILE ||
 			spell.targetType() == TargetType.BEAM) {

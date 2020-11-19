@@ -65,6 +65,7 @@ public class LevelUpScreen extends Screen {
 		case 8: x=108; y=718; break;
 		}
 		draw(root, Loader.arrowRight, x, y);
+		constructCloseButton();
 	}
 
 	@Override

@@ -3,16 +3,22 @@ package creatures.ai;
 import creatures.Ally;
 import creatures.Creature;
 import creatures.Tag;
+import spells.Spell;
 import tools.Point;
 
 public class AllyAI extends CreatureAI {
 	protected Creature player;
 	private Ally creature;
+	private int castChance;
 
 	public AllyAI(Ally creature, Creature player) {
 		super(creature);
 		this.creature = creature;
 		this.player = player;
+	}
+	public AllyAI(Ally creature, Creature player, int castChance) {
+		this(creature, player);
+		this.castChance = castChance;
 	}
 	
 	protected void action() {
@@ -20,11 +26,17 @@ public class AllyAI extends CreatureAI {
 			wander();
 			return;
 		}
-		
 		//If the ally can see an enemy, try to kill it
 		Creature c = creature.getNearestEnemy();
-		if (c != null && !c.is(Tag.ALLY)) {
-			if (canRangedWeaponAttack(c))
+		if (c != null) {
+			if (creature.is(Tag.SPELLCASTER) && Math.random()*100 < castChance && creature.spells() != null && creature.spells().size() > 0) {
+				//cast a randomly selected spell
+				Spell s = creature.spells().get((int)(Math.random()*creature.spells().size()));
+				if (canCastSpell(s, c.x, c.y, c.z)) {
+					creature.castSpell(s, c.x, c.y);
+				}
+			}
+			else if (canRangedWeaponAttack(c))
 				creature.fireItem(creature.quiver(), c.x, c.y, c.z);
 			else if (canThrowAt(c))
 				creature.throwItem(getWeaponToThrow(), c.x, c.y, c.z);

@@ -35,6 +35,10 @@ public final class Loader {
 	public static Image allyHealthBarThreeQuarter = ImageCrop.cropImage(healthBarIconFull, 32, 16, 32, 8);
 	public static Image allyHealthBarHalf = ImageCrop.cropImage(healthBarIconFull, 64, 16, 32, 8);
 	public static Image allyHealthBarQuarter = ImageCrop.cropImage(healthBarIconFull, 96, 16, 32, 8);
+	public static Image burningHealthBarFull = ImageCrop.cropImage(healthBarIconFull, 0, 48, 32, 8);
+	public static Image burningHealthBarThreeQuarter = ImageCrop.cropImage(healthBarIconFull, 32, 48, 32, 8);
+	public static Image burningHealthBarHalf = ImageCrop.cropImage(healthBarIconFull, 64, 48, 32, 8);
+	public static Image burningHealthBarQuarter = ImageCrop.cropImage(healthBarIconFull, 96, 48, 32, 8);
 
 	public static Image attributesFull = new Image(Screen.class.getResourceAsStream("resources/attributes.png"));
 	public static Image strengthIcon = ImageCrop.cropImage(attributesFull,0,0,32,32);
@@ -49,6 +53,7 @@ public final class Loader {
 	public static Image spellcastingIcon = ImageCrop.cropImage(statsFull, 64, 64, 32, 32);
 	
 	private static Image playerButtonsFull = new Image(Screen.class.getResourceAsStream("resources/player-buttons.png"));
+	public static Image buttonBar = new Image(Screen.class.getResourceAsStream("resources/button-bar.png"));
 	public static Image inventoryIcon = ImageCrop.cropImage(playerButtonsFull, 0,0,40,40);
 	public static Image wearIcon = ImageCrop.cropImage(playerButtonsFull, 40,0,40,40);
 	public static Image quaffIcon = ImageCrop.cropImage(playerButtonsFull, 80,0,40,40);
@@ -73,6 +78,8 @@ public final class Loader {
 	public static Image fireWeaponIconSelected = ImageCrop.cropImage(playerButtonsFull, 360,40,40,40);
 	public static Image castIconSelected = ImageCrop.cropImage(playerButtonsFull, 400,40,40,40);
 	public static Image swapWeaponIconSelected = ImageCrop.cropImage(playerButtonsFull, 440,40,40,40);
+	public static Image closeMenuIcon = ImageCrop.cropImage(playerButtonsFull, 480,0,40,40);
+	public static Image closeMenuIconSelected = ImageCrop.cropImage(playerButtonsFull, 480,40,40,40);
 	
 	public static Image playerUIFull = new Image(Screen.class.getResourceAsStream("resources/player_ui.png"));
 	private static Image equipmentBoxFull = new Image(Screen.class.getResourceAsStream("resources/equipment_box.png"));
@@ -88,6 +95,7 @@ public final class Loader {
 	public static Image arrowRight = ImageCrop.cropImage(arrowsFull, 0, 32, 32, 32);
 	public static Image arrowDown = ImageCrop.cropImage(arrowsFull, 0, 64, 32, 32);
 	public static Image arrowLeft = ImageCrop.cropImage(arrowsFull, 0, 96, 32, 32);
+	public static Image inventoryEmptyLine = new Image(Screen.class.getResourceAsStream("resources/inventory-line-empty.png"));
 	
 	private static Image typeIconsFull = new Image(Screen.class.getResourceAsStream("resources/type_full.png"));
 	public static Image fireIcon = ImageCrop.cropImage(typeIconsFull, 0, 0, 32, 32);

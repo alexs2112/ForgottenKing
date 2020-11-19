@@ -126,6 +126,9 @@ public class StatsScreen extends Screen {
 		
 		if (player.statPoints() > 0 || player.attributePoints() > 0)
 			writeCentered(root, "[enter] to Level Up!", 640, 764, fontL, Color.AQUA);
+		else
+			writeCentered(root, "[enter] to view stats breakdown!", 640, 764, fontL, Color.ANTIQUEWHITE);
+		constructCloseButton();
 	}
 	
 	@Override

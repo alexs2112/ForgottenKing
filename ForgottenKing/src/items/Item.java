@@ -6,6 +6,7 @@ import java.util.List;
 
 import creatures.Ability;
 import creatures.Attribute;
+import creatures.Creature;
 import creatures.Player;
 import creatures.Stat;
 import creatures.Tag;
@@ -130,6 +131,24 @@ public class Item {
 	public void setEffectOnHit(Effect x, int chance) { effectOnHit = x; effectChance = chance; }
 	private int effectChance;
 	public int effectChance() { return effectChance; }
+	
+	/**
+	 * Enchantment Methods
+	 */
+	private BaseItem baseItem;
+	public BaseItem baseItem() { return baseItem; }
+	public void setBaseItem(BaseItem b) { baseItem = b; }
+	private List<Trigger> triggers;
+	public List<Trigger> triggers() { return triggers; }
+	public void addTrigger(Trigger t) {
+		if (triggers == null)
+			triggers = new ArrayList<Trigger>();
+		triggers.add(t);
+	}
+	public void trigger(Creature owner, Creature other) { }
+	private Image effectImage;
+	public Image effectImage() { return effectImage; }
+	public void setEffectImage(Image i) { effectImage = i; }
 	
 	/**
 	 * Spell Methods

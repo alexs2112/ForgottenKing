@@ -1,6 +1,6 @@
 package assembly;
 
-import java.util.HashMap;
+import java.util.List;
 
 import creatures.Ally;
 import creatures.ClassSelection;
@@ -10,9 +10,9 @@ import creatures.Type;
 import creatures.Tag;
 import creatures.ai.*;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import tools.FieldOfView;
 import tools.ImageCrop;
+import tools.Message;
 import world.World;
 
 public class CreatureFactory {
@@ -38,6 +38,7 @@ public class CreatureFactory {
 	private Image grisstokIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/yamzuushk.gif"));
 	
 	private Image simulacrumIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/simulacrum.gif"));
+	private Image impIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/imp.gif"));
 	
 	public CreatureFactory(World world, ItemFactory itemFactory) {
 		this.world = world;
@@ -88,7 +89,7 @@ public class CreatureFactory {
 		return newGoblin(z);
 	}
 	
-	public Player newPlayer(HashMap<String, Color> messages, int z, FieldOfView fov, ClassSelection c){
+	public Player newPlayer(List<Message> messages, int z, FieldOfView fov, ClassSelection c){
 	    Player player = new Player(world, "Player", 1, 0, c.hp, c.evasion, c.armor, c.attack, c.damageMin, c.damageMax, c.icon);
 	    player.setAttributes(c.strength,c.dexterity,c.intelligence);
 	    player.setStats(c.toughness,c.brawn,c.agility,c.accuracy,c.will,c.spellcasting);
@@ -247,7 +248,7 @@ public class CreatureFactory {
 	    lizard.addEquipment(itemFactory.weapon().newDagger(-1));
 	    lizard.addEquipment(itemFactory.armor().newLeatherArmor(-1));
 	    lizard.addTag(Tag.SPELLCASTER);
-	    lizard.addTag(Tag.IMPROVED_CRITICAL);
+	    //lizard.addTag(Tag.IMPROVED_CRITICAL);
 	    lizard.setMana(12, 12);
 	    lizard.addSpell(Spells.slow(3, 5, 5));
 	    lizard.addSpell(Spells.vulnerable());
@@ -266,8 +267,7 @@ public class CreatureFactory {
 	}
 	public Creature newLizardPriest(int z) {
 		Creature lizard = new Creature(world, "Lizard Priest",5,175, 30,8,2,5,5,8, lizardPriestIcon);
-		new BasicAI(lizard, player);
-		//new SpellcastingAI(lizard, player, 70);
+		new SpellcastingAI(lizard, player, 70);
 		lizard.setAttributes(1,3,3);
 	    lizard.setStats(2,1,4,2,5,5);
 	    lizard.setDescription("");
@@ -304,7 +304,7 @@ public class CreatureFactory {
 	 * SUMMONS
 	 */
 	public Creature newFriendlySimulacrum(int z, int casterAbility) {
-		Ally simulacrum = new Ally(world, "Simulacrum",1, 0, 13+casterAbility, 9, 0, 2, 1, 3, simulacrumIcon);
+		Ally simulacrum = new Ally(world, "Simulacrum",1, 0, 9+casterAbility, 9, 0, 2, 0, 2, simulacrumIcon);
 		new AllyAI(simulacrum, player);
 		simulacrum.setAttributes(1+casterAbility, 1+casterAbility, 1+casterAbility);
 		simulacrum.setStats(2, 2, 2, 2, 2, 2);
@@ -321,8 +321,37 @@ public class CreatureFactory {
 		simulacrum.setAttributes(1, 1, 1);
 		simulacrum.setStats(2, 2, 2, 2, 2, 2);
 		simulacrum.setDescription("A small humanoid being made purely of ice and elemental cold.");
-		simulacrum.addEffect(Effects.temporarySummon(30));;
+		simulacrum.addEffect(Effects.temporarySummon(30));
 		world.addAtEmptyLocation(simulacrum, z);
 		return simulacrum;
+	}
+	public Creature newFriendlyImp(int z, int casterAbility) {
+		Ally imp = new Ally(world, "imp",1, 0, 7+casterAbility, 10, 0, 2, 1, 3, impIcon);
+		new AllyAI(imp, player, 80);
+		imp.setAttributes(1+casterAbility, 1+casterAbility, 1+casterAbility);
+		imp.setStats(2, 2, 2, 2, 2, 2);
+		imp.setDescription("A small demon, able to cast embers and fight alongside you.");
+		imp.addTag(Tag.ALLY);
+		imp.addTag(Tag.SPELLCASTER);
+		imp.addSpell(Spells.embers());
+		imp.setMana(10, 10);
+		imp.setTemporary(30);
+		imp.setPlayer(player);
+		world.addAtEmptyLocation(imp, z);
+		return imp;
+	}
+	public Creature newImp(int z) {
+		Creature imp = new Ally(world, "imp",1, 0, 10, 10, 0, 2, 1, 3, impIcon);
+		new SpellcastingAI(imp, player, 80);
+		imp.setAttributes(1, 1, 2);
+		imp.setStats(2, 2, 2, 2, 2, 2);
+		imp.setDescription("A small demon, able to cast low level fire spells.");
+		imp.addTag(Tag.ALLY);
+		imp.addTag(Tag.SPELLCASTER);
+		imp.addSpell(Spells.embers());
+		imp.setMana(10, 10);
+		imp.addEffect(Effects.temporarySummon(30));
+		world.addAtEmptyLocation(imp, z);
+		return imp;
 	}
 }
