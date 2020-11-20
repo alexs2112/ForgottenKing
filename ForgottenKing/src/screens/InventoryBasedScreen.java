@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import screens.Screen;
 
 public abstract class InventoryBasedScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	protected Player player;
 	protected Inventory inventory;
 	private String letters;

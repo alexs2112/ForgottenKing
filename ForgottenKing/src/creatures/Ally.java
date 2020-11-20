@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import world.World;
 
 public class Ally extends Creature {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Player player;
 	public void setPlayer(Player player) { this.player = player; }
 	

@@ -82,7 +82,7 @@ public enum Tag {
 		public void unlock(Creature player) { player.addAbility(Abilities.improvedKnockbackAll()); }
 	},
 	;
-	
+	private static final long serialVersionUID = 7769423305067121315L;
 	private String text;
 	public String text() { return text; }
 	private String description;

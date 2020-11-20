@@ -21,7 +21,8 @@ import spells.Spell;
 import world.Tile;
 import world.World;
 
-public class Creature {
+public class Creature implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
     private World world;
     public World world() { return world; }
 

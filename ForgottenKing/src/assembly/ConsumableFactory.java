@@ -6,7 +6,8 @@ import items.ItemType;
 import javafx.scene.image.Image;
 import world.World;
 
-public class ConsumableFactory {
+public class ConsumableFactory implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private World world;
 	
 	private Image potionsIconFull = new Image(this.getClass().getResourceAsStream("resources/items/potions_full.png"));

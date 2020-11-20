@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class HelpScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Font font = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 20);
 	private int currentScreen;
 	private int top;

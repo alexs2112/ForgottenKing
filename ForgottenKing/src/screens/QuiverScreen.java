@@ -5,7 +5,7 @@ import items.Item;
 import screens.Screen;
 
 public class QuiverScreen extends InventoryBasedScreen {
-
+	private static final long serialVersionUID = 7769423305067121315L;
 	public QuiverScreen(Player player) {
 		super(player);
 	}

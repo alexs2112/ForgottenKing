@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Line implements Iterable<Point> {
+public class Line implements Iterable<Point>, java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
     private List<Point> points;
     public List<Point> getPoints() { return points; }
 

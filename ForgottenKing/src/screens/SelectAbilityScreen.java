@@ -11,7 +11,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class SelectAbilityScreen extends Screen {
-
+	private static final long serialVersionUID = 7769423305067121315L;
 	protected Player player;
     private String letters;
     private Group playRoot;

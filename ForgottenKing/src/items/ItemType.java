@@ -20,6 +20,7 @@ public enum ItemType {
 	HEAD("Head"),				//
 	;
 	
+	private static final long serialVersionUID = 7769423305067121315L;
 	private String text;
 	public String text() { return text; }
 	private ItemType(String text) {

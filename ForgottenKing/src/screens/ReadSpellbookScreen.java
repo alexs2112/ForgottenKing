@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import spells.Spell;
 
 public class ReadSpellbookScreen extends Screen {
-
+	private static final long serialVersionUID = 7769423305067121315L;
 	protected Player player;
     private String letters;
     private Item item;

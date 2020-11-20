@@ -13,7 +13,8 @@ import items.Item;
 import javafx.scene.image.Image;
 import spells.Hazard;
 
-public class World {
+public class World implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Tile[][][] tiles;
 	private int width;
 	public int width() { return width; }

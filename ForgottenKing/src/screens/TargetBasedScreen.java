@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import spells.TargetType;
 
 public class TargetBasedScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	protected Player player;
 	protected String caption;
 	public Audio audio() { return player.songToPlayByEnemy(); }

@@ -7,7 +7,8 @@ import items.ItemTag;
 import items.ItemType;
 import world.World;
 
-public class ItemFactory {
+public class ItemFactory implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private World world;
 	private ConsumableFactory consumable;
 	private WeaponFactory weapon;

@@ -4,6 +4,7 @@ import creatures.Creature;
 import world.World;
 
 public class DownStair extends Feature {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private UpStair other;
 	private int x;
 	private int y;

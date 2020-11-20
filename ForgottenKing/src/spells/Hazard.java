@@ -3,7 +3,8 @@ package spells;
 import creatures.Creature;
 import javafx.scene.image.Image;
 
-public class Hazard implements Cloneable{
+public class Hazard implements Cloneable, java.io.Serializable {
+	protected static final long serialVersionUID = 7769423305067121315L;
 	private String name;
 	public String name() { return name; }
 	private String description;

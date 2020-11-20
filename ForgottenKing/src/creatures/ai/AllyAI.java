@@ -7,6 +7,7 @@ import spells.Spell;
 import tools.Point;
 
 public class AllyAI extends CreatureAI {
+	private static final long serialVersionUID = 7769423305067121315L;
 	protected Creature player;
 	private Ally creature;
 	private int castChance;

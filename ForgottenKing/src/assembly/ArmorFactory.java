@@ -6,7 +6,8 @@ import items.ItemType;
 import javafx.scene.image.Image;
 import world.World;
 
-public class ArmorFactory {
+public class ArmorFactory implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private World world;
 	
 	private Image armorFull = new Image(this.getClass().getResourceAsStream("resources/items/armor_full.png"));

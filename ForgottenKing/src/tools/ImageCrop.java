@@ -7,7 +7,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Rectangle;
 
-public class ImageCrop {
+public final class ImageCrop {
 
 	public static Image cropImage(Image image, int startX, int startY, int width, int height) {
 		PixelReader pr = image.getPixelReader();

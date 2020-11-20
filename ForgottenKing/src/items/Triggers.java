@@ -9,7 +9,8 @@ import creatures.Tag;
 import creatures.Type;
 import spells.Effect;
 
-public class Triggers {
+@SuppressWarnings("serial")
+public final class Triggers {
 	
 	/**
 	 * MISC TRIGGERS

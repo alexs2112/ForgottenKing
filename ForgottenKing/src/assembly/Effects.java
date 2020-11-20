@@ -8,6 +8,7 @@ import creatures.Type;
 import javafx.scene.paint.Color;
 import spells.Effect;
 
+@SuppressWarnings("serial")
 public final class Effects {
 	public static Effect health(int amount) {
 		Effect e = new Effect("Healing", 1){
@@ -205,18 +206,16 @@ public final class Effects {
 		return e;
 	}
 	public static Effect stun(int duration) {
-		Effect e = new Effect("Stunned", duration+1) {
+		Effect e = new Effect("Stunned", duration) {
 			public void start(Creature creature) {
+				if (!creature.is(Tag.PLAYER))
+					modifyDuration(1);
 				creature.addTag(Tag.STUNNED);
 				creature.doAction("become stunned");
-				for (Tag t : creature.tags())
-					System.out.println(t.name());
 			}
 			public void end(Creature creature) {
 				creature.removeTag(Tag.STUNNED);
 				creature.doAction("shake off the stun");
-				for (Tag t : creature.tags())
-					System.out.println(t.name());
 			}
 		};
 		e.setImage(Loader.stunnedIcon);
@@ -225,8 +224,10 @@ public final class Effects {
 		return e;
 	}
 	public static Effect confused(int duration) {
-		Effect e = new Effect("Confused", duration+1) {
+		Effect e = new Effect("Confused", duration) {
 			public void start(Creature creature) {
+				if (!creature.is(Tag.PLAYER))
+					modifyDuration(1);
 				creature.addTag(Tag.CONFUSED);
 				creature.doAction("become confused");
 			}

@@ -6,7 +6,7 @@ import spells.TargetType;
 import tools.Point;
 
 public class FireWeaponScreen extends TargetBasedScreen {
-
+	private static final long serialVersionUID = 7769423305067121315L;
 	public FireWeaponScreen(Group root, Player player, int sx, int sy, Point p) {
 		super(root, player, "Fire a " + player.quiver().name() + " at?", sx, sy);
 		x = p.x - player.x;

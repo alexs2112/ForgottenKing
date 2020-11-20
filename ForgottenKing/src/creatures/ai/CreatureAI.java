@@ -15,7 +15,8 @@ import tools.Path;
 import tools.Point;
 import world.Tile;
 
-public class CreatureAI {
+public class CreatureAI implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	protected Creature creature;
 	protected Point lastSeenAt;
 	protected boolean isWandering;

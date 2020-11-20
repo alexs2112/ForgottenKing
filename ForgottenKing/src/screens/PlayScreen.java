@@ -1,5 +1,8 @@
 package screens;
 
+//import java.io.FileOutputStream;
+//import java.io.IOException;
+//import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +40,7 @@ import world.World;
 import world.WorldBuilder;
 
 public class PlayScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
     private int screenWidth;
     private int screenHeight;
     private World world;
@@ -47,6 +51,7 @@ public class PlayScreen extends Screen {
     private FieldOfView fov;
     private Screen subscreen;
     private boolean devMode = false;
+    private String hotkeyNumbers = "1234567890";
     public Audio audio() {
     	if (subscreen != null)
     		return subscreen.audio();
@@ -344,12 +349,12 @@ public class PlayScreen extends Screen {
     				//Wait 1 turn
     			}
     		}
-    		else if (c == '0' && devMode)
+    		else if (hotkeyNumbers.indexOf(c) != -1)
+    			return player.hotkey(hotkeyNumbers.indexOf(c)).use(root, player, getScrollX(), getScrollY());
+    		else if (c == '0' && devMode && shift)
     			player.fillHP();
-    		else if (c == '9' && devMode)
+    		else if (c == '9' && devMode && shift)
     			player.modifyXP(player.nextLevelXP());
-    		else if (c == '8' && devMode)
-    			player.modifyArmorValue(player.armorValue() * 10);
     		else
     			endAfterUserInput = false;
     	}
@@ -539,7 +544,7 @@ public class PlayScreen extends Screen {
     	if (messages.size() == 0)
     		return;
     	int messageHeight = 24;
-    	int top = 780 - messages.size() * messageHeight;
+    	int top = 760 - messages.size() * messageHeight;
     	Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
     	int i = 0;
     	for (Message m : messages) {
@@ -614,6 +619,8 @@ public class PlayScreen extends Screen {
 		player.modifyTime(5);
 	}
 	
+	
+	
 	//Button Handling can go all the way down here
 	Font tooltipFont = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
 	private boolean[] mouseOverButtons = new boolean[12];
@@ -621,23 +628,23 @@ public class PlayScreen extends Screen {
 	private List<Image> buttonIconsSelected;
 	private List<String> tooltips;
 	private void handleButtons() {
-		draw(root, Loader.buttonBar, 518, 756);
+		draw(root, Loader.buttonBar, 0, 756);
 		for (int i = 0; i < 11; i++) {
 			Image image = buttonIcons.get(i);
 			if (mouseOverButtons[i])
 				image = buttonIconsSelected.get(i);
-			draw(root, image, 1040-(40*(i+1)), 760, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false));
+			draw(root, image, 40*i, 760, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false));
 		}
 		//A special case for swapping weapons
 		int i = 11;
 		Image image = buttonIcons.get(i);
 		if (mouseOverButtons[i])
 			image = buttonIconsSelected.get(i);
-		draw(root, image, 1040-(40*(i+1)), 760, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false)); 
+		draw(root, image, 40*i, 760, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false)); 
 		if (player.lastWielded() != null) {
 			for (ItemTag t : player.lastWielded().tags())
 				if (t.isWeapon() && t.icon() != null) {
-					draw(root, t.icon(), 1040-(40*(i+1))+4, 764, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false));
+					draw(root, t.icon(), 40*i+4, 764, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false));
 					break;
 				}
 		}

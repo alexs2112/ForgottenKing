@@ -6,7 +6,8 @@ import creatures.Type;
 import javafx.scene.image.Image;
 import tools.ImageCrop;
 
-public class GetWeaponImages {
+public class GetWeaponImages implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private HashMap<Type, Integer> bases;
 	private HashMap<Type, Integer> effects;
 	private HashMap<BaseItem, Integer> items;

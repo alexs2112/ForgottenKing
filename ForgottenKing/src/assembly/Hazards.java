@@ -4,7 +4,8 @@ import creatures.Creature;
 import creatures.Type;
 import spells.Hazard;
 
-public class Hazards {
+@SuppressWarnings("serial")
+public final class Hazards {
 	public static Hazard smallFire(int strength) {
 		Hazard h = new Hazard("Fire", 3, Effects.burning(4, strength), Loader.fire) {
 			@Override

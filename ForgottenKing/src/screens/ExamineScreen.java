@@ -8,7 +8,7 @@ import javafx.scene.Group;
 import world.Tile;
 
 public class ExamineScreen extends TargetBasedScreen {
-
+	private static final long serialVersionUID = 7769423305067121315L;
     public ExamineScreen(Group root, Player player, String caption, int sx, int sy) {
         super(root, player, caption, sx, sy);
         caption = player.name() + player.desc();

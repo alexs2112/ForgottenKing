@@ -80,6 +80,18 @@ public final class Loader {
 	public static Image swapWeaponIconSelected = ImageCrop.cropImage(playerButtonsFull, 440,40,40,40);
 	public static Image closeMenuIcon = ImageCrop.cropImage(playerButtonsFull, 480,0,40,40);
 	public static Image closeMenuIconSelected = ImageCrop.cropImage(playerButtonsFull, 480,40,40,40);
+	public static Image hotbar = new Image(Screen.class.getResourceAsStream("resources/hotbar.png"));
+	private static Image hotkeyButtonsFull = new Image(Screen.class.getResourceAsStream("resources/hotkey-buttons-full.png"));
+	public static Image hotkey1 = ImageCrop.cropImage(hotkeyButtonsFull, 0, 0, 40, 40);
+	public static Image hotkey2 = ImageCrop.cropImage(hotkeyButtonsFull, 40, 0, 40, 40);
+	public static Image hotkey3 = ImageCrop.cropImage(hotkeyButtonsFull, 80, 0, 40, 40);
+	public static Image hotkey4 = ImageCrop.cropImage(hotkeyButtonsFull, 120, 0, 40, 40);
+	public static Image hotkey5 = ImageCrop.cropImage(hotkeyButtonsFull, 160, 0, 40, 40);
+	public static Image hotkey6 = ImageCrop.cropImage(hotkeyButtonsFull, 200, 0, 40, 40);
+	public static Image hotkey7 = ImageCrop.cropImage(hotkeyButtonsFull, 240, 0, 40, 40);
+	public static Image hotkey8 = ImageCrop.cropImage(hotkeyButtonsFull, 280, 0, 40, 40);
+	public static Image hotkey9 = ImageCrop.cropImage(hotkeyButtonsFull, 320, 0, 40, 40);
+	public static Image hotkey0 = ImageCrop.cropImage(hotkeyButtonsFull, 360, 0, 40, 40);
 	
 	public static Image playerUIFull = new Image(Screen.class.getResourceAsStream("resources/player_ui.png"));
 	private static Image equipmentBoxFull = new Image(Screen.class.getResourceAsStream("resources/equipment_box.png"));

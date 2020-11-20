@@ -4,7 +4,8 @@ import creatures.Creature;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class Effect implements Cloneable {
+public class Effect implements Cloneable, java.io.Serializable {
+	protected static final long serialVersionUID = 7769423305067121315L;
 	protected int duration;
 	protected String name;
 	public String name() { return name; }

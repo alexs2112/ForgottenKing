@@ -7,6 +7,7 @@ import tools.Point;
 import world.World;
 
 public class Door extends Feature {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private boolean closed;
 	private World world;
 	private int x;

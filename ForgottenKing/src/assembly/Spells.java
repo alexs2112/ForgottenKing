@@ -6,6 +6,7 @@ import creatures.Type;
 import spells.Spell;
 import spells.TargetType;
 
+@SuppressWarnings("serial")
 public final class Spells {
 	/**
 	 * FIRE SPELLS

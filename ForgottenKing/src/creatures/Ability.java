@@ -3,7 +3,8 @@ package creatures;
 import javafx.scene.image.Image;
 import spells.TargetType;
 
-public class Ability {
+public class Ability implements java.io.Serializable {
+	protected static final long serialVersionUID = 7769423305067121315L;
 	private String name;
 	public String name() { return name; }
 	private Image icon;

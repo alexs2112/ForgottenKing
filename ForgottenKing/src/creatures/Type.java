@@ -17,6 +17,7 @@ public enum Type {
 	BLUE("Blue", null, null),	//
 	GREEN("Green", null, null);	//Two additional types used for enchantments
 	
+	private static final long serialVersionUID = 7769423305067121315L;
 	private String type;
 	public String text() { return type; }
 	private Image icon;

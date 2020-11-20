@@ -11,6 +11,7 @@ import tools.Message;
 import world.Tile;
 
 public class PlayerAI extends CreatureAI {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private List<Message> messages;
 	private FieldOfView fov;
 

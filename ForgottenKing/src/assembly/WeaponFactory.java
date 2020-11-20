@@ -9,7 +9,8 @@ import items.ItemType;
 import javafx.scene.image.Image;
 import world.World;
 
-public class WeaponFactory {
+public class WeaponFactory implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private World world;
 	private Enchantment enchant;
 	public void setCreatureFactory(CreatureFactory f) { 

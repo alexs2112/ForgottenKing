@@ -2,7 +2,8 @@ package items;
 
 import java.util.ArrayList;
 
-public class Inventory {
+public class Inventory implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Item[] items;
 	public Item[] items() { return items; }
 	private int[] quantity;

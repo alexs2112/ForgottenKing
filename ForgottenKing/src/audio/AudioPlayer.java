@@ -6,7 +6,8 @@ import java.util.List;
 
 import screens.Screen;
 
-public class AudioPlayer {
+public class AudioPlayer implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private List<Audio> audio;
 
 	public AudioPlayer() {

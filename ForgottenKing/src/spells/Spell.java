@@ -4,7 +4,8 @@ import creatures.Creature;
 import creatures.Tag;
 import creatures.Type;
 
-public class Spell {
+public class Spell implements java.io.Serializable {
+	protected static final long serialVersionUID = 7769423305067121315L;
 	private String name;
 	public String name() { return name; }
 	private String description;

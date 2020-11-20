@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class StatsScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Player player;
 	private Font font;
 	private Font fontL;

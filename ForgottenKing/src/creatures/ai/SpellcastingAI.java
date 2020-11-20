@@ -4,6 +4,7 @@ import creatures.Creature;
 import spells.Spell;
 
 public class SpellcastingAI extends BasicAI {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private int castChance;
 
 	public SpellcastingAI(Creature creature, Creature player, int castChance) {

@@ -11,6 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 public class LeaveScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	Player player;
 	public LeaveScreen(Player player) {
 		this.player = player;

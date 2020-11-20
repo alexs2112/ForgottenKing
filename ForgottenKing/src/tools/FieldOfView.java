@@ -4,7 +4,8 @@ import javafx.scene.image.Image;
 import world.Tile;
 import world.World;
 
-public class FieldOfView {
+public class FieldOfView implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
     private World world;
     private int depth;
 

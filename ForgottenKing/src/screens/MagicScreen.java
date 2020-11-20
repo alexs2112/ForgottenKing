@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import spells.Spell;
 
 public class MagicScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Player player;
 	private Magic magic;
 	private Font font;
@@ -64,10 +65,10 @@ public class MagicScreen extends Screen {
 			if (i == letters.indexOf(selection)) {
 				wx = x + 377;
 				if (points > 0) {
-					draw(root, Loader.plusIcon, wx, y + 72*i + 18);
+					draw(root, Loader.minusIcon, wx, y + 72*i + 18);
 					wx += 32;
 				} if (value > 0)
-					draw(root, Loader.minusIcon, wx, y + 72*i + 18);
+					draw(root, Loader.plusIcon, wx, y + 72*i + 18);
 			}
 		}
 		if (points > 0) {
@@ -123,9 +124,9 @@ public class MagicScreen extends Screen {
 		}
 		if (letters.indexOf(c) != -1)
 			selection = c;
-		if (shift && c == '=' && letters.indexOf(selection) != -1)
+		if (((shift && c == '=') || code.equals(KeyCode.RIGHT)) && letters.indexOf(selection) != -1)
 			modifyType(letters.indexOf(selection), 1);
-		if (code.equals(KeyCode.MINUS) && c == '-' && letters.indexOf(selection) != -1)
+		if (((code.equals(KeyCode.MINUS) && c == '-') || code.equals(KeyCode.LEFT)) && letters.indexOf(selection) != -1)
 			modifyType(letters.indexOf(selection), -1);
 		return this;
 	}

@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class LevelUpScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Player player;
 	private int select;
 

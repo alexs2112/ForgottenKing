@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Point {
+public class Point implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
     public int x;
     public int y;
     public int z;

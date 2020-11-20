@@ -8,7 +8,8 @@ import javafx.scene.image.Image;
 import tools.ImageCrop;
 import world.World;
 
-public class AmmoFactory {
+public class AmmoFactory implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private World world;
 	
 	private Image rocksIconFull = new Image(this.getClass().getResourceAsStream("resources/items/rocks_full.png"));

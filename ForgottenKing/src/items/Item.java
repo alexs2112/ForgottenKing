@@ -15,7 +15,8 @@ import javafx.scene.image.Image;
 import spells.Effect;
 import spells.Spell;
 
-public class Item {
+public class Item implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Image image;
 	public Image image() { return image; }
 	public void setImage(Image newImage) { image = newImage; }

@@ -15,7 +15,7 @@ public enum Audio {
 	COMBAT("combat.mp3", 0.4),
 	PAUSE("pause.mp3", 1),
 	BOSS("boss.mp3", 0.4);
-
+	private static final long serialVersionUID = 7769423305067121315L;
 	private double onVolume;
 	public double on() { return onVolume; }
 	private MediaPlayer mediaPlayer;

@@ -14,7 +14,8 @@ import items.ItemType;
 import javafx.scene.image.Image;
 import world.World;
 
-public class TrinketFactory {
+public class TrinketFactory implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private World world;
 	
 	private Image ringFull = new Image(this.getClass().getResourceAsStream("resources/items/ring_full.png"));

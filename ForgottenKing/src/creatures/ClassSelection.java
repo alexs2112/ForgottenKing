@@ -6,7 +6,8 @@ import java.util.List;
 import javafx.scene.image.Image;
 
 //A really clunky way to do it, really only calls it once, hence all the public variables
-public class ClassSelection {
+public class ClassSelection implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	public Image largeIcon;
 	public Image icon;
 	public Tag title;

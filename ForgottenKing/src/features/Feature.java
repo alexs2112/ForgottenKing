@@ -4,7 +4,8 @@ import creatures.Creature;
 import javafx.scene.image.Image;
 import world.World;
 
-public abstract class Feature implements Cloneable {
+public abstract class Feature implements Cloneable, java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	protected String name;
 	protected String desc;
 	protected String type;

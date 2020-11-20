@@ -5,7 +5,7 @@ import items.Item;
 import screens.Screen;
 
 public class DropScreen extends InventoryBasedScreen {
-
+	private static final long serialVersionUID = 7769423305067121315L;
 	public DropScreen(Player player) {
 		super(player);
 	}

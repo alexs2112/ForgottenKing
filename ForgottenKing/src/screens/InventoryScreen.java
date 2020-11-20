@@ -5,7 +5,7 @@ import items.Item;
 import screens.Screen;
 
 public class InventoryScreen extends InventoryBasedScreen {
-
+	private static final long serialVersionUID = 7769423305067121315L;
 	public InventoryScreen(Player player) {
 		super(player);
 	}

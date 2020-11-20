@@ -5,6 +5,7 @@ import creatures.Tag;
 import tools.Point;
 
 public class BasicAI extends CreatureAI {
+	private static final long serialVersionUID = 7769423305067121315L;
 	protected Creature player;
 
 	public BasicAI(Creature creature, Creature player) {

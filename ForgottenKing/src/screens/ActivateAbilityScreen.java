@@ -7,6 +7,7 @@ import spells.TargetType;
 import tools.Point;
 
 public class ActivateAbilityScreen extends TargetBasedScreen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Ability ability;
 
 	public ActivateAbilityScreen(Group root, Player player, String caption, int sx, int sy, Ability ability) {

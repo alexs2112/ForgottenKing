@@ -4,6 +4,7 @@ import creatures.Creature;
 import world.World;
 
 public class Entrance extends Feature {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private int x;
 	private int y;
 	private int z;

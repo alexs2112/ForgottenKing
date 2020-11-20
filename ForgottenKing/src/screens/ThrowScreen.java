@@ -5,6 +5,7 @@ import items.Item;
 import javafx.scene.Group;
 
 public class ThrowScreen extends InventoryBasedScreen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private int sx;
 	private int sy;
 	private Group root;

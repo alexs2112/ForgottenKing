@@ -19,6 +19,7 @@ import creatures.ClassSelection;
 import creatures.Tag;
 
 public class CharacterSelectionScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	public Audio audio() { return Audio.INTRO; }
 	private int selection;
 	private Font font;

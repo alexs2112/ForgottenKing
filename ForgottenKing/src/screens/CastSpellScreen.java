@@ -6,6 +6,7 @@ import spells.Spell;
 import spells.TargetType;
 
 public class CastSpellScreen extends TargetBasedScreen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Spell spell;
 
 	public CastSpellScreen(Group root, Player player, String caption, int sx, int sy, Spell spell) {

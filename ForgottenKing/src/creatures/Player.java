@@ -14,10 +14,12 @@ import tools.Point;
 import world.World;
 
 public class Player extends Creature {
+	private static final long serialVersionUID = 7769423305067121315L;
     public Player(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Image image) {
     	super(world,name,level,xp,hp,evasion,armorValue,baseAttackValue,baseDamageMin,baseDamageMax,image);
     	spells = new ArrayList<Spell>();
     	abilities = new ArrayList<Ability>();
+    	hotkeys = new Hotkey[10];
     }
     
     /**
@@ -109,6 +111,17 @@ public class Player extends Creature {
     		magic.modify(Type.LIGHT, magicChanges[4]);
     		magic.modify(Type.DARK, magicChanges[5]);
     	}
+    }
+    public boolean canCastSpell(Spell spell) {
+    	if (spell.level() > magic().get(spell.type())) {
+			notify("Your " + spell.type().text() + " skill is not high enough to cast " + spell.name());
+			return false;
+		} 
+    	if (spell.cost() > mana()) {
+			notify("You don't have enough mana to cast " + spell.name());
+			return false;
+		}
+		return true;
     }
     
     /**
@@ -245,6 +258,18 @@ public class Player extends Creature {
     	System.out.println(lastAttacked());
     	return super.getAutoTarget();
     }
-    	
-
+    
+    
+    /**
+     * HOTBAR
+     */
+    private Hotkey[] hotkeys;
+    public void setHotkey(int index, Hotkey k) { hotkeys[index] = k; }
+    public Hotkey hotkey(int index) { return hotkeys[index]; }
+    public void removeHotkey(Hotkey k) {
+    	for (int i = 0; i < hotkeys.length; i++) {
+    		if (hotkeys[i] == k)
+    			hotkeys[i] = null;
+    	}
+    }
 }

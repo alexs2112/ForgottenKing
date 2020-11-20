@@ -24,7 +24,7 @@ public enum ItemTag {
 	CLEAVING("Cleaving", "Attacks with this weapon attack each enemy adjacent to you and your target for 50% damage.", Loader.cleavingTag),
 	HIGHCRIT("High Critical", "Increases your critical chance by 10% when wielding this weapon.", Loader.highCritTag),
 	VICTORYITEM("Victory Item", "The end of your quest is in sight, return to the surface with this in your possession to win", Loader.victoryItemTag);	
-	
+	private static final long serialVersionUID = 7769423305067121315L;
 	private String text;
 	public String text() { return text; }
 	private Image icon;

@@ -1,5 +1,9 @@
 package screens;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 import audio.Audio;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -13,8 +17,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class StartScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private int select = 0;
-	//private Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 32);
 	private Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 20);
 	public Audio audio() { return Audio.INTRO; }
 	public void displayOutput(Stage stage) {
@@ -68,12 +72,28 @@ public class StartScreen extends Screen {
 			else if (select == 1) {
 				Platform.exit();
 				return null;
+			} else {
+				try {
+					return deserialize();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		if (code.equals(KeyCode.DOWN))
-			select = Math.min(select+1, 1);
+			select = Math.min(select+1, 2);
 		if (code.equals(KeyCode.UP))
 			select = Math.max(select-1,  0);
     	return this;
     }
+	
+	private static PlayScreen deserialize() throws java.io.IOException, ClassNotFoundException {
+		try (FileInputStream file = new FileInputStream("savegame.ser");
+				ObjectInputStream o = new ObjectInputStream(file))
+		{
+			return (PlayScreen)o.readObject();
+		}
+	}
 }

@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import spells.Spell;
 
 public class SelectSpellScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 
 	protected Player player;
     private String letters;
@@ -80,7 +81,7 @@ public class SelectSpellScreen extends Screen {
     		&& spells != null
     		&& spells.size() > letters.indexOf(c)) {
     		Spell spell = spells.get(letters.indexOf(c));
-    		if (canCastSpell(spell))
+    		if (player.canCastSpell(spell))
     			return new CastSpellScreen(playRoot, player, "Cast " + spell.name(), sx, sy, spell);
     		else
     			return null;
@@ -91,7 +92,7 @@ public class SelectSpellScreen extends Screen {
     		select = Math.max(select-1, 0);
     	else if (code.equals(KeyCode.ENTER) && select != -1) {
     		Spell spell = spells.get(select);
-    		if (canCastSpell(spell))
+    		if (player.canCastSpell(spell))
     			return new CastSpellScreen(playRoot, player, "Cast " + spell.name(), sx, sy, spell);
     		else
     			return null;
@@ -100,17 +101,5 @@ public class SelectSpellScreen extends Screen {
             return null;
     	}
         return this;
-    }
-
-    private boolean canCastSpell(Spell spell) {
-    	if (spell.level() > player.magic().get(spell.type())) {
-			player.notify("Your " + spell.type().text() + " skill is not high enough to cast " + spell.name());
-			return false;
-		} 
-    	if (spell.cost() > player.mana()) {
-			player.notify("You don't have enough mana to cast " + spell.name());
-			return false;
-		}
-		return true;
     }
 }

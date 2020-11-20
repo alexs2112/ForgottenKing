@@ -4,6 +4,7 @@ import assembly.CreatureFactory;
 import creatures.Creature;
 
 public class FungusAI extends CreatureAI {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private CreatureFactory factory;
 	private int spreadcount;
 	 

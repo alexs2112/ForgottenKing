@@ -15,7 +15,8 @@ import tools.ImageCrop;
 import tools.Message;
 import world.World;
 
-public class CreatureFactory {
+public class CreatureFactory implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private World world;
 	private ItemFactory itemFactory;
 	private Player player;
@@ -87,6 +88,7 @@ public class CreatureFactory {
 				return newLizardPriest(z);
 		}
 		return newGoblin(z);
+//		return newLizardPriest(z);
 	}
 	
 	public Player newPlayer(List<Message> messages, int z, FieldOfView fov, ClassSelection c){

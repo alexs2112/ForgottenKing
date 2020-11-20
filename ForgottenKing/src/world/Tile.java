@@ -42,6 +42,7 @@ public enum Tile {
 	FLOOR_DEFAULT("resources/default/floor.png", "Floor", "The floor"),
 	WALL_DEFAULT("resources/default/wall.png", "Wall", "The wall");
 	
+	private static final long serialVersionUID = 7769423305067121315L;
 	private String type;
 	public String type() { return type; }
 	private String description;

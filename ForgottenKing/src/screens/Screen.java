@@ -14,9 +14,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.image.Image;
 
-public abstract class Screen {
-	public Scene scene;
-	protected Group root;
+public abstract class Screen implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
+	public transient Scene scene;
+	protected transient Group root;
 	public Group root() { return root; }
 	public Audio audio() { return Audio.PAUSE; }
 	

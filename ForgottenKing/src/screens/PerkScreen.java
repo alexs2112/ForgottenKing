@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class PerkScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Player player;
 	private List<Tag> allPerks;
 	private List<Tag> perks;

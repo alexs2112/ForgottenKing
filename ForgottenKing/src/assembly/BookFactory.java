@@ -5,7 +5,8 @@ import items.ItemType;
 import javafx.scene.image.Image;
 import world.World;
 
-public class BookFactory {
+public class BookFactory implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private World world;
 	private CreatureFactory creatureFactory;
 	public void setCreatureFactory(CreatureFactory f) { creatureFactory = f; }

@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import screens.Screen;
 
 public class InspectItemScreen extends Screen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Item item;
 	private Screen previousScreen;
 	private Player player;
@@ -78,24 +79,27 @@ public class InspectItemScreen extends Screen {
 	@Override
 	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
 		if (code.equals(KeyCode.ESCAPE))
-            return previousScreen;
+			return returnLast();
 		if (player == null)
 			return this;
-		
 		if (c == 'd') {
 			player.drop(item);
-			return previousScreen;
+			return returnLast();
 		} else if (c == 'w' && item.equippable()) {
 			player.equip(item);
-			return previousScreen;
+			return returnLast();
 		} else if (c == 'r' && item.spells() != null) {
 			return new ReadSpellbookScreen(player, item);
 		} else if (c == 'q' && item.type() == ItemType.POTION) {
 			player.quaff(item);
-			return previousScreen;
+			return returnLast();
 		} else {
 			return this;
 		}
+	}
+	private Screen returnLast() {
+		previousScreen.refreshScreen = null;
+        return previousScreen;
 	}
 	
 	private String useTexts() {

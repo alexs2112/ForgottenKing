@@ -6,6 +6,7 @@ import screens.Screen;
 import world.World;
 
 public class PickUpScreen extends InventoryBasedScreen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Creature pickuper;
 	public PickUpScreen(World world, Creature player) {
 		super(world.items(player.x, player.y, player.z));

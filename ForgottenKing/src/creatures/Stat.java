@@ -7,7 +7,7 @@ public enum Stat {
 	ACCURACY("Accuracy", Attribute.DEX),
 	WILL("Will", Attribute.INT),
 	SPELLCASTING("Spellcasting", Attribute.INT);
-
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Attribute parent;
 	public Attribute parent() { return parent; }
 	private String text;

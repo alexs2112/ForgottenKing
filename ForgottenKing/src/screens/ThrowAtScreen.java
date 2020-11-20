@@ -7,6 +7,7 @@ import spells.TargetType;
 import tools.Point;
 
 public class ThrowAtScreen extends TargetBasedScreen {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Item item;
 
 	public ThrowAtScreen(Group root, Player player, int sx, int sy, Item item, Point p) {

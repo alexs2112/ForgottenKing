@@ -11,7 +11,8 @@ import creatures.Type;
  * Enchantments come with a Bonus, Effect and Base on weapons
  */
 
-public class Enchantment {
+public class Enchantment implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private List<String> fireBaseStrings;
 	private List<String> coldBaseStrings;
 	private List<String> airBaseStrings;
@@ -200,7 +201,7 @@ public class Enchantment {
 		
 		darkBaseStrings = Arrays.asList("Death", "Malice", "Strife", "Oblivion", "Termination", "Bereavement",
 		"Annihilation", "Darkness", "Necrosis", "Mortality", "Fatality", "Loss", "Ruin", "Ruination", "Release", 
-		"Damnation", "Anathema", "Sacrilege", "Decay");
+		"Damnation", "Anathema", "Sacrilege", "Decay", "Horror");
 	}
 	
 }

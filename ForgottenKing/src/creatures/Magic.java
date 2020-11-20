@@ -6,7 +6,8 @@ import java.util.HashMap;
  * A way to keep track of a creatures skill at magic and how their spellpoints are allocated
  * Fire, Cold, Air, Poison, Light, Dark
  */
-public class Magic {
+public class Magic implements java.io.Serializable {
+	private static final long serialVersionUID = 7769423305067121315L;
 	private Creature user;
 	private HashMap<Type, Integer> set;
 	public HashMap<Type, Integer> set() { return set; }

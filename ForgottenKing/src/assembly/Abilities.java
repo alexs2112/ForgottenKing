@@ -5,8 +5,8 @@ import creatures.Creature;
 import creatures.Tag;
 import items.ItemTag;
 import spells.TargetType;
-
-public class Abilities {
+@SuppressWarnings("serial")
+public final class Abilities {
 	public static Ability rage() {
 		Ability a = new Ability("Rage", Loader.rageIcon, 35) {
 			public void activate(Creature owner, Creature other) {
