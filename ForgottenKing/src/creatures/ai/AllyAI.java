@@ -46,13 +46,13 @@ public class AllyAI extends CreatureAI {
 		} else {
 			//If there is nothing to kill, your ally follows you
 			if (creature.canSee(player.x, player.y, player.z)) {
-				lastSeenAt = new Point(player.x, player.y, player.z);
+				destination = new Point(player.x, player.y, player.z);
 				followSafe(player.x, player.y);
 			}
-			if (lastSeenAt != null && creature.x == lastSeenAt.x && creature.y == lastSeenAt.y && creature.z == lastSeenAt.z)
-				lastSeenAt = null;
-			else if (lastSeenAt != null && !creature.canSee(player.x, player.y, player.z)) {
-				moveTo(lastSeenAt.x, lastSeenAt.y);
+			if (destination != null && creature.x == destination.x && creature.y == destination.y && creature.z == destination.z)
+				destination = null;
+			else if (destination != null && !creature.canSee(player.x, player.y, player.z)) {
+				moveTo(destination.x, destination.y);
 				return;
 			}
 		}

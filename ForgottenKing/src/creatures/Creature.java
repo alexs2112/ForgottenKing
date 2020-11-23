@@ -17,7 +17,9 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import spells.Effect;
 import spells.Hazard;
+import spells.OverloadEffect;
 import spells.Spell;
+import world.Noise;
 import world.Tile;
 import world.World;
 
@@ -865,11 +867,21 @@ public class Creature implements java.io.Serializable {
     	String s = builder.toString().trim();
     	return s.replaceAll("the Player", "you");
     }
+    public void hearNoise(Noise n) { ai.hearNoise(n); }
+    
     public boolean canEnter(int mx, int my, int mz) {
     	if ((world.tile(mx, my, mz).isPit() && world.creature(mx, my, mz) == null && is(Tag.FLYING)))
     		return true;
-    	return ((world.tile(mx, my, mz).isGround() && world.creature(mx, my, mz) == null) &&
-    			!(world.feature(mx,my,mz) != null && world.feature(mx, my, mz).blockMovement()));
+    	if (world.tile(mx, my, mz).isGround() && world.creature(mx, my, mz) == null) {
+    		Feature f = world.feature(mx, my, mz);
+    		if (f == null)
+    			return true;
+    		else {
+    			return (!world.feature(mx, my, mz).blockMovement() 
+    			|| world.feature(mx, my, mz).type().equals("Bump"));
+    		}
+    	}
+    	return false;
     }
     private HashMap<String, Color> statements;
     public void addStatement(String s, Color c) {
@@ -934,6 +946,14 @@ public class Creature implements java.io.Serializable {
 			doAction(spell.useText());
 		else
 			doAction("cast " + spell.name());
+		
+		//Overloading spell casts
+		if (is(Tag.PLAYER) && magic.floatingPoints() < 0) {
+			if (Math.random() < 1 + 1 / (double)(magic.floatingPoints()-1)) {
+				OverloadEffect.overload(spell, this);
+				return;
+			}
+		}
 		for (Point p : points)
 			if (creature(p.x,p.y,z) != null) {
 				lastAttacked = creature(p.x,p.y,z);
@@ -954,6 +974,9 @@ public class Creature implements java.io.Serializable {
 		}
 		
 		spell.casterEffect(this);
+		if (spell.volume() > 0) {
+			world.makeNoise(new Noise(x,y,z,spell.name(),spell.volume()));
+		}
 	}
 	private void spellEffects(Spell spell, int x, int y) {
 		Creature target = creature(x,y,z);

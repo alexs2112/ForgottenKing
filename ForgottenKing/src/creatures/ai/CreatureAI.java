@@ -13,12 +13,13 @@ import spells.TargetType;
 import tools.Line;
 import tools.Path;
 import tools.Point;
+import world.Noise;
 import world.Tile;
 
 public class CreatureAI implements java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;
 	protected Creature creature;
-	protected Point lastSeenAt;
+	protected Point destination;
 	protected boolean isWandering;
 	public boolean isWandering() { return isWandering; }
 
@@ -48,9 +49,15 @@ public class CreatureAI implements java.io.Serializable {
 
     public void onEnter(int x, int y, int z, Tile tile){
     	Feature feat = creature.world().feature(x, y, z);
-		if (feat != null && feat.blockMovement()) {
-			creature.doAction("bump into a " + feat.name().toLowerCase());
-			return;
+    	if (feat != null) {
+			if (feat.type().equals("Bump")) {
+				feat.interact(creature, creature.world(), x, y, z);
+				return;
+			}
+			if (feat.blockMovement()) {
+				creature.doAction("bump into a " + feat.name());
+				return;
+			}
 		}
         if (tile.isGround() || ((tile.isPit() && creature.is(Tag.FLYING)))){
              creature.x = x;
@@ -170,6 +177,8 @@ public class CreatureAI implements java.io.Serializable {
     }
     
     public void onNotify(String s, Color c) { }
+    
+    public void hearNoise(Noise n) { }
     
     protected void action() { }
 }

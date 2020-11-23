@@ -33,6 +33,7 @@ public enum Tag {
 	CONFUSED(),	//Each turn you move in a random direction and can't do anything else
 	NOCAST(),	//Cannot cast spells or meditate
 	NOQUAFF(),	//Cannot drink potions
+	NODOOR(), //Cannot close doors
 	
 	//Perks
 	QUICK_LEARNER("Quick Learner", "You gain an additional 10% experience from all actions.", Loader.quickLearnerIcon),	//Starting perk for the adventurer

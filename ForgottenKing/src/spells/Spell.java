@@ -95,6 +95,10 @@ public class Spell implements java.io.Serializable {
 	public String useText() { return useText; }
 	public void setUseText(String x) { useText = x; }
 	
+	private int volume;
+	public int volume() { return volume; }
+	public void setVolume(int x) { volume = x; }
+	
 	public void casterEffect(Creature caster) { }	//To be overridden
 
 	public Spell(String name, int cost, int level) {

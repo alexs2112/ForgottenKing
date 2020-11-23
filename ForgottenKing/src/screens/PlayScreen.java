@@ -50,7 +50,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = false;
+    private boolean devMode = true;
     private String hotkeyNumbers = "1234567890";
     public Audio audio() {
     	if (subscreen != null)
@@ -96,8 +96,12 @@ public class PlayScreen extends Screen {
         if (devMode) {
 //        	player.addEquipment(itemFactory.weapon().newDevSword(-1));
 //        	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
-        	for (int i = 0; i < 10; i++)
-        		player.addItemToInventory(itemFactory.weapon().getRandomEnchant());
+        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
+        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
+        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
+        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
+        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
+        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -461,6 +465,10 @@ public class PlayScreen extends Screen {
         	num++;
         }
         int notificationY = 0;
+        if (player.magic().floatingPoints() < 0) {
+        	String s = "[m]: Overloaded Spell Points!";
+        	write(root, s, 8, notificationY+=24, statFontS, Color.RED);
+        }
         if (player.magic().floatingPoints() > 0) {
         	String s = "[m]: "+player.magic().floatingPoints()+" Free Spell Point";
         	if (player.magic().floatingPoints() > 1)

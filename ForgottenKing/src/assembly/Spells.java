@@ -39,6 +39,7 @@ public final class Spells {
 		s.setHazard(Hazards.smallFire(1), 60);
 		s.setDescription("You blast a wave of fire around yourself, dealing MINDAMAGE - MAXDAMAGE fire damage to each adjacent creature, with a chance to light them on fire.");
 		s.setRadius(1);
+		s.setVolume(7);
 		return s;
 	}
 	public static Spell heatbeam() {
@@ -48,6 +49,7 @@ public final class Spells {
 		s.setTargetType(TargetType.BEAM);
 		s.setDescription("You summon a beam of pure heat, dealing MINDAMAGE - MAXDAMAGE fire damage to every creature in a line.");
 		s.setRange(4);
+		s.setVolume(4);
 		return s;
 	}
 	public static Spell summonImp(CreatureFactory f) {
@@ -73,6 +75,7 @@ public final class Spells {
 		s.setRadius(1);
 		s.setHazard(Hazards.smallFire(1), 80);
 		s.setDescription("You flick a tiny globe of fire towards your target, which quickly blossoms into a fiery explosion dealing MINDAMAGE - MAXDAMAGE fire damage to every creature caught in the blast.");
+		s.setVolume(8);
 		return s;
 	}
 	
@@ -138,6 +141,7 @@ public final class Spells {
 		s.setRadius(3);
 		s.setEffect(Effects.slowed(8, 6), 80);
 		s.setDescription("Every creature within 3 tiles of you that you can see takes MINDAMAGE - MAXDAMAGE cold damage, with a high chance to become slowed.");
+		s.setVolume(6);
 		return s;
 	}
 	
@@ -191,6 +195,7 @@ public final class Spells {
 		s.setType(Type.AIR);
 		s.setTargetType(TargetType.SELF);
 		s.setDescription("Pulled along by electrical currents, you randomly teleport to a tile within 5 tiles of you that you can see.");
+		s.setVolume(4);
 		return s;
 	}
 	public static Spell whirlwind() {
@@ -213,6 +218,7 @@ public final class Spells {
 		s.setRadius(1);
 		s.setDamage(2, 5);
 		s.setDescription("Summon a mighty gust of air to blast back each creature adjacent to you, dealing MINDAMAGE - MAXDAMAGE to each of them.");
+		s.setVolume(4);
 		return s;
 	}
 	public static Spell lightningBolt() {
@@ -223,6 +229,7 @@ public final class Spells {
 		s.setRange(5);
 		s.setEffect(Effects.shocked(2), 75); 
 		s.setDescription("Hurl a mighty bolt of lightning. Each creature struck by it takes MINDAMAGE - MAXDAMAGE air damage, with a high chance to become shocked for their next turn.");
+		s.setVolume(8);
 		return s;
 	}
 	
@@ -246,6 +253,7 @@ public final class Spells {
 		s.setRadius(1);
 		s.setHazard(Hazards.poisonCloud(1), 80);
 		s.setDescription("You manipulate matter to create a cloud of toxic poison, dealing damage and poisoning all who stand within.");
+		s.setVolume(3);
 		return s;
 	}
 	public static Spell minorConfuse() {
@@ -342,6 +350,7 @@ public final class Spells {
 		s.setDamage(3, 7);
 		s.setUseText("call upon darkness");
 		s.setDescription("An unholy prayer similar to it's light counterpart causing darkness to strike your target from above, dealing MINDAMAGE - MAXDAMAGE dark damage.");
+		s.setVolume(4);
 		return s;
 	}
 	public static Spell soulSiphon() {
@@ -357,6 +366,7 @@ public final class Spells {
 		s.setDamage(4, 8);
 		s.setAttackValue(6);
 		s.setTargetType(TargetType.PROJECTILE);
+		s.setVolume(4);
 		s.setDescription("You use dark magic to drain your target's life force directly, dealing MINDAMAGE - MAXDAMAGE dark damage and healing yourself for some of it.");
 		return s;
 	}
@@ -394,6 +404,7 @@ public final class Spells {
 		s.setDamage(2, 5);
 		s.setEffect(Effects.burning(3, 2), 5);
 		s.setUseText("stomp the ground");
+		s.setVolume(4);
 		return s;
 	}
 	
@@ -415,7 +426,7 @@ public final class Spells {
         while ((!caster.canEnter(caster.x+mx, caster.y+my, caster.z)
                 || !caster.canSee(caster.x+mx, caster.y+my, caster.z)) && trials < 50);
         if (trials >= 50) {
-        	caster.notify("Your simulacrum failed to materialize!");
+        	caster.notify("Your " + c.name() + " failed to materialize!");
         	caster.world().remove(c);
         	return;
         }

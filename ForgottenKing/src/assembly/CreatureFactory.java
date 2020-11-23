@@ -119,6 +119,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    bat.modifyAttackDelay(-5);
 	    bat.addTag(Tag.ERRATIC);
 	    bat.addTag(Tag.FLYING);
+	    bat.addTag(Tag.NODOOR);
 	    bat.setDescription("A large grey bat that, despite being herbivorous, is quite aggressive. It is myopic and uses echolocation to navigate.");//*
 	    world.addAtEmptyLocation(bat, z);
 	    new BasicAI(bat, player);
@@ -129,6 +130,7 @@ public class CreatureFactory implements java.io.Serializable {
 		rat.setAttributes(1,1,1);
 	    rat.setStats(1,1,1,2,1,0);
 	    rat.modifyMovementDelay(-1);
+	    rat.addTag(Tag.NODOOR);
 	    rat.setDescription("A dirty rodent that has grown large and aggressive in the dungeon environment."); //*
 	    world.addAtEmptyLocation(rat, z);
 	    new BasicAI(rat, player);

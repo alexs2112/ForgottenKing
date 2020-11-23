@@ -115,6 +115,17 @@ public class ReadSpellbookScreen extends Screen {
     		string += "\n\n" + s.name() + " has a range of " + s.range();
     	if (s.effect() != null && s.effect().description() != null)
     		string += "\n\n" + s.effect().description();
+    	if (s.volume() > 0) {
+    		string += "\n\n";
+    		if (s.volume() > 8)
+    			string += "It is extremely loud";
+    		else if (s.volume() > 5)
+    			string += "It is very loud";
+    		else if (s.volume() > 2)
+    			string += "It is moderately loud";
+    		else
+    			string += "It is slightly loud";
+    	}
     	writeWrapped(root, string, x, y+=32, 800, fontS, Color.ANTIQUEWHITE);
     }
 

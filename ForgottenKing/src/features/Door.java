@@ -1,6 +1,7 @@
 package features;
 
 import creatures.Creature;
+import creatures.Tag;
 import items.Item;
 import javafx.scene.image.Image;
 import tools.Point;
@@ -34,12 +35,14 @@ public class Door extends Feature {
 	@Override
 	public void interact(Creature creature, World world, int x, int y, int z) {
 		if (closed == true) {
+			if (creature.is(Tag.NODOOR))
+				return;
 			closed = false;
-			creature.notify("You open the door");
+			creature.doAction("open the door");
 			setType("CanClose");
 		} else {
 			closed = true;
-			creature.notify("You close the door");
+			creature.doAction("close the door");
 			Point p = new Point(x,y,z);
 			while (world.items(x,y,z) != null) {
 				Item i = world.items(x,y,z).getFirstItem();

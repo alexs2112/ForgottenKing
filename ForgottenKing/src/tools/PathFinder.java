@@ -5,12 +5,15 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import creatures.Creature;
+import world.World;
 
 public class PathFinder {
 	private ArrayList<Point> open;
 	private ArrayList<Point> closed;
 	private HashMap<Point, Point> parents;
 	private HashMap<Point,Integer> totalCost;
+	
+	private World world;
 
 	public PathFinder() {
 		this.open = new ArrayList<Point>();
@@ -25,7 +28,7 @@ public class PathFinder {
 	}
 
 	private int costToGetTo(Point from) {
-		return parents.get(from) == null ? 0 : (1 + costToGetTo(parents.get(from)));
+		return parents.get(from) == null ? 0 : (world.pathfindingCost(from.x,from.y,from.z) + costToGetTo(parents.get(from)));
 	}
 
 	private int totalCost(Point from, Point to) {
@@ -43,6 +46,7 @@ public class PathFinder {
 	}
 
 	public ArrayList<Point> findPath(Creature creature, Point start, Point end, int maxTries) {
+		world = creature.world();
 		open.clear();
 		closed.clear();
 		parents.clear();

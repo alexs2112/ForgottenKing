@@ -116,6 +116,12 @@ public class World implements java.io.Serializable {
 	        tiles[x][y][z] = Tile.DIRT_FLOOR;
 	}
 	
+	public int pathfindingCost(int x, int y, int z) {
+		if (feature(x,y,z) != null && feature(x,y,z).type().equals("Bump"))
+			return 2;
+		return 1;
+	}
+	
 	public void addAtEmptyLocation(Creature creature, int z){
 	    Point p = getEmptyLocation(z);
 
@@ -194,6 +200,25 @@ public class World implements java.io.Serializable {
 
     			if (other.canSee(x, y, z))
     				other.notify(message);
+    		}
+    	}
+	}
+	
+	/**
+	 * Set a noise somewhere and notify each creature who can hear it
+	 */
+	public void makeNoise(Noise n) {
+		for (int ox = -n.volume(); ox < n.volume()+1; ox++){
+    		for (int oy = -n.volume(); oy < n.volume()+1; oy++){
+    			if (ox*ox + oy*oy > n.volume()*n.volume())
+    				continue;
+
+    			Creature other = creature(n.x+ox, n.y+oy, n.z);
+
+    			if (other == null)
+    				continue;
+
+    			other.hearNoise(n);
     		}
     	}
 	}

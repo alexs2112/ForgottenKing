@@ -3,10 +3,12 @@ package creatures.ai;
 import creatures.Creature;
 import creatures.Tag;
 import tools.Point;
+import world.Noise;
 
 public class BasicAI extends CreatureAI {
 	private static final long serialVersionUID = 7769423305067121315L;
 	protected Creature player;
+	
 
 	public BasicAI(Creature creature, Creature player) {
 		super(creature);
@@ -16,12 +18,12 @@ public class BasicAI extends CreatureAI {
 	protected void action() {
 		isWandering = false;	//Always sets to false, then checks to see if it really is wandering
 		if (creature.canSee(player.x, player.y, player.z))
-			lastSeenAt = new Point(player.x, player.y, player.z);
+			destination = new Point(player.x, player.y, player.z);
 		
 		//Erratic creatures randomly wander on their turn 40% of the time
 		if (creature.is(Tag.ERRATIC) && Math.random()*100 < 40) {
 			wander();
-			if (lastSeenAt == null && getNearestEnemy() == null)
+			if (destination == null && getNearestEnemy() == null)
 				isWandering = true;
 			return;
 		}
@@ -37,10 +39,10 @@ public class BasicAI extends CreatureAI {
 				moveTo(c.x, c.y);
 		} else {
 			//Make the creatures follow the player around so they dont lose interest
-			if (lastSeenAt != null && creature.x == lastSeenAt.x && creature.y == lastSeenAt.y && creature.z == lastSeenAt.z)
-				lastSeenAt = null;
-			else if (lastSeenAt != null && !creature.canSee(player.x, player.y, player.z)) {
-				moveTo(lastSeenAt.x, lastSeenAt.y);
+			if (destination != null && creature.x == destination.x && creature.y == destination.y && creature.z == destination.z)
+				destination = null;
+			else if (destination != null && !creature.canSee(player.x, player.y, player.z)) {
+				moveTo(destination.x, destination.y);
 			} else {
 				wander();
 				isWandering = true;
@@ -70,6 +72,19 @@ public class BasicAI extends CreatureAI {
 			}
 		}
 		return nearest;
+	}
+	
+	@Override 
+	public void hearNoise(Noise n) {
+		if (destination == null) {
+			destination = new Point(n.x, n.y, n.z);
+			return;
+		}
+		int distanceToNew = Math.max(Math.abs(creature.x - n.x), Math.abs(creature.y - n.y));
+		int distanceToOld = Math.max(Math.abs(creature.x - destination.x), Math.abs(creature.y - destination.y));
+		if (distanceToNew < distanceToOld) {
+			destination = new Point(n.x, n.y, n.z);
+		}
 	}
 
 }
