@@ -18,6 +18,7 @@ import creatures.Player;
 import creatures.Tag;
 import creatures.Type;
 import features.Feature;
+import features.Portal;
 import items.Item;
 import items.ItemTag;
 import javafx.event.EventHandler;
@@ -72,7 +73,7 @@ public class PlayScreen extends Screen {
         prepareButtons();
     }
     private void createWorld(){
-        world = new WorldBuilder(90, 31, 5)
+        world = new WorldBuilder(90, 31, 8)
         	  .makeDungeon()
               .build();
     }
@@ -94,14 +95,8 @@ public class PlayScreen extends Screen {
         	player.addSpell(Spells.embers());
         }
         if (devMode) {
-//        	player.addEquipment(itemFactory.weapon().newDevSword(-1));
-//        	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
-        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
-        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
-        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
-        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
-        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
-        	player.addEquipment(itemFactory.trinket().newRingOfStat(-1));
+        	player.addEquipment(itemFactory.weapon().newDevSword(-1));
+        	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -353,12 +348,14 @@ public class PlayScreen extends Screen {
     				//Wait 1 turn
     			}
     		}
-    		else if (hotkeyNumbers.indexOf(c) != -1)
-    			return player.hotkey(hotkeyNumbers.indexOf(c)).use(root, player, getScrollX(), getScrollY());
+//    		else if (hotkeyNumbers.indexOf(c) != -1)
+//    			return player.hotkey(hotkeyNumbers.indexOf(c)).use(root, player, getScrollX(), getScrollY());
     		else if (c == '0' && devMode && shift)
     			player.fillHP();
     		else if (c == '9' && devMode && shift)
     			player.modifyXP(player.nextLevelXP());
+    		else if (c == '8' && devMode && shift)
+    			world.setFeature(new Portal(), player.x, player.y, player.z);
     		else
     			endAfterUserInput = false;
     	}
@@ -590,7 +587,7 @@ public class PlayScreen extends Screen {
 				itemFactory.trinket().newRandomRing(z);
 			}
 		}
-		creatureFactory.newGrisstok(world.depth()-1);	//Spawn in the boss, have a more interesting way of doing this later
+		creatureFactory.newGrisstok(4);
 	}
 	
 	//A method that repeats the last key press (5) until the player is done resting
@@ -627,6 +624,20 @@ public class PlayScreen extends Screen {
 		player.modifyTime(5);
 	}
 	
+	
+	//Display the correct [space] text if the player has actions
+	private String spaceText() {
+		items.Inventory i = world.items(player.x,player.y, player.z);
+		if (i != null)
+			return "[space]: pick up items.";
+		Feature f = world.feature(player.x, player.y, player.z);
+		if (f != null && (f.type().equals("DownStair") || f.type().equals("UpStair"))) {
+			if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
+				return "[space]: exit the dungeon.";
+			return "[space]: traverse the staircase";
+		}
+		return null;
+	}
 	
 	
 	//Button Handling can go all the way down here

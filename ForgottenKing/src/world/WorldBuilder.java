@@ -50,6 +50,7 @@ public class WorldBuilder {
 		for (int z = 0; z < depth; z++) {
 			int[][] nums = new int[width][height];
 			int[][] rooms = new int[width][height];	//Keeps track of where rooms are, so when deleting dead ends it doesnt delete vaults
+			boolean[][] connections = new boolean[width][height];
 			for (int x = 0; x < width; x++)
 				for (int y = 0; y < height; y++)
 					nums[x][y] = 1;
@@ -77,6 +78,8 @@ public class WorldBuilder {
 									features[x+sx][y+sy][z] = n.feature(x,y).clone();
 								if (n.num(x,y) != 1)
 									rooms[x+sx][y+sy] = 1;
+								if (n.connection(x,y) == true)
+									connections[x+sx][y+sy] = n.connection(x,y);
 							}
 				} else {
 					//Create a basic square room
@@ -99,7 +102,7 @@ public class WorldBuilder {
 				}
 			}
 			
-			GenerateDungeon g = new GenerateDungeon(nums, rooms);
+			GenerateDungeon g = new GenerateDungeon(nums, rooms, connections);
 			nums = g.generateDungeon();
 			for (int x = 0; x < width; x++)
 				for (int y = 0; y < height; y++) {	
@@ -181,6 +184,8 @@ public class WorldBuilder {
 	private WorldBuilder addStairs(int amount) {
 		for (int z = 0; z < depth-1; z++) {
 			for (int i = 0; i < amount; i++) {
+				if ((z + 1)% 5 == 0)
+					continue;
 				Point p1 = getEmptyLocation(z);
 				DownStair down = new DownStair(null, p1.x, p1.y, p1.z);
 				features[p1.x][p1.y][p1.z] = down;

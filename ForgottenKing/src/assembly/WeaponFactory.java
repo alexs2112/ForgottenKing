@@ -169,8 +169,7 @@ public class WeaponFactory implements java.io.Serializable {
 	public Item newDevSword(int z) {
 		Item sword = new Item("Sword of the Dev", ItemType.WEAPON, devSwordIcon);
 		sword.modifyAttackValue(400);
-		//sword.setDamage(50, 80);
-		//sword.setEffectOnHit(Effects.poisoned(5, 2), 100);
+		sword.setDamage(50, 80);
 		enchant.enchantWeapon(sword, 1, 1, false, true);
 		world.addAtEmptyLocation(sword,z);
 		sword.addTag(ItemTag.SWORD);

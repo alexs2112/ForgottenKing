@@ -69,7 +69,6 @@ public class PrefabLoader {
 				}
 				charSheets.add(chars);
 			}
-
 		}
 		reader.close();
 		return true;
@@ -79,6 +78,7 @@ public class PrefabLoader {
 		for (char[][] chars : charSheets) {
 			Tile[][] tiles = new Tile[chars.length][chars[0].length];
 			Feature[][] features = new Feature[chars.length][chars[0].length];
+			boolean[][] connections = new boolean[chars.length][chars[0].length];
 			for (int x = 0; x < chars.length; x++) {
 				for (int y = 0; y < chars[0].length; y++) {
 					if (chars[x][y] != ' ')
@@ -91,16 +91,16 @@ public class PrefabLoader {
 						tiles[x][y] = Tile.DUNGEON_PIT;
 					else if (chars[x][y] == '#')
 						tiles[x][y] = Tile.DUNGEON_WALL;
-					else if (chars[x][y] == '|') {
+					else if (chars[x][y] == '+') {
 						tiles[x][y] = Tile.DUNGEON_FLOOR;
-						features[x][y] = new Door();//Door.SIDE);
-					} else if (chars[x][y] == '-') {
+						features[x][y] = new Door();
+					} else if (chars[x][y] == '@') {
 						tiles[x][y] = Tile.DUNGEON_FLOOR;
-						features[x][y] = new Door();//Door.UP);
+						connections[x][y] = true;
 					}
 				}
 			}
-			prefabs.add(new Prefab(chars, tiles, features));
+			prefabs.add(new Prefab(chars, tiles, features, connections));
 		}
 	}
 	

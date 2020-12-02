@@ -18,13 +18,18 @@ public class Prefab {
 	private int[][] nums;
 	public int[][] nums() { return nums; }
 	public int num(int x, int y) { return nums[x][y]; }
+	private boolean[][] connections;
+	public boolean[][] connections() { return connections; }
+	public boolean connection(int x, int y) { return connections[x][y]; }
 	
-	public Prefab(char[][] chars, Tile[][] tiles, Feature[][] features) {
+	
+	public Prefab(char[][] chars, Tile[][] tiles, Feature[][] features, boolean[][] connections) {
 		this.chars = chars;
 		this.tiles = tiles;
 		this.features = features;
 		this.width = chars.length;
 		this.height = chars[0].length;
+		this.connections = connections;
 		nums = new int[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -46,44 +51,51 @@ public class Prefab {
 		char[][] newChars;
 		Tile[][] newTiles;
 		Feature[][] newFeatures;
+		boolean[][] newConnections;
 		if (rotation == 1) {
 			newChars = new char[height][width];
 			newTiles = new Tile[height][width];
 			newFeatures = new Feature[height][width];
+			newConnections = new boolean[height][width];
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < height; y++) {
 					newChars[height-1-y][x] = chars[x][y];
 					newTiles[height-1-y][x] = tiles[x][y];
 					newFeatures[height-1-y][x] = features[x][y];
+					newConnections[height-1-y][x] = connections[x][y];
 				}
 			}
-			return new Prefab(newChars, newTiles, newFeatures);
+			return new Prefab(newChars, newTiles, newFeatures, newConnections);
 		}
 		if (rotation == 2) {
 			newChars = new char[width][height];
 			newTiles = new Tile[width][height];
 			newFeatures = new Feature[width][height];
+			newConnections = new boolean[width][height];
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < height; y++) {
 					newChars[width-1-x][height-1-y] = chars[x][y];
 					newTiles[width-1-x][height-1-y] = tiles[x][y];
 					newFeatures[width-1-x][height-1-y] = features[x][y];
+					newConnections[width-1-x][height-1-y] = connections[x][y];
 				}
 			}
-			return new Prefab(newChars, newTiles, newFeatures);
+			return new Prefab(newChars, newTiles, newFeatures, newConnections);
 		}
 		if (rotation == 3) {
 			newChars = new char[height][width];
 			newTiles = new Tile[height][width];
 			newFeatures = new Feature[height][width];
+			newConnections = new boolean[height][width];
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < height; y++) {
 					newChars[height-1-y][width-1-x] = chars[x][y];
 					newTiles[height-1-y][width-1-x] = tiles[x][y];
 					newFeatures[height-1-y][width-1-x] = features[x][y];
+					newConnections[height-1-y][width-1-x] = connections[x][y];
 				}
 			}
-			return new Prefab(newChars, newTiles, newFeatures);
+			return new Prefab(newChars, newTiles, newFeatures, newConnections);
 		}
 		return this;
 	}

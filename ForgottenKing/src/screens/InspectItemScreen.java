@@ -98,7 +98,8 @@ public class InspectItemScreen extends Screen {
 		}
 	}
 	private Screen returnLast() {
-		previousScreen.refreshScreen = null;
+		if (previousScreen != null)
+			previousScreen.refreshScreen = null;
         return previousScreen;
 	}
 	

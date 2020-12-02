@@ -16,6 +16,7 @@ public final class Loader {
 	public static Image upStairs = ImageCrop.cropImage(tileFull, 160, 96, 32, 32);
 	public static Image downStairs = ImageCrop.cropImage(tileFull, 224, 96, 32, 32);
 	public static Image entrance = new Image(Loader.class.getResourceAsStream("resources/entrance.gif"));
+	public static Image portalImage = new Image(Loader.class.getResourceAsStream("resources/portal.gif"));
 	
 	
 	/**

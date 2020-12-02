@@ -18,8 +18,9 @@ public class GenerateDungeon {
 	private int height;
 	private int width;
 	private ArrayList<Point> set;
+	private boolean[][] initConnectors;
 	
-	public GenerateDungeon(int[][] map, int[][] currentRooms) {
+	public GenerateDungeon(int[][] map, int[][] currentRooms, boolean[][] connections) {
 		this.map = map;
 		this.width = map.length;
 		this.height = map[0].length;
@@ -27,6 +28,7 @@ public class GenerateDungeon {
 		this.set = new ArrayList<Point>();
 		this.features = new Feature[width][height];
 		this.rooms = currentRooms;	//1s mean a room is placed here, so that deleting dead ends doesnt delete them
+		initConnectors = connections;
 	}
 	
 	public int[][] generateDungeon() {
@@ -38,11 +40,10 @@ public class GenerateDungeon {
 				}
 			}
 		}
-		
 		createRegions();
+		resolveInitConnections();
 		findConnectors();
 		resolveConnections();
-
 		for (int x = 0; x < width-1; x++) {
 			for (int y = 0; y < height-1; y++) {
 				if (isDeadEnd(x, y)) {
@@ -204,14 +205,38 @@ public class GenerateDungeon {
 				map[p.x][p.y] = 0; 
 				features[p.x][p.y] = new Door();
 			}
-
 		}
 	}
+	private void resolveInitConnections() {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (initConnectors[x][y]) {
+					if (regions[x-1][y] != 0 && regions[x+1][y] != 0) {
+						int n = regions[x-1][y];
+						changeRegion(regions[x+1][y], n);
+						regions[x][y] = n;
+						map[x][y] = 0; 
+						features[x][y] = new Door(); 
+					} else if (regions[x][y-1] != 0 && regions[x][y+1] != 0) {
+						int n = regions[x][y-1];
+						changeRegion(regions[x][y+1], n);
+						regions[x][y] = n;
+						map[x][y] = 0; 
+						features[x][y] = new Door();
+					}
+				}
+			}
+		}
+	}
+	
 	@SuppressWarnings("unused")
 	private void printMap() {
 		for (int y=0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				System.out.print(map[x][y]);
+				if (initConnectors[x][y])
+					System.out.print("@");
+				else
+					System.out.print(map[x][y]);
 			}
 			System.out.print("\n");
 		}

@@ -8,6 +8,7 @@ import java.util.List;
 
 import creatures.ai.CreatureAI;
 import features.Feature;
+import features.Portal;
 import items.Inventory;
 import items.Item;
 import items.ItemType;
@@ -504,6 +505,13 @@ public class Creature implements java.io.Serializable {
 		}
 		if (killer != null && killer != this)
 			killer.modifyXP(xp());
+		
+		//A kind of gimpy way to do this now
+		if (is(Tag.LEGENDARY)) {
+			world.notify(x, y, z, "With the death of " + name() + ", a portal to the next area has opened!");
+			world.setFeature(new Portal(), x, y, z);
+		}
+		
 		world.remove(this);
 	}
 	public int critChance() {
