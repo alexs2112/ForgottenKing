@@ -20,7 +20,7 @@ public class Door extends Feature {
 	 */
 	public Door() {
 		super("Door", "A door", Loader.closedDoorUp);
-		setType("Bump");
+		setType(Type.BUMP);
 		this.closed = true;
 	}
 	
@@ -39,7 +39,7 @@ public class Door extends Feature {
 				return;
 			closed = false;
 			creature.doAction("open the door");
-			setType("CanClose");
+			setType(Type.CANCLOSE);
 		} else {
 			closed = true;
 			creature.doAction("close the door");
@@ -54,7 +54,7 @@ public class Door extends Feature {
 				if (world.items(x,y,z).getItems().size() == 0)
 					world.removeInventory(x,y,z);
 			}
-			setType("Bump");
+			setType(Type.BUMP);
 		}
 	}
 	

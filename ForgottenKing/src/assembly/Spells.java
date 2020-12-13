@@ -3,16 +3,62 @@ package assembly;
 import creatures.Creature;
 import creatures.Tag;
 import creatures.Type;
+import javafx.scene.image.Image;
 import spells.Spell;
 import spells.TargetType;
+import tools.ImageCrop;
 
 @SuppressWarnings("serial")
 public final class Spells {
+	private static int fireStartY = 0;
+	private static int coldStartY = 32;
+	private static int airStartY = 64;
+	private static int poisonStartY = 96;
+	private static int lightStartY = 128;
+	private static int darkStartY = 160;
+	private static Image spellsFull = new Image(ItemFactory.class.getResourceAsStream("resources/icons/spells-full.png"));
+	private static Image embersIcon = ImageCrop.cropImage(spellsFull, 0, fireStartY, 32, 32);
+	private static Image moltenFireIcon = ImageCrop.cropImage(spellsFull, 32, fireStartY, 32, 32);
+	private static Image flameWaveIcon = ImageCrop.cropImage(spellsFull, 64, fireStartY, 32, 32);
+	private static Image heatbeamIcon = ImageCrop.cropImage(spellsFull, 96, fireStartY, 32, 32);
+	private static Image summonImpIcon = ImageCrop.cropImage(spellsFull, 128, fireStartY, 32, 32);
+	private static Image fireballIcon = ImageCrop.cropImage(spellsFull, 160, fireStartY, 32, 32);
+	
+	private static Image chillIcon = ImageCrop.cropImage(spellsFull, 0, coldStartY, 32, 32);
+	private static Image iceShardIcon = ImageCrop.cropImage(spellsFull, 32, coldStartY, 32, 32);
+	private static Image summonSimulacrumIcon = ImageCrop.cropImage(spellsFull, 64, coldStartY, 32, 32);
+	private static Image armorOfFrostIcon = ImageCrop.cropImage(spellsFull, 96, coldStartY, 32, 32);
+	private static Image icicleIcon = ImageCrop.cropImage(spellsFull, 128, coldStartY, 32, 32);
+	private static Image massChillIcon = ImageCrop.cropImage(spellsFull, 160, coldStartY, 32, 32);
+	
+	private static Image shockingTouchIcon = ImageCrop.cropImage(spellsFull, 0, airStartY, 32, 32);
+	private static Image swiftnessIcon = ImageCrop.cropImage(spellsFull, 32, airStartY, 32, 32);
+	private static Image minorStunIcon = ImageCrop.cropImage(spellsFull, 64, airStartY, 32, 32);
+	private static Image blinkIcon = ImageCrop.cropImage(spellsFull, 96, airStartY, 32, 32);
+	private static Image whirlwindIcon = ImageCrop.cropImage(spellsFull, 128, airStartY, 32, 32);
+	private static Image lightningBoltIcon = ImageCrop.cropImage(spellsFull, 160, airStartY, 32, 32);
+
+	private static Image stingIcon = ImageCrop.cropImage(spellsFull, 0, poisonStartY, 32, 32);
+	private static Image toxicCloudIcon = ImageCrop.cropImage(spellsFull, 32, poisonStartY, 32, 32);
+	private static Image minorConfuseIcon = ImageCrop.cropImage(spellsFull, 64, poisonStartY, 32, 32);
+	
+	private static Image curePoisonIcon = ImageCrop.cropImage(spellsFull, 0, lightStartY, 32, 32);
+	private static Image innerGlowIcon = ImageCrop.cropImage(spellsFull, 32, lightStartY, 32, 32);
+	private static Image regenerateIcon = ImageCrop.cropImage(spellsFull, 64, lightStartY, 32, 32);
+	private static Image heroismIcon = ImageCrop.cropImage(spellsFull, 96, lightStartY, 32, 32);
+
+	private static Image slowIcon = ImageCrop.cropImage(spellsFull, 0, darkStartY, 32, 32);
+	private static Image weakenIcon = ImageCrop.cropImage(spellsFull, 32, darkStartY, 32, 32);
+	private static Image blindIcon = ImageCrop.cropImage(spellsFull, 64, darkStartY, 32, 32);
+	private static Image vulnerabilityIcon = ImageCrop.cropImage(spellsFull, 96, darkStartY, 32, 32);
+	private static Image darksmiteIcon = ImageCrop.cropImage(spellsFull, 128, darkStartY, 32, 32);
+	private static Image soulSiphonIcon = ImageCrop.cropImage(spellsFull, 160, darkStartY, 32, 32);
+	
 	/**
 	 * FIRE SPELLS
 	 */
 	public static Spell embers() {
-		Spell s = new Spell("Embers", 1, 1);
+		Spell s = new Spell("Embers", 1, 1, embersIcon);
 		s.setType(Type.FIRE);
 		s.setDamage(1, 4);
 		s.setTargetType(TargetType.PROJECTILE);
@@ -21,7 +67,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell moltenFire() {
-		Spell s = new Spell("Molten Fire", 3, 2);
+		Spell s = new Spell("Molten Fire", 3, 2, moltenFireIcon);
 		s.setType(Type.FIRE);
 		s.setDamage(0, 2);
 		s.setEffect(Effects.burning(4, 3), 75);
@@ -31,7 +77,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell flameWave() {
-		Spell s = new Spell("Flame Wave", 4, 2);
+		Spell s = new Spell("Flame Wave", 4, 2, flameWaveIcon);
 		s.setType(Type.FIRE);
 		s.setDamage(1, 3);
 		s.setEffect(Effects.burning(4, 2), 60);
@@ -43,7 +89,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell heatbeam() {
-		Spell s = new Spell("Heatbeam", 4, 2);
+		Spell s = new Spell("Heatbeam", 4, 2, heatbeamIcon);
 		s.setType(Type.FIRE);
 		s.setDamage(4, 7);
 		s.setTargetType(TargetType.BEAM);
@@ -53,7 +99,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell summonImp(CreatureFactory f) {
-		Spell s = new Spell("Summon Imp", 3, 2) {
+		Spell s = new Spell("Summon Imp", 3, 2, summonImpIcon) {
 			public void casterEffect(Creature caster) {
 				if (caster.is(Tag.PLAYER))
 					summonCreature(caster, f.newFriendlyImp(caster.z, caster.getSpellcasting()/2 + caster.magic().get(Type.FIRE)));
@@ -68,7 +114,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell fireball() {
-		Spell s = new Spell("Fireball", 6, 3);
+		Spell s = new Spell("Fireball", 6, 3, fireballIcon);
 		s.setType(Type.FIRE);
 		s.setDamage(7, 10);
 		s.setTargetType(TargetType.TARGET);
@@ -83,7 +129,7 @@ public final class Spells {
 	 * COLD SPELLS
 	 */
 	public static Spell chill() {
-		Spell s = new Spell("Chill", 1, 1);
+		Spell s = new Spell("Chill", 1, 1, chillIcon);
 		s.setType(Type.COLD);
 		s.setDamage(1, 2);
 		s.setTargetType(TargetType.TARGET);
@@ -93,7 +139,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell iceShard() {
-		Spell s = new Spell("Ice Shard", 2, 1);
+		Spell s = new Spell("Ice Shard", 2, 1, iceShardIcon);
 		s.setType(Type.COLD);
 		s.setDamage(2, 5);
 		s.setTargetType(TargetType.PROJECTILE);
@@ -102,7 +148,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell summonSimulacrum(CreatureFactory f) {
-		Spell s = new Spell("Summon Simulacrum", 3, 2) {
+		Spell s = new Spell("Summon Simulacrum", 3, 2, summonSimulacrumIcon) {
 			public void casterEffect(Creature caster) {
 				if (caster.is(Tag.PLAYER))
 					summonCreature(caster, f.newFriendlySimulacrum(caster.z, caster.getSpellcasting()/2 + caster.magic().get(Type.COLD)));
@@ -117,7 +163,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell armorOfFrost() {
-		Spell s = new Spell("Armor of Frost", 3, 2);
+		Spell s = new Spell("Armor of Frost", 3, 2, armorOfFrostIcon);
 		s.setType(Type.COLD);
 		s.setTargetType(TargetType.SELF);
 		s.setEffect(Effects.armorOfFrost(),100);
@@ -125,7 +171,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell icicle() {
-		Spell s = new Spell("Icicle", 3, 2);
+		Spell s = new Spell("Icicle", 3, 2, icicleIcon);
 		s.setType(Type.COLD);
 		s.setDamage(4, 6);
 		s.setTargetType(TargetType.PROJECTILE);
@@ -134,7 +180,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell massChill() {
-		Spell s = new Spell("Mass Chill", 4, 3);
+		Spell s = new Spell("Mass Chill", 4, 3, massChillIcon);
 		s.setType(Type.COLD);
 		s.setDamage(0, 1);
 		s.setTargetType(TargetType.SELF);
@@ -149,7 +195,7 @@ public final class Spells {
 	 * AIR SPELLS
 	 */
 	public static Spell shockingTouch() {
-		Spell s = new Spell("Shocking Touch", 1, 1);
+		Spell s = new Spell("Shocking Touch", 1, 1, shockingTouchIcon);
 		s.setType(Type.AIR);
 		s.setDamage(1, 3);
 		s.setTargetType(TargetType.PROJECTILE);
@@ -159,7 +205,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell swiftness() {
-		Spell s = new Spell("Swiftness", 2, 1);
+		Spell s = new Spell("Swiftness", 2, 1, swiftnessIcon);
 		s.setType(Type.AIR);
 		s.setTargetType(TargetType.SELF);
 		s.setEffect(Effects.swift(6,5),100);
@@ -167,7 +213,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell minorStun() {
-		Spell s = new Spell("Minor Stun", 5, 2);
+		Spell s = new Spell("Minor Stun", 5, 2, minorStunIcon);
 		s.setType(Type.AIR);
 		s.setTargetType(TargetType.TARGET);
 		s.setRange(4);
@@ -176,7 +222,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell blink() {
-		Spell s = new Spell("Blink", 3, 2) {
+		Spell s = new Spell("Blink", 3, 2, blinkIcon) {
 			@Override
 			public void casterEffect(Creature caster) {
 				int mx = 0;
@@ -199,7 +245,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell whirlwind() {
-		Spell s = new Spell("Whirlwind", 3, 2) {
+		Spell s = new Spell("Whirlwind", 3, 2, whirlwindIcon) {
 			@Override
 			public void casterEffect(Creature caster) {
 				for (int x = -1; x <= 1; x++) {
@@ -222,7 +268,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell lightningBolt() {
-		Spell s = new Spell("Lightning Bolt", 5, 3);
+		Spell s = new Spell("Lightning Bolt", 5, 3, lightningBoltIcon);
 		s.setType(Type.AIR);
 		s.setDamage(7, 10);
 		s.setTargetType(TargetType.BEAM);
@@ -237,7 +283,7 @@ public final class Spells {
 	 * POISON SPELLS
 	 */
 	static Spell sting() {
-		Spell s = new Spell("Sting", 1, 1);
+		Spell s = new Spell("Sting", 1, 1, stingIcon);
 		s.setType(Type.POISON);
 		s.setEffect(Effects.poisoned(5, 1), 90);
 		s.setDamage(1, 3);
@@ -247,7 +293,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell toxicCloud() {
-		Spell s = new Spell("Toxic Cloud", 3, 2);
+		Spell s = new Spell("Toxic Cloud", 3, 2, toxicCloudIcon);
 		s.setType(Type.POISON);
 		s.setTargetType(TargetType.TARGET);
 		s.setRadius(1);
@@ -257,7 +303,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell minorConfuse() {
-		Spell s = new Spell("Minor Confuse", 3, 2);
+		Spell s = new Spell("Minor Confuse", 3, 2, minorConfuseIcon);
 		s.setType(Type.POISON);
 		s.setEffect(Effects.confused(3), 70);
 		s.setRange(4);
@@ -271,7 +317,7 @@ public final class Spells {
 	 * LIGHT SPELLS
 	 */
 	public static Spell curePoison() {
-		Spell s = new Spell("Cure Poison", 2, 1);
+		Spell s = new Spell("Cure Poison", 2, 1, curePoisonIcon);
 		s.setType(Type.LIGHT);
 		s.setEffect(Effects.curePoison(), 100);
 		s.setTargetType(TargetType.TARGET);
@@ -280,7 +326,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell innerGlow() {
-		Spell s = new Spell("Inner Glow", 2, 1);
+		Spell s = new Spell("Inner Glow", 2, 1, innerGlowIcon);
 		s.setType(Type.LIGHT);
 		s.setEffect(Effects.glowing(6,4), 80);
 		s.setTargetType(TargetType.TARGET);
@@ -288,7 +334,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell regenerateHealth() {
-		Spell s = new Spell("Regenerate", 4, 2);
+		Spell s = new Spell("Regenerate", 4, 2, regenerateIcon);
 		s.setType(Type.LIGHT);
 		s.setEffect(Effects.healOverTime(8, 2), 100);
 		s.setTargetType(TargetType.TARGET);
@@ -297,7 +343,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell heroism() {
-		Spell s = new Spell("Heroism", 4, 2);
+		Spell s = new Spell("Heroism", 4, 2, heroismIcon);
 		s.setType(Type.LIGHT);
 		s.setEffect(Effects.strong(8, 2), 100);
 		s.setTargetType(TargetType.TARGET);
@@ -310,7 +356,7 @@ public final class Spells {
 	 * DARK SPELLS
 	 */
 	public static Spell slow(int cost, int duration, int amount) {
-		Spell s = new Spell("Slow", cost, 1);
+		Spell s = new Spell("Slow", cost, 1, slowIcon);
 		s.setType(Type.DARK);
 		s.setEffect(Effects.slowed(duration, amount), 75);
 		s.setTargetType(TargetType.TARGET);
@@ -318,7 +364,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell weaken() {
-		Spell s = new Spell("Weaken", 3, 2);
+		Spell s = new Spell("Weaken", 3, 2, weakenIcon);
 		s.setType(Type.DARK);
 		s.setEffect(Effects.weak(6, 4), 70);
 		s.setTargetType(TargetType.TARGET);
@@ -326,7 +372,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell blind() {
-		Spell s = new Spell("Blind", 4, 2);
+		Spell s = new Spell("Blind", 4, 2, blindIcon);
 		s.setType(Type.DARK);
 		s.setEffect(Effects.blind(4), 60);
 		s.setRange(4);
@@ -334,8 +380,8 @@ public final class Spells {
 		s.setDescription("Blind your target, making them unable to see anywhere further than their own tile.");
 		return s;
 	}
-	public static Spell vulnerable() {
-		Spell s = new Spell("Vulnerability", 4, 2);
+	public static Spell vulnerability() {
+		Spell s = new Spell("Vulnerability", 4, 2, vulnerabilityIcon);
 		s.setType(Type.DARK);
 		s.setEffect(Effects.vulnerable(6, 4), 75);
 		s.setTargetType(TargetType.TARGET);
@@ -343,7 +389,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell darksmite() {
-		Spell s = new Spell("Darksmite", 4, 2);
+		Spell s = new Spell("Darksmite", 4, 2, darksmiteIcon);
 		s.setType(Type.DARK);
 		s.setTargetType(TargetType.TARGET);
 		s.setRange(6);
@@ -354,7 +400,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell soulSiphon() {
-		Spell s = new Spell("Soul Siphon", 5, 3) {
+		Spell s = new Spell("Soul Siphon", 5, 3, soulSiphonIcon) {
 			public void casterEffect(Creature caster) {
 				caster.modifyHP(caster.getDamageReceived(6, Type.DARK));
 				caster.doAction("heal from darkness.");
@@ -381,7 +427,7 @@ public final class Spells {
 		return slow;		
 	}
 	public static Spell fireStomp() {
-		Spell s = new Spell("Stomp", 4, 3) {
+		Spell s = new Spell("Stomp", 4, 3, null) {
 			@Override
 			public void casterEffect(Creature caster) {
 				for (int x = -1; x <= 1; x++) {

@@ -26,11 +26,11 @@ public class CharacterSelectionScreen extends Screen {
 	private Font fontL;
 	private Font fontS;
 	private List<ClassSelection> classes;
-	private Image adventurerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer-96.gif"));
-	private Image fighterIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter-96.gif"));
-	private Image rangerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger-96.gif"));
-	private Image berserkerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/berserker-96.gif"));
-	private Image elementalistIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/elementalist-96.gif"));
+	private Image adventurerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer.gif"), 96, 96, true, false);
+	private Image fighterIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter.gif"), 96, 96, true, false);
+	private Image rangerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger.gif"), 96, 96, true, false);
+	private Image berserkerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/berserker.gif"), 96, 96, true, false);
+	private Image elementalistIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/elementalist.gif"), 96, 96, true, false);
 	private Image adventurerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer.gif"));
 	private Image fighterIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter.gif"));
 	private Image rangerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger.gif"));

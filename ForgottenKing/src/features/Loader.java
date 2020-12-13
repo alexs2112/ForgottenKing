@@ -18,6 +18,12 @@ public final class Loader {
 	public static Image entrance = new Image(Loader.class.getResourceAsStream("resources/entrance.gif"));
 	public static Image portalImage = new Image(Loader.class.getResourceAsStream("resources/portal.gif"));
 	
+	private static Image chestClosedFull = new Image(Loader.class.getResourceAsStream("resources/chest-closed-full.png"));
+	private static Image chestOpenFull = new Image(Loader.class.getResourceAsStream("resources/chest-open-full.png"));
+	public static Image closedChest = ImageCrop.cropImage(chestClosedFull, 32, 0, 32, 32);
+	public static Image openChest = ImageCrop.cropImage(chestOpenFull, 32, 0, 32, 32);
+	public static Image closedBarrel = ImageCrop.cropImage(chestClosedFull, 0, 32, 32, 32);
+	public static Image brokenBarrel = ImageCrop.cropImage(chestClosedFull, 64, 32, 32, 32);
 	
 	/**
 	 * Image handling for directional trees

@@ -8,8 +8,14 @@ import features.Door;
 import features.Feature;
 import tools.Point;
 
+/**
+ * A class that finalizes dungeon generation.
+ * First it generates a perfect maze
+ * Then it finds connections and connects the maze
+ * Then it removes dead ends of the maze
+ */
 public class GenerateDungeon {
-	private int[][] map;
+	private Tile[][] map;
 	private int[][] regions;
 	private int[][] rooms;
 	private Feature[][] features;
@@ -18,9 +24,10 @@ public class GenerateDungeon {
 	private int height;
 	private int width;
 	private ArrayList<Point> set;
-	private boolean[][] initConnectors;
+	private Tile floor;
+	private Tile wall;
 	
-	public GenerateDungeon(int[][] map, int[][] currentRooms, boolean[][] connections) {
+	public GenerateDungeon(Tile[][] map, int[][] currentRooms, Tile floor, Tile wall) {
 		this.map = map;
 		this.width = map.length;
 		this.height = map[0].length;
@@ -28,10 +35,11 @@ public class GenerateDungeon {
 		this.set = new ArrayList<Point>();
 		this.features = new Feature[width][height];
 		this.rooms = currentRooms;	//1s mean a room is placed here, so that deleting dead ends doesnt delete them
-		initConnectors = connections;
+		this.floor = floor;
+		this.wall = wall;
 	}
 	
-	public int[][] generateDungeon() {
+	public Tile[][] getMap() {
 		generateMaze();
 		for (int x = 1; x < width-1; x++) {
 			for (int y = 1; y < height-1; y++) {
@@ -41,13 +49,12 @@ public class GenerateDungeon {
 			}
 		}
 		createRegions();
-		resolveInitConnections();
 		findConnectors();
 		resolveConnections();
-		for (int x = 0; x < width-1; x++) {
-			for (int y = 0; y < height-1; y++) {
+		for (int x = 1; x < width-1; x++) {
+			for (int y = 1; y < height-1; y++) {
 				if (isDeadEnd(x, y)) {
-					map[x][y] = 1;
+					map[x][y] = wall;
 					regions[x][y] = 0;
 					features[x][y] = null;
 					x = 1;
@@ -58,15 +65,19 @@ public class GenerateDungeon {
 		return map;
 	}
 	
+	public Feature[][] getFeatures() {
+		return features;
+	}
+	
 	private void generateMaze(int sx, int sy) {
 		set.add(new Point(sx,sy,0));
 		
 		while (set.size() > 0) {
 			Point c = set.get(0);
 			set.remove(c);
-			if (adjacentToFloor(c.x,c.y) > 1 || map[c.x][c.y]==0 )
+			if (adjacentToFloor(c.x,c.y) > 1 || map[c.x][c.y] == floor )
 				continue;
-			map[c.x][c.y] = 0; 
+			map[c.x][c.y] = floor; 
 			addNeighbors(c);
 		}
 	}
@@ -86,16 +97,18 @@ public class GenerateDungeon {
 		Point parent = null;
 		List<Point> n = s.neighbors4();
 		for (Point p : n) {
-			if (p.x > 0 && p.x < width & p.y > 0 && p.y < height)
-				if (map[p.x][p.y] != 1)
+			if (p.x > 0 && p.x < width & p.y > 0 && p.y < height) {
+				if (!map[p.x][p.y].isWall())
 					parent = p;
+			}
 		}
 		n = s.neighbors8();
 		int adjacency = 0;
 		for (Point p : n) {
 			if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height) 
 				adjacency++;
-			else if (map[p.x][p.y] != 1 && !isNeighbors(parent,p))
+			//else if (map[p.x][p.y] != 1 && !isNeighbors(parent,p))
+			else if (!map[p.x][p.y].isWall() && !isNeighbors(parent,p))
 				adjacency++;
 		}
 		return adjacency;
@@ -118,25 +131,24 @@ public class GenerateDungeon {
 	}
 	private boolean isDeadEnd(int x, int y) {
 		int n = 0;
-		if (map[x][y] == 1 || rooms[x][y] == 1)
+		if (map[x][y].isWall() || rooms[x][y] == 1)
 			return false;
-		if (map[x-1][y] != 1)
+		if (!map[x-1][y].isWall())
 			n++;
-		if (map[x+1][y] != 1)
+		if (!map[x+1][y].isWall())
 			n++;
-		if (map[x][y-1] != 1)
+		if (!map[x][y-1].isWall())
 			n++;
-		if (map[x][y+1] != 1)
+		if (!map[x][y+1].isWall())
 			n++;
-		return n == 1;
+		return n <= 1;
 	}
 	
 	private void createRegions() {
 		regions = new int[width][height];
-	    
 		for (int x = 0; x < width; x++){
 			for (int y = 0; y < height; y++){
-				if (map[x][y] == 0 && regions[x][y] == 0){
+				if (map[x][y].isGround() && regions[x][y] == 0){
 					fillRegion(nextRegion++, x, y);
 				}
 			}
@@ -144,7 +156,7 @@ public class GenerateDungeon {
 	}
 	private void fillRegion(int region, int x, int y) {
         ArrayList<Point> open = new ArrayList<Point>();
-        open.add(new Point(x,y, 0));
+        open.add(new Point(x,y,0));
         regions[x][y] = region;
     
         while (!open.isEmpty()){
@@ -152,7 +164,7 @@ public class GenerateDungeon {
 
             for (Point neighbor : p.neighbors8()){
                 if (regions[neighbor.x][neighbor.y] > 0
-                  || map[neighbor.x][neighbor.y] != 0)
+                  || !map[neighbor.x][neighbor.y].isGround())
                     continue;
 
                 regions[neighbor.x][neighbor.y] = region;
@@ -168,7 +180,7 @@ public class GenerateDungeon {
 		connections = new ArrayList<Point>();
 		for (int x = 1; x < width-1; x++) {
 			for (int y = 1; y < height-1; y++) {
-				if (map[x][y] == 1 && regions[x][y] == 0) {
+				if (map[x][y].isWall() && regions[x][y] == 0) {
 					if (regions[x-1][y] != regions[x+1][y] && regions[x-1][y] != 0 && regions[x+1][y] != 0) {
 						connectors[x][y] = 1;
 						connections.add(new Point(x,y,0));
@@ -181,12 +193,10 @@ public class GenerateDungeon {
 		}
 	}
 	private void changeRegion(int region, int change) {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
 				if (regions[x][y] == region)
 					regions[x][y] = change;
-			}
-		}
 	}
 	private void resolveConnections() {
 		Collections.shuffle(connections);
@@ -196,47 +206,31 @@ public class GenerateDungeon {
 				int n = regions[p.x-1][p.y];
 				changeRegion(regions[p.x+1][p.y], n);
 				regions[p.x][p.y] = n;
-				map[p.x][p.y] = 0; 
+				map[p.x][p.y] = floor; 
 				features[p.x][p.y] = new Door(); 
 			} else if (regions[p.x][p.y-1] != regions[p.x][p.y+1] && regions[p.x][p.y-1]!= 0 && regions[p.x][p.y+1]!=0) {
 				int n = regions[p.x][p.y-1];
 				changeRegion(regions[p.x][p.y+1], n);
 				regions[p.x][p.y] = n;
-				map[p.x][p.y] = 0; 
+				map[p.x][p.y] = floor; 
 				features[p.x][p.y] = new Door();
 			}
 		}
 	}
-	private void resolveInitConnections() {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				if (initConnectors[x][y]) {
-					if (regions[x-1][y] != 0 && regions[x+1][y] != 0) {
-						int n = regions[x-1][y];
-						changeRegion(regions[x+1][y], n);
-						regions[x][y] = n;
-						map[x][y] = 0; 
-						features[x][y] = new Door(); 
-					} else if (regions[x][y-1] != 0 && regions[x][y+1] != 0) {
-						int n = regions[x][y-1];
-						changeRegion(regions[x][y+1], n);
-						regions[x][y] = n;
-						map[x][y] = 0; 
-						features[x][y] = new Door();
-					}
-				}
-			}
-		}
-	}
-	
 	@SuppressWarnings("unused")
 	private void printMap() {
 		for (int y=0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				if (initConnectors[x][y])
-					System.out.print("@");
-				else
-					System.out.print(map[x][y]);
+				char c = ' ';
+				if (map[x][y] != null) {
+					if (map[x][y].isGround())
+						c = '0';
+					if (map[x][y].isWall())
+						c = '1';
+				} else {
+					c = 'E';
+				}
+				System.out.print(c);
 			}
 			System.out.print("\n");
 		}

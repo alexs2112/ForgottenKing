@@ -24,19 +24,17 @@ public class PlayerAI extends CreatureAI {
     public void onEnter(int x, int y, int z, Tile tile){
     	Feature feat = creature.world().feature(x, y, z);
 		if (feat != null) {
-			if (feat.type().equals("Bump")) {
+			if (feat.type() == Feature.Type.BUMP) {
 				feat.interact(creature, creature.world(), x, y, z);
 				return;
 			}
 			if (feat.blockMovement())
 				return;
 		}
-        if (tile.isGround() || ((tile.isPit() && creature.is(Tag.FLYING)))){
+        if (tile.canMoveOn(creature)){
             creature.x = x;
             creature.y = y;
             creature.z = z;
-        } else if (tile == Tile.CAVE_WALL) {
-            creature.dig(x, y, z);
         }
     }
     

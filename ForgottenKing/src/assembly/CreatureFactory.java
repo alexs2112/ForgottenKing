@@ -38,6 +38,17 @@ public class CreatureFactory implements java.io.Serializable {
 	private Image lizardPriestIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_priest.gif"));
 	private Image grisstokIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/yamzuushk.gif"));
 	
+	private Image orcThugIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_thug.gif"));
+	private Image deepAntIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/deep_ant.gif"));
+	private Image snappingTurtleIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/snapping_turtle.gif"));
+	private Image orcBrawlerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_brawler.gif"));
+	private Image orcPrivateerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_privateer.gif"));
+	private Image alligatorIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/alligator.gif"));
+	private Image orcSwashbucklerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_swashbuckler.gif"));
+	private Image orcGunnerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_gunner.gif"));
+	private Image orcCaptainIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_captain.gif"));
+	private Image orcWarcasterIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_warcaster.gif"));
+	
 	private Image simulacrumIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/simulacrum.gif"));
 	private Image impIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/imp.gif"));
 	
@@ -50,7 +61,7 @@ public class CreatureFactory implements java.io.Serializable {
 	}
 	
 	public Creature newRandomCreature(int z, int level) {
-		if (level <= 1) {
+		if (level <= 0) {
 			int c = (int)(Math.random()*3);
 			if (c == 0)
 				return newBat(z);
@@ -58,7 +69,7 @@ public class CreatureFactory implements java.io.Serializable {
 				return newRat(z);
 			else
 				return newGoblin(z);
-		} else if (level == 2) {
+		} else if (level == 1) {
 			int c = (int)(Math.random()*4);
 			if (c == 0)
 				return newLizardGrunt(z);
@@ -68,27 +79,56 @@ public class CreatureFactory implements java.io.Serializable {
 				return newSoldierAnt(z);
 			else if (c == 3)
 				return newHomunculus(z);
-		} else if (level == 3) {
+		} else if (level == 2) {
 			int c = (int)(Math.random()*2);
 			if (c == 0)
 				return newLizardFighter(z);
 			else if (c == 1)
 				return newLizardHunter(z);
-		} else if (level == 4) {
+		} else if (level == 3) {
 			int c = (int)(Math.random()*2);
 			if (c == 0)
 				return newLizardHexer(z);
 			else if (c == 1)
 				return newLizardShadowblade(z);
-		} else if (level >= 5) {
+		} else if (level == 4) {
 			int c = (int)(Math.random()*2);
 			if (c == 0)
 				return newLizardGuardian(z);
 			else if (c == 1)
 				return newLizardPriest(z);
+		} else if (level == 5) {
+			int c = (int)(Math.random()*2);
+			if (c == 0)
+				return newOrcThug(z);
+			else if (c == 1)
+				return newDeepAnt(z);
+		} else if (level == 6) {
+			int c = (int)(Math.random()*2);
+			if (c == 0)
+				return newSnappingTurtle(z);
+			else if (c == 1)
+				return newOrcBrawler(z);
+		} else if (level == 7) {
+			int c = (int)(Math.random()*2);
+			if (c == 0)
+				return newOrcPrivateer(z);
+			else if (c == 1)
+				return newAlligator(z);
+		} else if (level == 8) {
+			int c = (int)(Math.random()*2);
+			if (c == 0)
+				return newOrcSwashbuckler(z);
+			else if (c == 1)
+				return newOrcGunner(z);
+		} else if (level >= 9) {
+			int c = (int)(Math.random()*2);
+			if (c == 0)
+				return newOrcCaptain(z);
+			else if (c == 1)
+				return newOrcWarcaster(z);
 		}
 		return newGoblin(z);
-//		return newLizardPriest(z);
 	}
 	
 	public Player newPlayer(List<Message> messages, int z, FieldOfView fov, ClassSelection c){
@@ -184,6 +224,7 @@ public class CreatureFactory implements java.io.Serializable {
 		soldierAnt.setStats(3,2,2,2,0,0);
 		soldierAnt.addEffectOnHit(Effects.poisoned(4, 1), 50);
 		soldierAnt.addTag(Tag.VENOMOUS);
+		soldierAnt.addTag(Tag.NODOOR);
 		soldierAnt.setDescription("An ant that has grown the size of a small cow. Its razor sharp mandibles drip with poison.");
 		world.addAtEmptyLocation(soldierAnt, z);
 		new BasicAI(soldierAnt, player);
@@ -255,7 +296,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    //lizard.addTag(Tag.IMPROVED_CRITICAL);
 	    lizard.setMana(12, 12);
 	    lizard.addSpell(Spells.slow(3, 5, 5));
-	    lizard.addSpell(Spells.vulnerable());
+	    lizard.addSpell(Spells.vulnerability());
 	    return lizard;
 	}
 	public Creature newLizardGuardian(int z) {
@@ -274,11 +315,11 @@ public class CreatureFactory implements java.io.Serializable {
 		new SpellcastingAI(lizard, player, 70);
 		lizard.setAttributes(1,3,3);
 	    lizard.setStats(2,1,4,2,5,5);
-	    lizard.setDescription("");
+	    lizard.setDescription("A lizard priest, devoted to bringing the return of the Forgotten King through dark prayer.");
 	    world.addAtEmptyLocation(lizard, z);
 	    lizard.addTag(Tag.SPELLCASTER);
 	    lizard.setMana(12, 12);
-	    lizard.addSpell(Spells.vulnerable());
+	    lizard.addSpell(Spells.vulnerability());
 	    lizard.addSpell(Spells.darksmite());
 	    lizard.addSpell(Spells.minorStun());
 	    if (Math.random()*100 < 25)
@@ -303,6 +344,117 @@ public class CreatureFactory implements java.io.Serializable {
 	    return grisstok;
 	}
 	
+	
+	
+	public Creature newOrcThug(int z) {
+		Creature orc = new Creature(world, "Orc Thug",6,215, 30,8,2,4,2,4, orcThugIcon);
+		new BasicAI(orc, player);
+		orc.setAttributes(4,2,2);
+	    orc.setStats(2,3,2,1,2,3);
+	    orc.setDescription("");
+	    world.addAtEmptyLocation(orc, z);
+	    //Should be any random weapon, if ranged than give ammo
+	    orc.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
+	    return orc;
+	}
+	public Creature newDeepAnt(int z) {
+		Creature ant = new Creature(world, "Deep Ant",6, 220, 26, 7, 4, 4, 5, 8, deepAntIcon);
+		ant.setAttributes(3, 2, 1);
+		ant.setStats(4,2,2,2,1,2);
+		ant.addEffectOnHit(Effects.poisoned(4, 3), 50);
+		ant.addTag(Tag.VENOMOUS);
+		ant.addTag(Tag.NODOOR);
+		ant.setDescription("");
+		world.addAtEmptyLocation(ant, z);
+		new BasicAI(ant, player);
+		return ant;
+	}
+	public Creature newSnappingTurtle(int z) {
+		Creature turtle = new Creature(world, "Snapping Turtle",7,260, 28,6,6,4,6,10, snappingTurtleIcon);
+		new BasicAI(turtle, player);
+		turtle.setAttributes(3,2,1);
+	    turtle.setStats(4,3,2,3,1,1);
+	    turtle.modifyResistance(Type.FIRE, 1);
+	    turtle.modifyResistance(Type.COLD, 1);
+	    turtle.addTag(Tag.FASTSWIMMER);
+	    turtle.setDescription("");
+	    world.addAtEmptyLocation(turtle, z);
+	    return turtle;
+	}
+	public Creature newOrcBrawler(int z) {
+		Creature orc = new Creature(world, "Orc Thug",7,265,30,9,3,5,5,8, orcBrawlerIcon);
+		new BasicAI(orc, player);
+		orc.setAttributes(3,3,2);
+	    orc.setStats(3,4,3,2,2,2);
+	    orc.setDescription("");
+	    //Ability to go berserk
+	    //Perk that deals bonus damage on unarmed
+	    world.addAtEmptyLocation(orc, z);
+	    return orc;
+	}
+	public Creature newOrcPrivateer(int z) {
+		Creature orc = new Creature(world, "Orc Privateer",8,305,34,10,3,4,4,7, orcPrivateerIcon);
+		new BasicAI(orc, player);
+		orc.setAttributes(2,4,3);
+	    orc.setStats(3,3,4,4,3,1);
+	    orc.setDescription("");
+	    //Attacks quickly with short blades
+	    //Can teleport next to you
+	    world.addAtEmptyLocation(orc, z);
+	    return orc;
+	}
+	public Creature newAlligator(int z) {
+		Creature gator = new Creature(world, "Alligator",8,310,30,10,3,5,7,10, alligatorIcon);
+		new BasicAI(gator, player);
+		gator.setAttributes(3,3,2);
+	    gator.setStats(3,3,3,3,3,2);
+	    //SWIMS FAST
+	    gator.modifyMovementDelay(-2);
+	    gator.setDescription("");
+	    gator.addTag(Tag.FASTSWIMMER);
+	    world.addAtEmptyLocation(gator, z);
+	    return gator;
+	}
+	public Creature newOrcSwashbuckler(int z) {
+		Creature orc = new Creature(world, "Orc Swashbuckler",9,350,30,10,4,4,3,6, orcSwashbucklerIcon);
+		new BasicAI(orc, player);
+		orc.setAttributes(3,4,3);
+	    orc.setStats(3,3,4,4,3,3);
+	    orc.setDescription("");
+	    //Swaps between a blade and a gun
+	    world.addAtEmptyLocation(orc, z);
+	    return orc;
+	}
+	public Creature newOrcGunner(int z) {
+		Creature orc = new Creature(world, "Orc Gunner",9,360,29,10,4,4,3,6, orcGunnerIcon);
+		new BasicAI(orc, player);
+		orc.setAttributes(3,4,3);
+	    orc.setStats(3,2,4,4,4,3);
+	    orc.setDescription("");
+	    //Gun based, loud shots, can activate ability to increase ranged attack speed for a time
+	    world.addAtEmptyLocation(orc, z);
+	    return orc;
+	}
+	public Creature newOrcCaptain(int z) {
+		Creature orc = new Creature(world, "Orc Captain",10,405,25,9,5,5,4,7, orcCaptainIcon);
+		new BasicAI(orc, player);
+		orc.setAttributes(5,3,3);
+	    orc.setStats(3,4,3,3,4,3);
+	    orc.setDescription("");
+	    //Can pump up allies in range, spawns with melee weapon
+	    world.addAtEmptyLocation(orc, z);
+	    return orc;
+	}
+	public Creature newOrcWarcaster(int z) {
+		Creature orc = new Creature(world, "Orc Warcaster",10,410,34,10,4,6,10,13, orcWarcasterIcon);
+		new BasicAI(orc, player);
+		orc.setAttributes(3,4,5);
+	    orc.setStats(2,3,4,3,5,5);
+	    orc.setDescription("");
+	    //Cold/Dark caster, can make allies go berserk
+	    world.addAtEmptyLocation(orc, z);
+	    return orc;
+	}
 	
 	/**
 	 * SUMMONS

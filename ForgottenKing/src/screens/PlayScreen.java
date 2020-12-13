@@ -17,6 +17,7 @@ import creatures.Creature;
 import creatures.Player;
 import creatures.Tag;
 import creatures.Type;
+import features.Chest;
 import features.Feature;
 import features.Portal;
 import items.Item;
@@ -52,7 +53,7 @@ public class PlayScreen extends Screen {
     private FieldOfView fov;
     private Screen subscreen;
     private boolean devMode = true;
-    private String hotkeyNumbers = "1234567890";
+    //private String hotkeyNumbers = "1234567890";
     public Audio audio() {
     	if (subscreen != null)
     		return subscreen.audio();
@@ -73,7 +74,8 @@ public class PlayScreen extends Screen {
         prepareButtons();
     }
     private void createWorld(){
-        world = new WorldBuilder(90, 31, 8)
+        world = new WorldBuilder(90, 31, 10)
+        		//new WorldBuilder(90,55,2)	//For screenshots of maps
         	  .makeDungeon()
               .build();
     }
@@ -199,6 +201,9 @@ public class PlayScreen extends Screen {
         			player.canSee(c.x, c.y, c.z)) {
         		draw(root, c.image(), (c.x-left)*32, (c.y-top)*32 - ((int)c.image().getHeight()-32));
         		Image healthbar = getCreatureHealthIcon(c);
+        		
+        		if (world.tile(c.x, c.y, c.z).isWater() && !c.is(Tag.FLYING))
+        			drawWaterOverlay(root, world.tileImage(c.x, c.y, c.z), (c.x-left)*32, (c.y-top)*32);
         		if (healthbar != null)
         			draw(root, healthbar, (c.x-left)*32, (c.y-top)*32);
         		if (c.weapon() != null && !c.is(Tag.PLAYER))
@@ -308,10 +313,10 @@ public class PlayScreen extends Screen {
     		else if (shift && c == '/') {
     			subscreen = new HelpScreen();
     		} else if (shift && code.equals(KeyCode.PERIOD)) {
-    			if (world.feature(player.x, player.y, player.z) != null && world.feature(player.x, player.y, player.z).type().equals("DownStair"))
+    			if (world.feature(player.x, player.y, player.z) != null && world.feature(player.x, player.y, player.z).type() == Feature.Type.DOWNSTAIR)
     				world.feature(player.x,player.y, player.z).interact(player, world, player.x, player.y, player.z);
     		} else if (shift && code.equals(KeyCode.COMMA)) {
-    			if (world.feature(player.x, player.y, player.z) != null && world.feature(player.x, player.y, player.z).type().equals("UpStair")) {
+    			if (world.feature(player.x, player.y, player.z) != null && world.feature(player.x, player.y, player.z).type() == Feature.Type.UPSTAIR) {
     				if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
     					return new LeaveScreen(player);	//If the player tries to leave
     				else
@@ -340,7 +345,7 @@ public class PlayScreen extends Screen {
     			Feature f = world.feature(player.x, player.y, player.z);
     			if (world.items(player.x,player.y, player.z) != null) {
     				pickupItems();
-    			} else if (f != null && (f.type().equals("DownStair") || f.type().equals("UpStair"))) {
+    			} else if (f != null && (f.type() == Feature.Type.DOWNSTAIR || f.type() == Feature.Type.UPSTAIR)) {
     				if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
     					return new LeaveScreen(player);
     				f.interact(player, world, player.x, player.y, player.z);
@@ -356,6 +361,8 @@ public class PlayScreen extends Screen {
     			player.modifyXP(player.nextLevelXP());
     		else if (c == '8' && devMode && shift)
     			world.setFeature(new Portal(), player.x, player.y, player.z);
+    		else if (c == '7' && devMode && shift)
+    			subscreen = new DevMapScreen(world, player.z);
     		else
     			endAfterUserInput = false;
     	}
@@ -384,7 +391,7 @@ public class PlayScreen extends Screen {
     	for (int wx = -1; wx < 2; wx++) {
     		for (int wy = -1; wy < 2; wy++) {
     			Feature feat = world.feature(player.x - wx, player.y - wy, player.z);
-    			if (feat != null && feat.type() == "CanClose") {
+    			if (feat != null && feat.type() == Feature.Type.CANCLOSE) {
     				if (wx == 0 && wy == 0)
     					player.notify("You are standing in the way"); 
     				else {
@@ -561,8 +568,12 @@ public class PlayScreen extends Screen {
 	private void populate() {
 		for (int z = 0; z < world.depth(); z++) {
 			//Each level has 9 creatures of a lower level, 15 creatures of that level, and 6 creatures of a higher level
-			for (int i = 0; i < 9; i++)
-				creatureFactory.newRandomCreature(z, z-1);
+			for (int i = 0; i < 9; i++) {
+				if ((z+1) % 5 != 0)
+					creatureFactory.newRandomCreature(z, z-1);
+				else
+					creatureFactory.newRandomCreature(z, z);
+			}
 			for (int i = 0; i < 15; i++)
 				creatureFactory.newRandomCreature(z, z);
 			for (int i = 0; i < 6; i++)
@@ -586,8 +597,19 @@ public class PlayScreen extends Screen {
 			for (int i = 0; i < 3; i++) {
 				itemFactory.trinket().newRandomRing(z);
 			}
+			for (int i = 0; i < 3; i++) {
+				Point p = world.getEmptyLocation(z);
+				Chest c = new Chest(Chest.ChestType.CHEST);
+				world.setFeature(c, p.x, p.y, z);
+			}
+			for (int i = 0; i < 6; i++) {
+				Point p = world.getEmptyLocation(z);
+				Chest c = new Chest(Chest.ChestType.BARREL);
+				world.setFeature(c, p.x, p.y, z);
+			}
 		}
-		creatureFactory.newGrisstok(4);
+		if (world.depth() > 4)
+			creatureFactory.newGrisstok(4);
 	}
 	
 	//A method that repeats the last key press (5) until the player is done resting
@@ -624,20 +646,19 @@ public class PlayScreen extends Screen {
 		player.modifyTime(5);
 	}
 	
-	
 	//Display the correct [space] text if the player has actions
-	private String spaceText() {
-		items.Inventory i = world.items(player.x,player.y, player.z);
-		if (i != null)
-			return "[space]: pick up items.";
-		Feature f = world.feature(player.x, player.y, player.z);
-		if (f != null && (f.type().equals("DownStair") || f.type().equals("UpStair"))) {
-			if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
-				return "[space]: exit the dungeon.";
-			return "[space]: traverse the staircase";
-		}
-		return null;
-	}
+//	private String spaceText() {
+//		items.Inventory i = world.items(player.x,player.y, player.z);
+//		if (i != null)
+//			return "[space]: pick up items.";
+//		Feature f = world.feature(player.x, player.y, player.z);
+//		if (f != null && (f.type() == Feature.Type.DOWNSTAIR || f.type() == Feature.Type.UPSTAIR)) {
+//			if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
+//				return "[space]: exit the dungeon.";
+//			return "[space]: traverse the staircase";
+//		}
+//		return null;
+//	}
 	
 	
 	//Button Handling can go all the way down here

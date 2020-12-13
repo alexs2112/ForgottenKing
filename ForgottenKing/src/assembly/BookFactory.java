@@ -154,7 +154,7 @@ public class BookFactory implements java.io.Serializable {
 	}
 	public Item newBookOfLizardRituals(int z) {
 		Item item = new Item("Book of Lizard Rituals", ItemType.BOOK, lizardRitualsIcon);
-		item.addSpell(Spells.vulnerable());
+		item.addSpell(Spells.vulnerability());
 		item.addSpell(Spells.minorStun());
 		item.addSpell(Spells.darksmite());
 		item.setDescription("An embellished book full of rituals devised and used by lizard priests.");

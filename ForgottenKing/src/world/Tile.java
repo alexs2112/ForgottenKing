@@ -1,5 +1,7 @@
 package world;
 
+import creatures.Creature;
+import creatures.Tag;
 //import algorithms.GetTileDirection;
 import javafx.scene.image.Image;
 import tools.GetTileDirection;
@@ -26,25 +28,30 @@ W S E N = new
 1 1 1 1 = NESW*/
 
 public enum Tile {
-	BOUNDS("resources/default/bounds.png", "Bounds", "This doesn't exist"),
-	CAVE_WALL("Wall", "The wall", 0, 576),
-	DIRT_FLOOR("Floor", "The floor", 0, 576),
-	DIRT_FLOOR_CENTER(ImageCrop.cropImage(new Image(Tile.class.getResourceAsStream("resources/floor_full.png")), 32, 608,32,32), "Floor", "The floor"),
-	WOOD_FLOOR("Floor", "The floor", 224, 576),
-	DUNGEON_WALL("Wall", "The wall", 0, 192),
-	DUNGEON_FLOOR("Floor", "The floor", 0, 192),
-	DUNGEON_FLOOR_CENTER(ImageCrop.cropImage(new Image(Tile.class.getResourceAsStream("resources/floor_full.png")), 32, 224,32,32), "Floor", "The floor"),
-	DUNGEON_PIT("Chasm", "A pit leading to nothing", 0, 64),
-	WOOD_WALL("Wall", "The wall", 224, 192),
-	GRASS_FLOOR("Floor", "The floor", 224, 192),
+	BOUNDS("resources/default/bounds.png", null, null, "This doesn't exist"),
+	CAVE_WALL(TileType.WALL, Group.CAVE, "The wall", 0, 576),
+	DIRT_FLOOR(TileType.FLOOR, Group.CAVE, "The floor", 0, 576),
+	DIRT_FLOOR_CENTER(ImageCrop.cropImage(new Image(Tile.class.getResourceAsStream("resources/floor_full.png")), 32, 608,32,32), TileType.FLOOR, Group.CAVE, "The floor"),
+	WOOD_FLOOR(TileType.FLOOR, Group.WOOD, "The floor", 224, 576),
+	DUNGEON_WALL(TileType.WALL, Group.DUNGEON, "The wall", 0, 192),
+	DUNGEON_FLOOR(TileType.FLOOR, Group.DUNGEON, "The floor", 0, 192),
+	DUNGEON_FLOOR_CENTER(ImageCrop.cropImage(new Image(Tile.class.getResourceAsStream("resources/floor_full.png")), 32, 224,32,32), TileType.FLOOR, Group.DUNGEON, "The floor"),
+	DUNGEON_PIT(TileType.PIT, Group.DUNGEON, "A pit leading to nothing", 0, 64),
+	WOOD_WALL(TileType.WALL, Group.WOOD, "The wall", 224, 192),
+	GRASS_FLOOR(TileType.FLOOR, Group.MISC, "The floor", 224, 192),
+	MINE_WALL(TileType.WALL, Group.CAVE, "The wall", 448, 192),
+	STONE_PIT(TileType.PIT, Group.CAVE, "A pit", 0, 128),
+	CAVE_POND(TileType.WATER, Group.CAVE, "A pool of water", 0, 320),
 	
-	UNKNOWN("resources/unknown.png", "Unknown", "Anything could be out there"),
-	FLOOR_DEFAULT("resources/default/floor.png", "Floor", "The floor"),
-	WALL_DEFAULT("resources/default/wall.png", "Wall", "The wall");
+	UNKNOWN("resources/unknown.png", null, null, "Anything could be out there"),
+	FLOOR_DEFAULT("resources/default/floor.png", TileType.FLOOR, Group.MISC, "The floor"),
+	WALL_DEFAULT("resources/default/wall.png", TileType.WALL, Group.MISC, "The wall");
 	
 	private static final long serialVersionUID = 7769423305067121315L;
-	private String type;
-	public String type() { return type; }
+	private TileType type;
+	public TileType type() { return type; }
+	private Group group;
+	public Group group() { return group; }
 	private String description;
 	public String desc() { return description; }
 	private Image icon;
@@ -53,6 +60,21 @@ public enum Tile {
 	private Image floorImage = new Image(Tile.class.getResourceAsStream("resources/floor_full.png"));
 	private Image wallImage = new Image(Tile.class.getResourceAsStream("resources/wall_full.png"));
 	private Image pitImage = new Image(Tile.class.getResourceAsStream("resources/pits_full.png"));
+	
+	private enum TileType {
+		UNKNOWN,
+		FLOOR,
+		WALL,
+		WATER,
+		PIT;
+	}
+	private enum Group {
+		CAVE,
+		DUNGEON,
+		WOOD,
+		MINE,
+		MISC;
+	}
 	
 	//The direction specified is the direction where the tile art "ends" (ie, adjacent to different tile)
 	public Image ALL;
@@ -77,19 +99,21 @@ public enum Tile {
 	public Image XNW;
 	public Image XNEW;
 	
-	Tile(String path, String type, String description) {
-		this(new Image(Tile.class.getResourceAsStream(path)), type, description);
+	Tile(String path, TileType type, Group group, String description) {
+		this(new Image(Tile.class.getResourceAsStream(path)), type, group, description);
 	}
-	Tile(Image image, String type, String description) {
+	Tile(Image image, TileType type, Group group, String description) {
 		this.type = type;
 		this.description = description;
 		icon = image;
 		this.image = image;
+		this.group = group;
 	}
-	Tile (String type, String description, int x, int y) {
+	Tile (TileType type, Group group, String description, int x, int y) {
 		this.type = type;
 		this.description = description;
-		if (type.equals("Wall")) {
+		this.group = group;
+		if (type == TileType.WALL) {
 			this.ALL = ImageCrop.cropImage(wallImage, x+96, y+0, 32, 32);
 			this.N = ImageCrop.cropImage(wallImage, x+32, y+32, 32, 32);
 			this.NE = ImageCrop.cropImage(wallImage, x+0, y+64, 32, 32);
@@ -104,7 +128,7 @@ public enum Tile {
 			this.ESW = ImageCrop.cropImage(wallImage, x+128, y+0, 32, 32);
 			this.NESW = ImageCrop.cropImage(wallImage, x+128, y+32, 32, 32);
 		}
-		if (type.equals("Floor")) {
+		if (type == TileType.FLOOR) {
 			this.ALL = ImageCrop.cropImage(floorImage, x+32, y+32, 32, 32);
 			this.N = ImageCrop.cropImage(floorImage, x+32, y+0, 32, 32);
 			this.E = ImageCrop.cropImage(floorImage, x+64, y+32, 32, 32);
@@ -122,7 +146,7 @@ public enum Tile {
 			this.ESW = ImageCrop.cropImage(floorImage, x+96, y+64, 32, 32);
 			this.NESW = ImageCrop.cropImage(floorImage, x+160, y+0, 32, 32);
 		}
-		if (type.equals("Chasm")) {
+		if (type == TileType.PIT || type == TileType.WATER) {
 			this.ALL = ImageCrop.cropImage(pitImage, x+32, y+32, 32, 32);
 			this.N = ImageCrop.cropImage(pitImage, x+32, y+0, 32, 32);
 			this.E = ImageCrop.cropImage(pitImage, x+64, y+32, 32, 32);
@@ -147,25 +171,38 @@ public enum Tile {
 	}
 	
 	public boolean isGround() {
-	    return this.type().equals("Floor");
+	    return this.type() == TileType.FLOOR;
 	}
 	public boolean isWall() {
-		return this.type().equals("Wall");
+		return this.type() == TileType.WALL;
 	}
 	public boolean isPit() {
-		return this.type().equals("Chasm");
+		return this.type() == TileType.PIT;
+	}
+	public boolean isWater() {
+		return this.type() == TileType.WATER;
+	}
+	public boolean canMoveOn(Creature c) {
+		return isGround() ||
+				(isPit() && c.is(Tag.FLYING)) ||
+				isWater();
 	}
 	
 	public Image getImage(World world, int x, int y, int z) {
 		if (image != null)
 			return icon;
-		if (type.equals("Floor"))
+		if (type == TileType.FLOOR)
 			return GetTileDirection.handleFloor(world, this, x, y, z);
-		else if (type.equals("Chasm"))
-			return GetTileDirection.handleChasm(world, this, x, y, z);
+		else if (type == TileType.PIT || type == TileType.WATER)
+			return GetTileDirection.handlePit(world, this, x, y, z);
 		else
 			return GetTileDirection.handleWall(world, this, x, y, z);
 			
+	}
+	
+	public boolean isEqual(Tile tile) {
+		return (this == tile ||
+				(this.type == tile.type() && this.group == tile.group()));
 	}
 
 }

@@ -27,6 +27,8 @@ public enum Tag {
 	UNDEAD("Undead", "This creature heals when inflicted with poison damage.", Loader.undeadIcon),
 	FLYING("Flying","This creature flies and can pass otherwise impassable terrain.", Loader.flyingIcon),
 	LEGENDARY("Legendary", ""),	//Maybe add a description and icon at some point, mostly here for grammar atm
+	SWIMMER("Swimmer", "This creature moves through water at normal speed.", Loader.swimmerIcon),
+	FASTSWIMMER("Fast Swimmer", "This creature moves quickly through water.", Loader.fastSwimmerIcon),
 	
 	//Temporary Modifiers
 	STUNNED(),	//Cannot take actions on your turn

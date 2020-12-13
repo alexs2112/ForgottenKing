@@ -326,7 +326,7 @@ public class Creature implements java.io.Serializable {
 	public int time() { return time; }
 	public void modifyTime(int x) { time += x; }
 	private int movementDelay;
-	public int movementDelay() { return Math.max(movementDelay - getAgility()/6,5) + getArmorDebuff(); }
+	public int movementDelay() { return Math.max(movementDelay - getAgility()/6,5) + getArmorDebuff() + getTileMovementDelay(); }
 	public int getMovementDelay() { return movementDelay() + randomTimeChange(); }
 	public void modifyMovementDelay(int x) { movementDelay += x; }
 	private int randomTimeChange() {
@@ -345,6 +345,15 @@ public class Creature implements java.io.Serializable {
 		return Math.max(attackDelay + mod, 4) + getArmorDebuff(); 
 	}
 	public void modifyAttackDelay(int x) { attackDelay += x; }
+	public int getTileMovementDelay() {
+		if (world.tile(x,y,z).isWater()) {
+			if (is(Tag.FASTSWIMMER))
+				return -3;
+			else if (!is(Tag.SWIMMER) && !is(Tag.FLYING))
+				return 5;
+		}
+		return 0;
+	}
     
 	/**
 	 * Inventory and Equipment
@@ -459,7 +468,7 @@ public class Creature implements java.io.Serializable {
     	return world.tile(wx, wy, wz);
     }
     public Feature feature(int wx, int wy, int wz) {
-    	if (canSee(wx,wy,wz) || ai.rememberedTile(wx, wy, wz) != Tile.UNKNOWN)
+    	if (canSee(wx,wy,wz) && ai.rememberedTile(wx, wy, wz) != Tile.UNKNOWN)
     		return world.feature(wx, wy, wz);
     	else
     		return null;
@@ -470,7 +479,7 @@ public class Creature implements java.io.Serializable {
     	return null;
     }
     public Inventory items(int wx, int wy, int wz) {
-    	if (canSee(wx,wy,wz) || ai.rememberedTile(wx, wy, wz) != Tile.UNKNOWN)
+    	if (canSee(wx,wy,wz) && ai.rememberedTile(wx, wy, wz) != Tile.UNKNOWN)
     		return world.items(wx,wy,wz);
     	else
     		return null;
@@ -508,7 +517,7 @@ public class Creature implements java.io.Serializable {
 		
 		//A kind of gimpy way to do this now
 		if (is(Tag.LEGENDARY)) {
-			world.notify(x, y, z, "With the death of " + name() + ", a portal to the next area has opened!");
+			world.notify(x, y, z, "With the death of " + name() + ", a portal to the next area of the dungeon has opened!");
 			world.setFeature(new Portal(), x, y, z);
 		}
 		
@@ -878,15 +887,13 @@ public class Creature implements java.io.Serializable {
     public void hearNoise(Noise n) { ai.hearNoise(n); }
     
     public boolean canEnter(int mx, int my, int mz) {
-    	if ((world.tile(mx, my, mz).isPit() && world.creature(mx, my, mz) == null && is(Tag.FLYING)))
-    		return true;
-    	if (world.tile(mx, my, mz).isGround() && world.creature(mx, my, mz) == null) {
+    	if (world.tile(mx, my, mz).canMoveOn(this) && world.creature(mx, my, mz) == null) {
     		Feature f = world.feature(mx, my, mz);
     		if (f == null)
     			return true;
     		else {
     			return (!world.feature(mx, my, mz).blockMovement() 
-    			|| world.feature(mx, my, mz).type().equals("Bump"));
+    			|| world.feature(mx, my, mz).type() == Feature.Type.BUMP);
     		}
     	}
     	return false;

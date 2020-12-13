@@ -183,4 +183,6 @@ public final class Loader {
 	public static Image undeadIcon = ImageCrop.cropImage(tagsFull, 96, 0, 32, 32);
 	public static Image allyIcon = ImageCrop.cropImage(tagsFull, 128, 0, 32, 32);
 	public static Image flyingIcon = ImageCrop.cropImage(tagsFull, 160, 0, 32, 32);
+	public static Image swimmerIcon = ImageCrop.cropImage(tagsFull, 192, 0, 32, 32);
+	public static Image fastSwimmerIcon = ImageCrop.cropImage(tagsFull, 224, 0, 32, 32);
 }

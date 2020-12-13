@@ -15,7 +15,7 @@ public class DownStair extends Feature {
 
 	public DownStair(UpStair upStair, int x, int y, int z) {
 		super("Down Stair", "A staircase leading down", Loader.downStairs);
-		setType("DownStair");
+		setType(Type.DOWNSTAIR);
 		this.other = upStair;
 		this.x = x;
 		this.y = y;

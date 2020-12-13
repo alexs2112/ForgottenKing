@@ -14,7 +14,7 @@ public class Entrance extends Feature {
 
 	public Entrance(int x, int y, int z) {
 		super("Entrance", "An archway leading out of the dungeon", Loader.entrance);
-		setType("UpStair");
+		setType(Type.UPSTAIR);
 		this.x = x;
 		this.y = y;
 		this.z = z;

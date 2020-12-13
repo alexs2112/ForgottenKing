@@ -8,11 +8,18 @@ public abstract class Feature implements Cloneable, java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;
 	protected String name;
 	protected String desc;
-	protected String type;
+	protected Type type;
 	protected Image image;
 	public String name() { return name; }
 	public String desc() { return desc; }
-	public String type() { return type; }
+	public Type type() { return type; }
+	
+	public enum Type {
+		BUMP,
+		CANCLOSE,
+		UPSTAIR,
+		DOWNSTAIR;
+	}
 	
 	/**
 	 * How the player triggers interact
@@ -20,13 +27,12 @@ public abstract class Feature implements Cloneable, java.io.Serializable {
 	 * "CanClose" : player press 'c' next to it
 	 * "UpStair" and "DownStair" are handled in playscreen
 	 */
-	public void setType(String t) { type = t; }
+	public void setType(Type t) { type = t; }
 
 	public Feature(String name, String desc, Image image) {
 		this.name = name;
 		this.desc = desc;
 		this.image = image;
-		this.type = "";
 	}
 	
 	public Feature clone() {

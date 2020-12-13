@@ -22,7 +22,7 @@ public class SelectSpellScreen extends Screen {
     
     public SelectSpellScreen(Group playRoot, Player player, int sx, int sy){
         this.player = player;
-        this.letters = "abcdefghijklmnopqrstuvwxyz";
+        this.letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         this.playRoot = playRoot;
         this.sx = sx;
         this.sy = sy;
@@ -46,7 +46,7 @@ public class SelectSpellScreen extends Screen {
         	return;
         }
         x += 32;
-        
+        y+=32;
         int top = Math.min(Math.max(0, select-5), Math.max(0, spells.size()-10));
         for (int i = top; i < top+10; i++) {
         	if (i >= spells.size())
@@ -57,11 +57,13 @@ public class SelectSpellScreen extends Screen {
         	if (player.magic().get(spell.type()) < spell.level() ||
         			player.mana() < spell.cost())
         		c = Color.DARKGREY;
-        	write(root, line, x, 32*(i-top) + y + 32, font, c);
+        	
+        	
+        	draw(root, spell.icon(), x, 32*(i-top) + y - 26);
+        	write(root, line, x+48, 32*(i-top) + y, font, c);
         	if (i == select)
-        		draw(root, Loader.arrowRight, x-48, 32*(i-top)+y+4);
+        		draw(root, Loader.arrowRight, x-44, 32*(i-top)+y-26);
         }
-        
         y = 396;
         if (spells.size() > 0) {
         	Spell s = spells.get(select);

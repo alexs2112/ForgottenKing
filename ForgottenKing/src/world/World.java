@@ -88,18 +88,31 @@ public class World implements java.io.Serializable {
 	public void remove(Creature creature) {
 		creatures.remove(creature);
 	}
-
-	public World(Tile[][][] tiles, Feature[][][] features){
-		this.tiles = tiles;
-		this.width = tiles.length;
-		this.height = tiles[0].length;
-		this.depth = tiles[0][0].length;
+	
+	/**
+	 * Basic Constructor
+	 * @param width of the world
+	 * @param height of the world
+	 * @param depth of the world, how many levels there are
+	 */
+	public World(int width, int height, int depth) {
+		this.width = width;
+		this.height = height;
+		this.depth = depth;
 		this.creatures = new ArrayList<Creature>();
 		this.items = new Inventory[width][height][depth];
 		this.hazards = new Hazard[width][height][depth];
+	}
+	public void setTiles(Tile[][][] tiles) {
+		this.tiles = tiles;
+	}
+	public void setFeatures(Feature[][][] features) {
 		this.features = features;
 	}
 	
+	/**
+	 * Returns the specified tile, if it is out of bounds return the BOUNDS tile
+	 */
 	public Tile tile(int x, int y, int z){
 		if (x < 0 || x >= width || y < 0 || y >= height)
 			return Tile.BOUNDS;
@@ -107,24 +120,37 @@ public class World implements java.io.Serializable {
 			return tiles[x][y][z];
 	}
 
+	/**
+	 * Return the specified tiles image
+	 */
 	public Image tileImage(int x, int y, int z){
 		return tile(x, y, z).getImage(this, x, y, z);
 	}
 	
+	/**
+	 * Obsolete method, delete in the future
+	 */
 	public void dig(int x, int y, int z) {
 	    if (tile(x,y,z) == Tile.CAVE_WALL)
 	        tiles[x][y][z] = Tile.DIRT_FLOOR;
 	}
 	
+	/**
+	 * Return the pathfinding cost of a tile, currently 1 for everything unless it has a feature with a bump interaction,
+	 * in which case return 2 (since it takes 2 moves to move through it)
+	 */
 	public int pathfindingCost(int x, int y, int z) {
-		if (feature(x,y,z) != null && feature(x,y,z).type().equals("Bump"))
+		if (feature(x,y,z) != null && feature(x,y,z).type() == Feature.Type.BUMP)
 			return 2;
 		return 1;
 	}
 	
+	/**
+	 * Adds a creature at a randomly selected location of the designated z level
+	 * Makes sure to fill their HP and mana pools in case there is something modifying that
+	 */
 	public void addAtEmptyLocation(Creature creature, int z){
 	    Point p = getEmptyLocation(z);
-
 	    creature.x = p.x;
 	    creature.y = p.y;
 	    creature.z = p.z;
@@ -133,11 +159,17 @@ public class World implements java.io.Serializable {
 	    creature.fillHP();
 	}
 	
+	/**
+	 * A helper method that returns a point of an empty location of the designated z level
+	 * Empty is defined as a ground tile that does not contain a creature and does not contain a feature that blocks movement
+	 */
 	public Point getEmptyLocation(int z) {
 		int x = (int)(Math.random() * width);
 	    int y = (int)(Math.random() * height);
 
-	    while (!tile(x,y,z).isGround() || creature(x,y,z) != null || (feature(x,y,z) != null && feature(x,y,z).blockMovement() == true)) {
+	    while (!tile(x,y,z).isGround() 
+	    		|| creature(x,y,z) != null 
+	    		|| (feature(x,y,z) != null && feature(x,y,z).blockMovement() == true)) {
 	        x = (int)(Math.random() * width);
 	        y = (int)(Math.random() * height);
 	    }

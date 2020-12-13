@@ -3,6 +3,7 @@ package spells;
 import creatures.Creature;
 import creatures.Tag;
 import creatures.Type;
+import javafx.scene.image.Image;
 
 public class Spell implements java.io.Serializable {
 	protected static final long serialVersionUID = 7769423305067121315L;
@@ -19,6 +20,9 @@ public class Spell implements java.io.Serializable {
 			return description;
 		}
 	public void setDescription(String s) { description = s; }
+	
+	private Image icon;
+	public Image icon() { return icon; }
 	
 	private int level;
 	public int level() { return level; }
@@ -101,10 +105,11 @@ public class Spell implements java.io.Serializable {
 	
 	public void casterEffect(Creature caster) { }	//To be overridden
 
-	public Spell(String name, int cost, int level) {
+	public Spell(String name, int cost, int level, Image icon) {
 		this.name = name;
 		this.cost = cost;
 		this.level = level;
+		this.icon = icon;
 	}
 	
 	/**

@@ -50,7 +50,7 @@ public class CreatureAI implements java.io.Serializable {
     public void onEnter(int x, int y, int z, Tile tile){
     	Feature feat = creature.world().feature(x, y, z);
     	if (feat != null) {
-			if (feat.type().equals("Bump")) {
+			if (feat.type() == Feature.Type.BUMP) {
 				feat.interact(creature, creature.world(), x, y, z);
 				return;
 			}
@@ -59,7 +59,7 @@ public class CreatureAI implements java.io.Serializable {
 				return;
 			}
 		}
-        if (tile.isGround() || ((tile.isPit() && creature.is(Tag.FLYING)))){
+        if (tile.canMoveOn(creature)){
              creature.x = x;
              creature.y = y;
              creature.z = z;

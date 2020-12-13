@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.effect.ColorAdjust;
 import javafx.stage.Stage;
+import tools.ImageCrop;
 import tools.KeyBoardCommand;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -72,6 +73,14 @@ public abstract class Screen implements java.io.Serializable {
     	j.setOnMousePressed(clickEvent);
     	j.setOnMouseEntered(enteredEvent);
     	j.setOnMouseExited(exitEvent);
+    	root.getChildren().add(j);
+    }
+    public static void drawWaterOverlay(Group root, Image i, int x, int y) {
+    	ImageView j = new ImageView(ImageCrop.cropImage(i, 0, 22, 32, 10));
+    	j.setX(x);
+    	j.setY(y+22);
+    	j.setPreserveRatio(true);
+    	j.setOpacity(0.8);
     	root.getChildren().add(j);
     }
     

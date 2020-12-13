@@ -1,31 +1,37 @@
 package features;
 
 import creatures.Creature;
-import tools.Point;
 import world.World;
 
-public class Portal extends Feature {
+//A generic feature that blocks movement and line of sight
+public class Block extends Feature {
 	private static final long serialVersionUID = 7769423305067121315L;
+	public enum Type {
+		TREE;
+	}
 
-	public Portal() {
-		super("Portal", "A portal to the next area", Loader.portalImage);
-		setType(Type.DOWNSTAIR);
+	public Block(Type t) {
+		super("", "", null);
+		if (t == Type.TREE) {
+			name = "Tree";
+			desc = "A tree";
+			image = Loader.treeNESW;
+		}
 	}
 
 	@Override
 	public boolean blockLineOfSight() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean blockMovement() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public void interact(Creature creature, World world, int x, int y, int z) {
-		Point p = world.getEmptyLocation(z+1);
-		creature.moveTo(p.x, p.y, z+1);
 	}
+	
 
 }

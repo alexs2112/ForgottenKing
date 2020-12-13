@@ -64,10 +64,10 @@ public class MagicScreen extends Screen {
 			write(root, ""+value, wx, y + 48 + 72*i, font, c);
 			if (i == letters.indexOf(selection)) {
 				wx = x + 377;
-				if (points > 0) {
+				if (value > 0) {
 					draw(root, Loader.minusIcon, wx, y + 72*i + 18);
 					wx += 32;
-				} if (value > 0)
+				} if (points > 0)
 					draw(root, Loader.plusIcon, wx, y + 72*i + 18);
 			}
 		}

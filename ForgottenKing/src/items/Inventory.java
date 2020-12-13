@@ -48,6 +48,8 @@ public class Inventory implements java.io.Serializable {
 		addMany(item, 1);
 	}
 	public void addMany(Item item, int amount){
+		if (item == null)
+			return;
 		for (int i = 0; i < items.length; i++){
 	        if (items[i] != null && items[i].name().equals(item.name())){
 	             quantity[i] += amount;
