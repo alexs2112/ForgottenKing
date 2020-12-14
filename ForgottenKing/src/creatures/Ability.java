@@ -32,6 +32,8 @@ public class Ability implements java.io.Serializable {
 	public int radius() { return radius; }
 	public void setRadius(int x) { radius = x; }
 	
+	public boolean self;
+	
 	//For tags that grant more powerful abilities, such as polearm master
 	private Ability upgradedAbility;
 	private Tag prerequisiteTag;

@@ -52,7 +52,7 @@ public class PlayScreen extends Screen {
     private ItemFactory itemFactory;
     private FieldOfView fov;
     private Screen subscreen;
-    private boolean devMode = true;
+    private boolean devMode = false;
     //private String hotkeyNumbers = "1234567890";
     public Audio audio() {
     	if (subscreen != null)
@@ -99,6 +99,14 @@ public class PlayScreen extends Screen {
         if (devMode) {
         	player.addEquipment(itemFactory.weapon().newDevSword(-1));
         	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
+        	player.addEquipment(itemFactory.weapon().newFlintlock(-1));
+        	player.addEquipment(itemFactory.weapon().newLongbow(-1));
+        	player.addEquipment(itemFactory.weapon().newHandCrossbow(-1));
+        	for (int i = 0; i < 100; i++) {
+        		player.addItemToInventory(itemFactory.ammo().newArrow(-1));
+        		player.addItemToInventory(itemFactory.ammo().newShot(-1));
+        		player.addItemToInventory(itemFactory.ammo().newBolt(-1));
+        	}
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -370,6 +378,9 @@ public class PlayScreen extends Screen {
     	if (code.equals(KeyCode.ESCAPE))
     		endAfterUserInput = false;
     	
+    	if (player.hasWon)
+    		return new LeaveScreen(player);
+    	
 		if (endAfterUserInput && subscreen == null) {
 			player.update();
 			if (player.time() <= 0) //If the players action did not modify their time, set their time to their movement delay
@@ -384,6 +395,7 @@ public class PlayScreen extends Screen {
 		//If the player is dead, hit a command to jumpstart to the next screen.
 		if (player.hp() <= 0)
 			nextCommand = new KeyBoardCommand(KeyCode.PERIOD, '.', false);
+		
     	return this;
     }
 	
@@ -568,22 +580,30 @@ public class PlayScreen extends Screen {
 	private void populate() {
 		for (int z = 0; z < world.depth(); z++) {
 			//Each level has 9 creatures of a lower level, 15 creatures of that level, and 6 creatures of a higher level
-			for (int i = 0; i < 9; i++) {
-				if ((z+1) % 5 != 0)
-					creatureFactory.newRandomCreature(z, z-1);
-				else
+			if (z % 5 == 0) {
+				for (int i = 0; i < 10; i++)
+					creatureFactory.newRandomCreature(z, z+1);
+				for (int i = 0; i < 20; i++)
 					creatureFactory.newRandomCreature(z, z);
+			} else if ((z+1) % 5 == 0) {
+				for (int i = 0; i < 15; i++) {
+					creatureFactory.newRandomCreature(z, z-1);
+					creatureFactory.newRandomCreature(z, z);
+				}
+			} else {
+				for (int i = 0; i < 9; i++)
+					creatureFactory.newRandomCreature(z, z-1);
+				for (int i = 0; i < 15; i++)
+					creatureFactory.newRandomCreature(z, z);
+				for (int i = 0; i < 6; i++)
+					creatureFactory.newRandomCreature(z, z+1);
 			}
-			for (int i = 0; i < 15; i++)
-				creatureFactory.newRandomCreature(z, z);
-			for (int i = 0; i < 6; i++)
-				creatureFactory.newRandomCreature(z, z+1);
 			for (int i = 0; i < 8; i++){
 	            itemFactory.ammo().newRock(z);
 	        }
 			for (int i = 0; i < 5; i++){
 				itemFactory.newRandomArmor(z);
-				itemFactory.newRandomWeapon(z);
+				itemFactory.newRandomWeapon(z, (z/5) + 1);
 			}
 			for (int i = 0; i < 3; i++) {
 				itemFactory.newRandomPotion(z);
@@ -597,11 +617,11 @@ public class PlayScreen extends Screen {
 			for (int i = 0; i < 3; i++) {
 				itemFactory.trinket().newRandomRing(z);
 			}
-			for (int i = 0; i < 3; i++) {
-				Point p = world.getEmptyLocation(z);
-				Chest c = new Chest(Chest.ChestType.CHEST);
-				world.setFeature(c, p.x, p.y, z);
-			}
+//			for (int i = 0; i < 3; i++) {
+//				Point p = world.getEmptyLocation(z);
+//				Chest c = new Chest(Chest.ChestType.CHEST);
+//				world.setFeature(c, p.x, p.y, z);
+//			}
 			for (int i = 0; i < 6; i++) {
 				Point p = world.getEmptyLocation(z);
 				Chest c = new Chest(Chest.ChestType.BARREL);

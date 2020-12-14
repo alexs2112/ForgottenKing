@@ -33,11 +33,13 @@ public class LeaveScreen extends Screen {
     	return this;
     }
 	
-	private String getWinOrLose(Creature player) {
+	private String getWinOrLose(Player player) {
 		for (Item i : player.inventory().getUniqueItems())
 			if (i.is(ItemTag.VICTORYITEM)) {
 				return "resources/win_screen.png";
 			}
+		if (player.hasWon)
+			return "resources/win_screen.png";
 		return "resources/lose_screen.png";
 	}
 }

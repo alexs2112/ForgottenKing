@@ -18,19 +18,28 @@ public class AmmoFactory implements java.io.Serializable {
 	private Image rangedFull = new Image(this.getClass().getResourceAsStream("resources/items/ranged_full.png"));
 	private Image arrowImage = ImageCrop.cropImage(rangedFull, 0, 64, 32, 32);
 	private Image dartImage = ImageCrop.cropImage(rangedFull, 0, 96, 32, 32);
+	private Image boltImage = ImageCrop.cropImage(rangedFull, 96, 64, 32, 32);
+	private Image shotImage = ImageCrop.cropImage(rangedFull, 64, 0, 32, 32);
 	
 	public AmmoFactory(World world) {
 		this.world = world;
 	}
 	
 	public Item newRandomAmmo(int z) {
-		int n = (int)(Math.random()*2);
+		int n = (int)(Math.random()*5);
 		if (n == 0)
 			return newArrow(z);
 		else if (n == 1)
 			return newDart(z);
-		else
-			return newRock(z);
+		else if (n == 2)
+			return newBolt(z);
+		else if (n == 3) {
+			if (z > 4)
+				return newShot(z);
+			else
+				return newRandomAmmo(z);
+		} else
+		 	return newRock(z);
 	}
 	
 	public Item newRock(int z) {
@@ -60,6 +69,26 @@ public class AmmoFactory implements java.io.Serializable {
 		item.setThrownDamage(1, 3);
 		item.setWeight(0);
 		item.setDescription("A thin, razor sharp piece of metal. With skill it can be thrown with deadly accuracy. If coated with a harmful substance it can deliver poison directly into the bloodstream of its intended target.");
+		int amount = (int)(Math.random()*5 + 2);
+		world.addAtEmptyLocation(item, z, amount);
+		return item;
+	}
+	public Item newBolt(int z) {
+		Item item = new Item("Bolt", ItemType.BOLT, boltImage);
+		item.setDamageType(Type.PIERCING);
+		item.setRangedDamage(2, 3);
+		item.setWeight(0);
+		item.setDescription("A metal projectile, shorter than an arrow, intended to be shot from a crossbow.");
+		int amount = (int)(Math.random()*5 + 2);
+		world.addAtEmptyLocation(item, z, amount);
+		return item;
+	}
+	public Item newShot(int z) {
+		Item item = new Item("Shot", ItemType.SHOT, shotImage);
+		item.setDamageType(Type.CRUSHING);
+		item.setRangedDamage(3, 4);
+		item.setWeight(0);
+		item.setDescription("Small round metal shots to be fired from a black powder weapon.");
 		int amount = (int)(Math.random()*5 + 2);
 		world.addAtEmptyLocation(item, z, amount);
 		return item;

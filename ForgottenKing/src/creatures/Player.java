@@ -23,6 +23,11 @@ public class Player extends Creature {
     }
     
     /**
+     * A really poor way to do this to have it finished in time for proc jam
+     */
+    public boolean hasWon;
+    
+    /**
      * FLAVOUR STUFF
      */
     private Image largeIcon;

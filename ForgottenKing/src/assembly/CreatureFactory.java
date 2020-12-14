@@ -48,6 +48,9 @@ public class CreatureFactory implements java.io.Serializable {
 	private Image orcGunnerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_gunner.gif"));
 	private Image orcCaptainIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_captain.gif"));
 	private Image orcWarcasterIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_warcaster.gif"));
+	private Image parrotIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/parrot.gif"));
+	private Image harpyIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/harpy.gif"));
+	private Image orcBossIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_boss.gif"));
 	
 	private Image simulacrumIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/simulacrum.gif"));
 	private Image impIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/imp.gif"));
@@ -186,7 +189,7 @@ public class CreatureFactory implements java.io.Serializable {
 		for (int i = 0; i < (int)(Math.random()*10)+1; i++)
 			goblin.addItemToInventory(itemFactory.ammo().newRock(-1));
 		if (z > 0 && Math.random()*100 < 20*z)
-	    	goblin.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
+	    	goblin.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 1));
 		return goblin;
 	}
 
@@ -215,7 +218,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    	for (int i = 0; i < 3 + (int)(Math.random()*2); i++)
 	    		lizardGrunt.addItemToInventory(itemFactory.ammo().newDart(-1));
 	    } if (z > 0 && Math.random()*100 < 25*z)
-	    		lizardGrunt.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
+	    		lizardGrunt.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 1));
 	    return lizardGrunt;
 	}
 	public Creature newSoldierAnt(int z) {
@@ -250,7 +253,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    lizard.setStats(3,3,2,2,2,1);
 	    lizard.setDescription("A common foot soldier of the Lizardfolk. What they lose in intelligence they make up for with their strength and willingness to follow orders.");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
+	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 1));
 	    return lizard;
 	}
 	public Creature newLizardHunter(int z) {
@@ -293,7 +296,6 @@ public class CreatureFactory implements java.io.Serializable {
 	    lizard.addEquipment(itemFactory.weapon().newDagger(-1));
 	    lizard.addEquipment(itemFactory.armor().newLeatherArmor(-1));
 	    lizard.addTag(Tag.SPELLCASTER);
-	    //lizard.addTag(Tag.IMPROVED_CRITICAL);
 	    lizard.setMana(12, 12);
 	    lizard.addSpell(Spells.slow(3, 5, 5));
 	    lizard.addSpell(Spells.vulnerability());
@@ -306,7 +308,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    lizard.setStats(3,3,1,2,3,2);
 	    lizard.setDescription("A powerful and high ranking lizardfolk trained in the use of an impressive arsenal of arms and armour, they serve to guard the most important of their people. Why are they in the dungeon?");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
+	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 1));
 	    lizard.addEquipment(itemFactory.armor().newStuddedLeatherArmor(-1));
 	    return lizard;
 	}
@@ -339,7 +341,6 @@ public class CreatureFactory implements java.io.Serializable {
 	    grisstok.addSpell(Spells.darksmite());
 	    grisstok.setMana(12, 12);
 	    grisstok.setDescription("What was once a lizardfolk has been turned into a massive monstrosity through priestly ritual. Griss'tok the Fierce has large spined wings and is covered with bloodred scales. He emanates heat and the ground trembles when he moves.");
-	    grisstok.addItemToInventory(itemFactory.newVictoryItem(-1));
 	    world.addAtEmptyLocation(grisstok, z);
 	    return grisstok;
 	}
@@ -351,10 +352,9 @@ public class CreatureFactory implements java.io.Serializable {
 		new BasicAI(orc, player);
 		orc.setAttributes(4,2,2);
 	    orc.setStats(2,3,2,1,2,3);
-	    orc.setDescription("");
+	    orc.setDescription("What amounts to hired help on the high seas, they are more than capable of killing unfortunate stragglers.");
 	    world.addAtEmptyLocation(orc, z);
-	    //Should be any random weapon, if ranged than give ammo
-	    orc.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1));
+	    orc.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 2));
 	    return orc;
 	}
 	public Creature newDeepAnt(int z) {
@@ -364,10 +364,22 @@ public class CreatureFactory implements java.io.Serializable {
 		ant.addEffectOnHit(Effects.poisoned(4, 3), 50);
 		ant.addTag(Tag.VENOMOUS);
 		ant.addTag(Tag.NODOOR);
-		ant.setDescription("");
+		ant.setDescription("An massive, jet black ant grown in the depths of the dungeon. Thick poison drips from its mandibles.");
 		world.addAtEmptyLocation(ant, z);
 		new BasicAI(ant, player);
 		return ant;
+	}
+	public Creature newParrot(int z) {
+		Creature parrot = new Creature(world, "Parrot",6,200, 28,13,3,5,5,8, parrotIcon);
+		new BasicAI(parrot, player);
+		parrot.setAttributes(2,3,3);
+	    parrot.setStats(2,2,4,4,4,3);
+	    parrot.setDescription("A brightly coloured bird, it moves quickly and can screech for help. It has also learned a wide variety of cuss words.");
+	    parrot.addTag(Tag.FLYING);
+	    parrot.modifyMovementDelay(-3);
+	    parrot.addAbility(Abilities.warningScreech());
+	    world.addAtEmptyLocation(parrot, z);
+	    return parrot;
 	}
 	public Creature newSnappingTurtle(int z) {
 		Creature turtle = new Creature(world, "Snapping Turtle",7,260, 28,6,6,4,6,10, snappingTurtleIcon);
@@ -377,29 +389,42 @@ public class CreatureFactory implements java.io.Serializable {
 	    turtle.modifyResistance(Type.FIRE, 1);
 	    turtle.modifyResistance(Type.COLD, 1);
 	    turtle.addTag(Tag.FASTSWIMMER);
-	    turtle.setDescription("");
+	    turtle.modifyMovementDelay(1);
+	    turtle.setDescription("A belligerent testudine with an armoured carapace."); //*
 	    world.addAtEmptyLocation(turtle, z);
 	    return turtle;
 	}
 	public Creature newOrcBrawler(int z) {
-		Creature orc = new Creature(world, "Orc Thug",7,265,30,9,3,5,5,8, orcBrawlerIcon);
+		Creature orc = new Creature(world, "Orc Brawler",7,265,30,9,3,5,5,8, orcBrawlerIcon);
 		new BasicAI(orc, player);
 		orc.setAttributes(3,3,2);
 	    orc.setStats(3,4,3,2,2,2);
-	    orc.setDescription("");
-	    //Ability to go berserk
-	    //Perk that deals bonus damage on unarmed
+	    orc.setDescription("An experienced fighter, orc brawlers are prone to fits of berserk rage.");
+	    orc.addAbility(Abilities.rage());
+	    orc.addTag(Tag.UNARMED_TRAINING);
 	    world.addAtEmptyLocation(orc, z);
 	    return orc;
 	}
+	public Creature newHarpy(int z) {
+		Creature harpy = new Creature(world, "Harpy",7,260,30,12,3,5,4,7,harpyIcon);
+		new BasicAI(harpy, player);
+		harpy.setAttributes(2,4,2);
+	    harpy.setStats(3,3,4,4,3,2);
+	    harpy.setDescription("Aggressive winged creatures, their sharp claws and harrying strikes have torn many luckless travelers to shreds.");
+	    harpy.addTag(Tag.FLYING);
+	    harpy.modifyMovementDelay(-3);
+	    harpy.modifyAttackDelay(-3);
+	    world.addAtEmptyLocation(harpy, z);
+	    return harpy;
+	}
 	public Creature newOrcPrivateer(int z) {
-		Creature orc = new Creature(world, "Orc Privateer",8,305,34,10,3,4,4,7, orcPrivateerIcon);
+		Creature orc = new Creature(world, "Orc Privateer",8,305,34,10,3,4,5,7, orcPrivateerIcon);
 		new BasicAI(orc, player);
 		orc.setAttributes(2,4,3);
 	    orc.setStats(3,3,4,4,3,1);
-	    orc.setDescription("");
-	    //Attacks quickly with short blades
-	    //Can teleport next to you
+	    orc.setDescription("Skilled with blades, privateers are adept at taking out important targets, both on land and at sea.");
+	    orc.addEquipment(itemFactory.weapon().newOrcishDagger(-1));
+	    orc.addAbility(Abilities.teleportNextTo());
 	    world.addAtEmptyLocation(orc, z);
 	    return orc;
 	}
@@ -408,9 +433,8 @@ public class CreatureFactory implements java.io.Serializable {
 		new BasicAI(gator, player);
 		gator.setAttributes(3,3,2);
 	    gator.setStats(3,3,3,3,3,2);
-	    //SWIMS FAST
 	    gator.modifyMovementDelay(-2);
-	    gator.setDescription("");
+	    gator.setDescription("An aggressive crocodilian with great crunching jaws full of sharp teeth.");//*
 	    gator.addTag(Tag.FASTSWIMMER);
 	    world.addAtEmptyLocation(gator, z);
 	    return gator;
@@ -420,7 +444,14 @@ public class CreatureFactory implements java.io.Serializable {
 		new BasicAI(orc, player);
 		orc.setAttributes(3,4,3);
 	    orc.setStats(3,3,4,4,3,3);
-	    orc.setDescription("");
+	    orc.setDescription("An experienced seafarer, able to man (or rather, orc) all positions on deck.");
+	    if (Math.random() < 0.5)
+	    	orc.addEquipment(itemFactory.newRandomWeapon(-1, 2));
+	    else {
+	    	orc.addEquipment(itemFactory.weapon().newFlintlock(-1));
+	    	for (int i = 0; i < 6; i++)
+	    		orc.addItemToInventory(itemFactory.ammo().newShot(-1));
+	    }
 	    //Swaps between a blade and a gun
 	    world.addAtEmptyLocation(orc, z);
 	    return orc;
@@ -430,8 +461,10 @@ public class CreatureFactory implements java.io.Serializable {
 		new BasicAI(orc, player);
 		orc.setAttributes(3,4,3);
 	    orc.setStats(3,2,4,4,4,3);
-	    orc.setDescription("");
-	    //Gun based, loud shots, can activate ability to increase ranged attack speed for a time
+	    orc.setDescription("It takes a skilled marksman to hit moving targets on opposing vessels.");
+	    orc.addEquipment(itemFactory.weapon().newFlintlock(-1));
+	    for (int i = 0; i < 5; i++)
+	    	orc.addItemToInventory(itemFactory.ammo().newShot(-1));
 	    world.addAtEmptyLocation(orc, z);
 	    return orc;
 	}
@@ -440,7 +473,7 @@ public class CreatureFactory implements java.io.Serializable {
 		new BasicAI(orc, player);
 		orc.setAttributes(5,3,3);
 	    orc.setStats(3,4,3,3,4,3);
-	    orc.setDescription("");
+	    orc.setDescription("A captain of an orcish pirate ship, leading their allies to blood and riches.");
 	    //Can pump up allies in range, spawns with melee weapon
 	    world.addAtEmptyLocation(orc, z);
 	    return orc;
@@ -450,8 +483,22 @@ public class CreatureFactory implements java.io.Serializable {
 		new BasicAI(orc, player);
 		orc.setAttributes(3,4,5);
 	    orc.setStats(2,3,4,3,5,5);
-	    orc.setDescription("");
+	    orc.setDescription("Usually accompanying high ranking orc pirates, warcaster's are capable of casting all sorts of cold and dark spells.\nCurrently Unfinished");
 	    //Cold/Dark caster, can make allies go berserk
+	    world.addAtEmptyLocation(orc, z);
+	    return orc;
+	}
+	public Creature newUshnag(int z) {
+		Creature orc = new Creature(world, "Ushnag",11, 900, 29,10,6,6,10,13, orcBossIcon);
+		new SpellcastingAI(orc, player, 75);
+		orc.setAttributes(5,3,5);
+	    orc.setStats(4,5,2,3,5,5);
+	    orc.setDescription("An established pirate king, corrupted by his proximity to the Forgotten King. Ushnag the Volatile has a single large bloodred eye, set in the center of his head that grant him massive amounts of magical power.");
+	    orc.addTag(Tag.LEGENDARY);
+	    orc.addTag(Tag.SPELLCASTER);
+	    orc.setResistance(Type.FIRE, 1);
+	    orc.addSpell(Spells.fireball());
+	    orc.addSpell(Spells.summonImp(this));
 	    world.addAtEmptyLocation(orc, z);
 	    return orc;
 	}

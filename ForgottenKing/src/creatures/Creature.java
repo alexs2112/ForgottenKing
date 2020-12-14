@@ -155,7 +155,6 @@ public class Creature implements java.io.Serializable {
 		for (Item i : equipment.values()) {
 			if (!(i.is(ItemTag.SHIELD) && is(Tag.SHIELD_TRAINING) && i.attackValue() < 0))
 				value += i.attackValue();
-			//value += i.attackValue();
 		}
 		return value - getArmorDebuff();
 	}
@@ -340,8 +339,11 @@ public class Creature implements java.io.Serializable {
 	private int attackDelay;
 	public int attackDelay() {
 		int mod = 0;
-		if (weapon() != null)
+		if (weapon() != null) {
 			mod += weapon().weaponDelay();
+			if (weapon().is(ItemTag.LOADING) && !is(Tag.FAST_LOADER))
+				mod += 4;
+		}
 		return Math.max(attackDelay + mod, 4) + getArmorDebuff(); 
 	}
 	public void modifyAttackDelay(int x) { attackDelay += x; }
@@ -669,6 +671,16 @@ public class Creature implements java.io.Serializable {
 		Creature c = creature(wx,wy,wz);
 		putAt(item, wx, wy, wz);
 		if (c != null) {
+			if (weapon() != null && weapon().is(ItemTag.BLACKPOWDER)) {
+				//Black powder weapons are loud
+				world.makeNoise(new Noise(x,y,z,"gunshot",8));
+				//8% chance to misfire black powder weapons
+				if (Math.random()*100 < 8) {
+					doAction("misfire");
+					return;
+				}
+			}
+			
 			rangedWeaponAttack(item, c);
 			//20% chance the fired object breaks, 8% if you have the STRONG_ARROWS perk
 	        int breakChance = 20;
@@ -689,7 +701,8 @@ public class Creature implements java.io.Serializable {
 	public Item quiver() { 
 		if (quiver != null && !inventory.contains(quiver))
 			quiver = null;
-		if (quiver == null || quiver.isCompatibleAmmoWith(weapon())) {
+		if (quiver == null || !quiver.isCompatibleAmmoWith(weapon())) {
+			quiver = null;
 			for (Item i : inventory.getUniqueItems())
 				if (i.type() != null && i.isCompatibleAmmoWith(weapon())) {
 					setQuiver(i);
@@ -1096,6 +1109,9 @@ public class Creature implements java.io.Serializable {
 	public void addEffect(Effect effect){
         if (effect == null)
             return;
+        
+        if (effect.fails(this))
+        	return;
         Effect newEffect = (Effect)(effect.clone());
         if (newEffect.colour() != null)
         	addStatement("*" + newEffect.name() + "*", newEffect.colour());

@@ -4,6 +4,7 @@ public enum ItemType {
 	RUNESTONE("Runestone"),		//Runestones
 	ARROW("Arrow"),				//Ammunition for Bows
 	BOLT("Bolt"),				//Ammunition for Crossbows
+	SHOT("Shot"),				//Ammunition for Guns
 	STONE("Stone"),				//Ammunition for slings, usually with throwing tag
 	POTION("Potion"),			//Quaffed to apply an effect
 	BOOK("Book"),				//Read to learn from its spell list	
@@ -27,6 +28,6 @@ public enum ItemType {
 		this.text = text;
 	}
 	public boolean isAmmo() {
-		return this == ARROW || this == BOLT || this == STONE;
+		return this == ARROW || this == BOLT || this == STONE || this == SHOT;
 	}
 }

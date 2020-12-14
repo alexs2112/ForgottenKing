@@ -12,6 +12,7 @@ public enum ItemTag {
 	BOW("Bow", "A bow, fires quivered arrows.", Loader.bowIconGold),
 	CROSSBOW("Crossbow", "A crossbow, fires quivered bolts.", Loader.crossbowIconGold),
 	SLING("Sling", "A sling, fires quivered stones.", Loader.slingIconGold),
+	GUN("Gun", "A rudimentary firearm, fires shot.", Loader.gunIconGold),
 	
 	SHIELD("Shield", "Equipped in your off hand, reduces your attack by 2 if you do not have the [Shield Training] perk.", Loader.shieldTag),
 	LIGHTARMOR("Light Armor", "The lightest of armor, you do not have to be trained in its use to be able to wear it.", Loader.lightArmorTag),
@@ -23,6 +24,8 @@ public enum ItemTag {
 	VERSATILE("Versatile", "If you are wielding this one handed weapon with both hands, you gain +2 to attack.", Loader.versatileTag),
 	CLEAVING("Cleaving", "Attacks with this weapon attack each enemy adjacent to you and your target for 50% damage.", Loader.cleavingTag),
 	HIGHCRIT("High Critical", "Increases your critical chance by 10% when wielding this weapon.", Loader.highCritTag),
+	LOADING("Loading", "Slow to load and fire, unless you have the fast loader perk.", Loader.loadingTag),
+	BLACKPOWDER("Blackpowder", "Utilizing explosive powder, firing this weapon is extremely loud.", Loader.blackPowderTag),
 	VICTORYITEM("Victory Item", "The end of your quest is in sight, return to the surface with this in your possession to win", Loader.victoryItemTag);	
 	private static final long serialVersionUID = 7769423305067121315L;
 	private String text;
@@ -42,7 +45,7 @@ public enum ItemTag {
 	}
 	public boolean isWeapon() {
 		return this == DAGGER || this == SWORD || this == AXE || this == MACE ||
-				this == POLEARM || this == BOW || this == CROSSBOW || this == SLING;
+				this == POLEARM || this == BOW || this == CROSSBOW || this == SLING || this == GUN;
 	}
 
 }

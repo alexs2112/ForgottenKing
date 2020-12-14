@@ -62,6 +62,7 @@ public enum Tag {
 		public boolean canUnlock(Creature player) { return (player.getBrawn() >= 9); }
 		public String prerequisites() { return "9 Brawn"; }
 	},
+	FAST_LOADER("Fast Loader", "Adept at loading weapons, weapons with the Loading tag no longer increase attack delay.", Loader.fastLoaderIcon),
 	DEADLY_CRITICAL("Deadly Critical", "You deal an additional DEX-Accuracy damage on critical hits.", Loader.deadlyCriticalIcon) {
 		public boolean canUnlock(Creature player) { return (player.is(Tag.IMPROVED_CRITICAL) && player.getAccuracy() >= 5); }
 		public String prerequisites() { return "[Improved Critical] perk and 5 Accuracy"; }

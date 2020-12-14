@@ -1,7 +1,9 @@
 package creatures.ai;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import creatures.Ability;
 import creatures.Creature;
 import creatures.Tag;
 import features.Feature;
@@ -158,6 +160,13 @@ public class CreatureAI implements java.io.Serializable {
 		} else {
 			return creature.canSee(x, y, z);
 		}
+	}
+	protected boolean canActivateAbility(Ability a, Creature c) {
+		if (a.time() > 0)
+			return false;
+		if (a.self || inRange(a.range(), c.x, c.y))
+			return true;
+		return false;
 	}
 	
 	protected boolean inRange(int range, int wx, int wy) {

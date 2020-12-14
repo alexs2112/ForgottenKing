@@ -37,7 +37,7 @@ public class ItemFactory implements java.io.Serializable {
 		ammo = new AmmoFactory(world);
 	}
 	
-	public Item newRandomWeapon(int z) { return weapon.newRandomWeapon(z); }
+	public Item newRandomWeapon(int z, int tier) { return weapon.newRandomWeapon(z, tier); }
 	public Item newRandomArmor(int z) { return armor.newRandomArmor(z); }
 	public Item newRandomPotion(int z) { return consumable.newRandomPotion(z); }
 	

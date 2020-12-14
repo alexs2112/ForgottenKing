@@ -88,7 +88,8 @@ public class Item implements java.io.Serializable {
 			return false;
 		return (type() == ItemType.ARROW && i.is(ItemTag.BOW)) ||
 			   (type() == ItemType.BOLT && i.is(ItemTag.CROSSBOW)) ||
-			   (type() == ItemType.STONE && i.is(ItemTag.SLING));
+			   (type() == ItemType.STONE && i.is(ItemTag.SLING)) ||
+			   (type() == ItemType.SHOT && i.is(ItemTag.GUN));
 	}
 	
 	private int rangedAttackValue;
@@ -175,7 +176,7 @@ public class Item implements java.io.Serializable {
 		return (tags != null && tags.contains(t));
 	}
 	public boolean isRanged() {
-		return is(ItemTag.BOW) || is(ItemTag.CROSSBOW) || is(ItemTag.SLING);
+		return is(ItemTag.BOW) || is(ItemTag.CROSSBOW) || is(ItemTag.SLING) || is(ItemTag.GUN);
 	}
 	
 	/**

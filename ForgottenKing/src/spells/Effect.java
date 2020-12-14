@@ -36,13 +36,14 @@ public class Effect implements Cloneable, java.io.Serializable {
 		duration--;
 	}
 
-	public void start(Creature creature){
+	public void start(Creature creature){	}
 
-	}
-
-	public void end(Creature creature){
-
-	}
+	public void end(Creature creature){	}
+	
+	/**
+	 * A method to check if the effect fails, outside of normal chances (such as resisting poison, or resisting a net)
+	 */
+	public boolean fails(Creature creature) { return false; }
 	
 	public Object clone() {
 		try {

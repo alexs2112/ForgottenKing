@@ -1,10 +1,15 @@
 package assembly;
 
+import java.util.List;
+
 import creatures.Ability;
 import creatures.Creature;
 import creatures.Tag;
 import items.ItemTag;
+import javafx.scene.paint.Color;
 import spells.TargetType;
+import tools.Point;
+import world.Noise;
 @SuppressWarnings("serial")
 public final class Abilities {
 	public static Ability rage() {
@@ -68,7 +73,7 @@ public final class Abilities {
 		return a;
 	}
 	public static Ability improvedKnockbackAll() {
-		Ability a = new Ability("Knockback All+", Loader.knockbackAllIcon, 1) {
+		Ability a = new Ability("Knockback All+", Loader.knockbackAllIcon, 2) {
 			public void activate(Creature owner, Creature target) {
 				owner.attack(target);
 			}
@@ -87,6 +92,36 @@ public final class Abilities {
 		a.setTargetType(TargetType.SELF);
 		a.setRadius(1);
 		a.setDescription("You make an attack against each adjacent enemy, knocking them backwards.");
+		return a;
+	}
+	public static Ability warningScreech() {
+		Ability a = new Ability("Warning Screech", null, 5) {
+			public void activate(Creature owner, Creature target) {
+				owner.world().makeNoise(new Noise(owner.x,owner.y,owner.z,"screech", 12));
+				owner.addStatement("Screech", Color.AQUA);
+			}
+		};
+		a.self = true;
+		a.setTargetType(TargetType.SELF);
+		a.setDescription("This creature makes a warning screech, attracting allies to its position.");
+		return a;
+	}
+	public static Ability teleportNextTo() {
+		Ability a = new Ability("Teleport", null, 30) {
+			public void activate(Creature owner, Creature target) {
+				List<Point> points = new Point(target.x,target.y,target.z).neighbors8();
+				for (Point p : points) {
+					if (owner.canEnter(p.x, p.y, p.z)) {
+						owner.moveTo(p.x, p.y, p.z);
+						owner.doAction("teleport next to you");
+						return;
+					}
+				}
+			}
+		};
+		a.setRange(6);
+		a.setTargetType(TargetType.TARGET);
+		a.setDescription("Allows this creature to teleport next to you if you are within 6 tiles.");
 		return a;
 	}
 	

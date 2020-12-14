@@ -175,6 +175,7 @@ public final class Loader {
 	public static Image unarmedTrainingIcon = ImageCrop.cropImage(perksFull, 192, 32, 32, 32);
 	public static Image thickSkinIcon = ImageCrop.cropImage(perksFull, 224, 32, 32, 32);
 	public static Image shieldTrainingIcon = ImageCrop.cropImage(perksFull, 0, 64, 32, 32);
+	public static Image fastLoaderIcon = ImageCrop.cropImage(perksFull, 32, 64, 32, 32);
 	
 	private static Image tagsFull = new Image(Screen.class.getResourceAsStream("resources/creature_tags_full.png"));
 	public static Image spellcasterIcon = ImageCrop.cropImage(tagsFull, 0, 0, 32, 32);

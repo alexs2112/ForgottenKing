@@ -64,17 +64,18 @@ public final class Effects {
 	}
 	public static Effect poisoned(int duration, int strength) {
 		Effect e = new Effect("Poisoned", duration){
-			public void start(Creature creature){
+			public boolean fails(Creature creature) {
 				if (Math.random() * 100 < creature.getToughness() * 10) {
 					creature.doAction("resist being poisoned");
-					duration = 0;
+					return true;
 				}
-				else {
-					if (creature.getResistance(Type.POISON) < 0)
-						creature.doAction("look invigorated");
-					else
-						creature.doAction("look sick");
-				}
+				return false;
+			}
+			public void start(Creature creature) {
+				if (creature.getResistance(Type.POISON) < 0)
+					creature.doAction("look invigorated");
+				else
+					creature.doAction("look sick");
 			}
 			public void update(Creature creature){
 				super.update(creature);
@@ -339,7 +340,10 @@ public final class Effects {
 				creature.modifyAttackDelay(-3);
 				creature.addTag(Tag.NOCAST);
 				creature.addTag(Tag.NOQUAFF);
-				creature.doAction("go berserk");
+				if (creature.is(Tag.PLAYER))
+					creature.doAction("go berserk");
+				else
+					creature.doAction("goe berserk");
 			}
 			public void end(Creature creature) {
 				creature.modifyAttribute(Attribute.STR, -4);

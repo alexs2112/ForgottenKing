@@ -1,5 +1,9 @@
 package creatures.ai;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import creatures.Ability;
 import creatures.Creature;
 import creatures.Tag;
 import tools.Point;
@@ -31,6 +35,17 @@ public class BasicAI extends CreatureAI {
 		//If the creature can see an enemy, try to kill it
 		Creature c = getNearestEnemy();
 		if (c != null) {
+			if (creature.getAbilities() != null) {
+				for (Ability a : creature.getAbilities()) {
+					if (canActivateAbility(a, c)) {
+						List<Point> l = new ArrayList<Point>();
+						l.add(new Point(c.x,c.y,c.z));
+						creature.activateAbility(a, l);
+						return;
+					}
+				}
+			}
+			
 			if (canRangedWeaponAttack(c))
 				creature.fireItem(creature.quiver(), c.x, c.y, c.z);
 			else if (canThrowAt(c))
