@@ -3,9 +3,12 @@ package world;
 import java.util.ArrayList;
 import java.util.List;
 
+import assembly.CreatureFactory;
+import assembly.ItemFactory;
 import tools.Point;
 import creatures.Creature;
 import creatures.Tag;
+import features.Chest;
 import features.Entrance;
 import features.Feature;
 import items.Inventory;
@@ -254,4 +257,99 @@ public class World implements java.io.Serializable {
     		}
     	}
 	}
+	
+	
+	/**
+	 * A populate method to place all creatures and items
+	 */
+	public void populate(CreatureFactory creature, ItemFactory item) {
+		addCreatures(creature);
+		addItems(item);
+	}
+	private void addCreatures(CreatureFactory f) {
+		for (int z = 0; z < depth; z++) {
+			//Each level has 9 creatures of a lower level, 15 creatures of that level, and 6 creatures of a higher level
+			if (z % 5 == 0) {
+				for (int i = 0; i < 10; i++)
+					f.newRandomCreature(z, z+1);
+				for (int i = 0; i < 20; i++)
+					f.newRandomCreature(z, z);
+			} else if ((z+1) % 5 == 0) {
+				for (int i = 0; i < 15; i++) {
+					f.newRandomCreature(z, z-1);
+					f.newRandomCreature(z, z);
+				}
+			} else {
+				for (int i = 0; i < 9; i++)
+					f.newRandomCreature(z, z-1);
+				for (int i = 0; i < 15; i++)
+					f.newRandomCreature(z, z);
+				for (int i = 0; i < 6; i++)
+					f.newRandomCreature(z, z+1);
+			}
+		}
+		if (depth > 4)
+			f.newGrisstok(4);
+		if (depth >= 9)
+			f.newUshnag(9);
+	}
+	private void addItems(ItemFactory f) {
+		for (int z = 0; z < depth; z++) {
+			for (int i = 0; i < 5; i++){
+				addAtEmptyLocation(f.ammo().newRock(z), z);
+			}
+			for (int i = 0; i < 5; i++){
+				addAtEmptyLocation(f.newRandomArmor(z), z);
+				addAtEmptyLocation(f.newRandomWeapon(z), z);
+			}
+			for (int i = 0; i < 3; i++) {
+				addAtEmptyLocation(f.newRandomPotion(z), z);
+			}
+			for (int i = 0; i < 2; i++) {
+				addAtEmptyLocation(f.book().newRandomBook(z), z);
+			}
+			for (int i = 0; i < 3; i++) {
+				Item item = f.ammo().newRandomAmmo(z);
+				Point n = getEmptyLocation(z);
+			    addAtEmptyLocation(item, n.x, n.y, z, item.spawnQuantity());
+			}
+			for (int i = 0; i < 3; i++) {
+				addAtEmptyLocation(f.trinket().newRandomRing(z), z);
+			}
+			for (int i = 0; i < 1 + z / 3; i++) {
+				Point p = getEmptyLocation(z);
+				Chest c = new Chest(Chest.ChestType.CHEST);
+				setFeature(c, p.x, p.y, z);
+			}
+			for (int i = 0; i < 6; i++) {
+				Point p = getEmptyLocation(z);
+				Chest c = new Chest(Chest.ChestType.BARREL);
+				setFeature(c, p.x, p.y, z);
+			}
+		}
+		fillChests(f);
+	}
+	
+	/**
+	 * Go across the entire world, filling chests when necessary
+	 * Need to do it here to fill chests that are placed via prefab along with generation
+	 */
+	private void fillChests(ItemFactory f) {
+		for (int z = 0; z < depth; z++) {
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					if (feature(x,y,z) != null && feature(x,y,z) instanceof Chest) {
+						Chest c = (Chest)(feature(x,y,z));
+						f.fillChest(c, z);
+						if (items(x,y,z) != null)
+							for (Item i : items(x,y,z).getItems())
+							//Then check that tiles space and move all items from the world into the chest
+								c.addItem(i);
+						items[x][y][z] = null;
+					}
+				}
+			}
+		}
+	}
+	
 }

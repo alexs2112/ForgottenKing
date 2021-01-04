@@ -3,15 +3,14 @@ package items;
 import java.util.HashMap;
 
 import creatures.Type;
-import javafx.scene.image.Image;
-import tools.ImageCrop;
+import tools.Icon;
 
 public class GetWeaponImages implements java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;
 	private HashMap<Type, Integer> bases;
 	private HashMap<Type, Integer> effects;
 	private HashMap<BaseItem, Integer> items;
-	private static Image weapons = new Image(Item.class.getResourceAsStream("resources/weapons-full.png"));
+	
 	public GetWeaponImages() {
 		bases = new HashMap<Type, Integer>();
 		effects = new HashMap<Type, Integer>();
@@ -40,28 +39,30 @@ public class GetWeaponImages implements java.io.Serializable {
 		if (items.get(item.baseItem()) == null) {
 			return;
 		}
-		Image newBase = item.image();
+		
+		Icon newBase = item.icon();
+		
 		if (base != null)
-			newBase = ImageCrop.cropImage(weapons, bases.get(base), items.get(item.baseItem()), 32, 32);
-		Image newEffect = null;
+			newBase = new Icon("items/weapons-full.png", bases.get(base), items.get(item.baseItem()));
+		Icon newEffect = null;
 		if (effect != null && effect != Type.BLUE && effect != Type.GREEN)
-			newEffect = ImageCrop.cropImage(weapons, effects.get(effect), items.get(item.baseItem()), 32, 32);
+			newEffect = new Icon("items/weapons-full.png", effects.get(effect), items.get(item.baseItem()));
 		else if (effect == Type.BLUE || effect == Type.GREEN) {
 			if (base == null) {
 				int x = 32;
 				if (effect == Type.BLUE)
 					x = 64;
-				item.setImage(ImageCrop.cropImage(weapons, x, items.get(item.baseItem()), 32, 32));
+				item.setIcon(new Icon("items/weapons-full.png", x, items.get(item.baseItem()), 32, 32));
 				return;
 			}
 		}
 		
 		if (effect == null && base == null && bonus > 0) {
-			item.setImage(ImageCrop.cropImage(weapons, 32, items.get(item.baseItem()), 32, 32));
+			item.setIcon(new Icon("items/weapons-full.png", 32, items.get(item.baseItem()), 32, 32));
 			return;
 		}
 		
-		item.setImage(newBase);
-		item.setEffectImage(newEffect);
+		item.setIcon(newBase);
+		item.setEffectIcon(newEffect);
 	}
 }

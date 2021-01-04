@@ -3,6 +3,7 @@ package spells;
 import creatures.Creature;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import tools.Icon;
 
 public class Effect implements Cloneable, java.io.Serializable {
 	protected static final long serialVersionUID = 7769423305067121315L;
@@ -12,10 +13,10 @@ public class Effect implements Cloneable, java.io.Serializable {
 	protected Creature owner;
 	public Creature owner() { return owner; }
 	public void setOwner(Creature x) { owner = x; }
-	private Image image;
-	public Image image() { return image; }
-	public void setImage(Image x) { image = x; }
-	private Color colour;
+	private Icon icon;
+	public Image image() { return icon.image(); }
+	public void setIcon(Icon x) { icon = x; }
+	private transient Color colour;
 	public Color colour() { return colour; }
 	public void setColour(Color c) { colour = c; }
 	private int strength;

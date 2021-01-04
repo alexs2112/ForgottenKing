@@ -2,6 +2,7 @@ package features;
 
 import creatures.Creature;
 import javafx.scene.image.Image;
+import tools.Icon;
 import world.World;
 
 public abstract class Feature implements Cloneable, java.io.Serializable {
@@ -9,7 +10,7 @@ public abstract class Feature implements Cloneable, java.io.Serializable {
 	protected String name;
 	protected String desc;
 	protected Type type;
-	protected Image image;
+	protected Icon icon;
 	public String name() { return name; }
 	public String desc() { return desc; }
 	public Type type() { return type; }
@@ -29,10 +30,10 @@ public abstract class Feature implements Cloneable, java.io.Serializable {
 	 */
 	public void setType(Type t) { type = t; }
 
-	public Feature(String name, String desc, Image image) {
+	public Feature(String name, String desc, Icon icon) {
 		this.name = name;
 		this.desc = desc;
-		this.image = image;
+		this.icon = icon;
 	}
 	
 	public Feature clone() {
@@ -45,7 +46,7 @@ public abstract class Feature implements Cloneable, java.io.Serializable {
 		}
 	}
 	
-	public Image getImage() { return image; }
+	public Image getImage() { return icon.image(); }
 	
 	public abstract boolean blockLineOfSight();
 	

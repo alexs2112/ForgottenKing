@@ -9,7 +9,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import screens.Screen;
 
@@ -39,18 +38,16 @@ public abstract class InventoryBasedScreen extends Screen {
     
     public void displayOutput(Stage stage) {
     	root = new Group();
-    	draw(root, Loader.screenBorder, 0, 0);
+    	draw(root, Loader.screenBorder.image(), 0, 0);
 	    
 	    Item[] items = getItems();
     	
-	    Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
-	    Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
 	    
         int x = 104;
         int y = 50;
-        write(root, "What would you like to " + getVerb() + "?", 64, y, font);
+        write(root, "What would you like to " + getVerb() + "?", 64, y, font22);
         if (player != null)
-        	writeCentered(root, String.format("%.1f/%.1f", inventory.totalWeight(), player.carryWeight()), 1000, 50, fontS, Color.WHITE);
+        	writeCentered(root, String.format("%.1f/%.1f", inventory.totalWeight(), player.carryWeight()), 1000, 50, font18, Color.WHITE);
         int num = 0;
         int top = Math.min(Math.max(0, select-14), Math.max(0, numOfItems(items) - height));
         for (int i = top; i < items.length; i++) {
@@ -84,20 +81,20 @@ public abstract class InventoryBasedScreen extends Screen {
             	equipColour = Color.FORESTGREEN;
             }
             draw(root, item.image(), x-44, 32*num + y + 4);
-            if (item.effectImage() != null)
-        		draw(root, item.effectImage(), x-44, 32*num + y + 4);
-        	write(root, line, x, 32*num + y + 32, fontS, equipColour);
-        	writeCentered(root, String.format("%.1f",item.weight()*inventory.quantityOf(item)), 1000, 32*num+y+32, fontS, Color.WHITE);
+            if (item.effectIcon() != null)
+        		draw(root, item.effectIcon().image(), x-44, 32*num + y + 4);
+        	write(root, line, x, 32*num + y + 32, font18, equipColour);
+        	writeCentered(root, String.format("%.1f",item.weight()*inventory.quantityOf(item)), 1000, 32*num+y+32, font18, Color.WHITE);
         	if (select == i) {
-        		draw(root, Loader.arrowRight, 20, 32*num+y+4);
+        		draw(root, Loader.arrowRight.image(), 20, 32*num+y+4);
         	}
-        	draw(root, Loader.inventoryEmptyLine, 0, 32*num + y + 4, click(item), enter(inventory.indexOf(item)), null);
+        	draw(root, Loader.inventoryEmptyLine.image(), 0, 32*num + y + 4, click(item), enter(inventory.indexOf(item)), null);
         	num++;
         }
         if (top > 0)
-        	draw(root, Loader.arrowUp, 20, 32);
+        	draw(root, Loader.arrowUp.image(), 20, 32);
         if (top < numOfItems(items)-height)
-        	draw(root, Loader.arrowDown, 20, 744);
+        	draw(root, Loader.arrowDown.image(), 20, 744);
         
         
         constructCloseButton();

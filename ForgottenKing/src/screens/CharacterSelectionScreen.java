@@ -12,42 +12,37 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import creatures.Ability;
 import creatures.ClassSelection;
 import creatures.Tag;
+import tools.Icon;
 
 public class CharacterSelectionScreen extends Screen {
 	private static final long serialVersionUID = 7769423305067121315L;
 	public Audio audio() { return Audio.INTRO; }
 	private int selection;
-	private Font font;
-	private Font fontL;
-	private Font fontS;
 	private List<ClassSelection> classes;
-	private Image adventurerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer.gif"), 96, 96, true, false);
-	private Image fighterIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter.gif"), 96, 96, true, false);
-	private Image rangerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger.gif"), 96, 96, true, false);
-	private Image berserkerIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/berserker.gif"), 96, 96, true, false);
-	private Image elementalistIconLarge = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/elementalist.gif"), 96, 96, true, false);
-	private Image adventurerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/adventurer.gif"));
-	private Image fighterIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/fighter.gif"));
-	private Image rangerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/ranger.gif"));
-	private Image berserkerIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/berserker.gif"));
-	private Image elementalistIcon = new Image(assembly.CreatureFactory.class.getResourceAsStream("resources/characters/elementalist.gif"));
+	private Icon adventurerIcon = new Icon("characters/adventurer.gif");
+	private Icon fighterIcon = new Icon("characters/fighter.gif");
+	private Icon rangerIcon = new Icon("characters/ranger.gif");
+	private Icon berserkerIcon = new Icon("characters/berserker.gif");
+	private Icon elementalistIcon = new Icon("characters/elementalist.gif");
+	
+	private Icon adventurerIconLarge = new Icon("characters/adventurer.gif").resize(96);
+	private Icon fighterIconLarge = new Icon("characters/fighter.gif").resize(96);
+	private Icon rangerIconLarge = new Icon("characters/ranger.gif").resize(96);
+	private Icon berserkerIconLarge = new Icon("characters/berserker.gif").resize(96);
+	private Icon elementalistIconLarge = new Icon("characters/elementalist.gif").resize(96);
 	
 	public CharacterSelectionScreen() {
-		font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
-		fontL = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 36);
-		fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
 		initializeClasses();
 	}
 	
 	public void displayOutput(Stage stage) {
 		root = new Group();
 		scene = new Scene(root, 1280, 800, Color.BLACK);
-		draw(root, Loader.characterSelectionBackground, 0, 0);
+		draw(root, Loader.characterSelectionBackground.image(), 0, 0);
 		int x = 136;
 		int y = 356;
 		for (int i = -1; i < 2; i++) {
@@ -58,55 +53,55 @@ public class CharacterSelectionScreen extends Screen {
 					darken = -0.7;
 				
 				EventHandler<MouseEvent> onClick = handleClick(i);
-				draw(root, Loader.characterSelectionBox, x, y + i*124, onClick);
-				draw(root, classes.get(i+selection).largeIcon, x+4, y + i*124, darken, onClick);
+				draw(root, Loader.characterSelectionBox.image(), x, y + i*124, onClick);
+				draw(root, classes.get(i+selection).largeIcon.image(), x+4, y + i*124, darken, onClick);
 			}
 		}
 		handleButtons();
 		
 		ClassSelection c = classes.get(selection);
 		
-		write(root, c.title.name(), 518, 118, fontL);
+		write(root, c.title.name(), 518, 118, font36);
 		
 		//Attributes in table
 		x = 1032;
-		write(root, ""+c.strength, x, 134, font);
-		write(root, ""+c.dexterity, x, 220, font);
-		write(root, ""+c.intelligence, x, 306, font);
+		write(root, ""+c.strength, x, 134, font22);
+		write(root, ""+c.dexterity, x, 220, font22);
+		write(root, ""+c.intelligence, x, 306, font22);
 		//Stats in table
 		x = 1114;
-		write(root, ""+c.toughness, x, 114, font, Color.ANTIQUEWHITE);
-		write(root, ""+c.brawn, x, 156, font, Color.ANTIQUEWHITE);
-		write(root, ""+c.agility, x, 200, font, Color.ANTIQUEWHITE);
-		write(root, ""+c.accuracy, x, 242, font, Color.ANTIQUEWHITE);
-		write(root, ""+c.will, x, 285, font, Color.ANTIQUEWHITE);
-		write(root, ""+c.spellcasting, x, 327, font, Color.ANTIQUEWHITE);
+		write(root, ""+c.toughness, x, 114, font22, Color.ANTIQUEWHITE);
+		write(root, ""+c.brawn, x, 156, font22, Color.ANTIQUEWHITE);
+		write(root, ""+c.agility, x, 200, font22, Color.ANTIQUEWHITE);
+		write(root, ""+c.accuracy, x, 242, font22, Color.ANTIQUEWHITE);
+		write(root, ""+c.will, x, 285, font22, Color.ANTIQUEWHITE);
+		write(root, ""+c.spellcasting, x, 327, font22, Color.ANTIQUEWHITE);
 		x = 1172;
-		write(root, ""+(c.toughness+c.strength), x, 114, font);
-		write(root, ""+(c.brawn+c.strength), x, 156, font);
-		write(root, ""+(c.agility+c.dexterity), x, 200, font);
-		write(root, ""+(c.accuracy+c.dexterity), x, 242, font);
-		write(root, ""+(c.will+c.intelligence), x, 285, font);
-		write(root, ""+(c.spellcasting+c.intelligence), x, 327, font);
+		write(root, ""+(c.toughness+c.strength), x, 114, font22);
+		write(root, ""+(c.brawn+c.strength), x, 156, font22);
+		write(root, ""+(c.agility+c.dexterity), x, 200, font22);
+		write(root, ""+(c.accuracy+c.dexterity), x, 242, font22);
+		write(root, ""+(c.will+c.intelligence), x, 285, font22);
+		write(root, ""+(c.spellcasting+c.intelligence), x, 327, font22);
 		
-		writeWrapped(root, c.descriptionText, 426, 160, 520, font, Color.ANTIQUEWHITE);
+		writeWrapped(root, c.descriptionText, 426, 160, 520, font22, Color.ANTIQUEWHITE);
 		
 		if (c.tags() != null)
 			for (int i = 0; i < c.tags().size(); i++) {
 				Tag t = c.tags().get(i);
-				draw(root, Loader.perkBoxSmall, 440, 374 + 122*i);
-				if (t.icon() != null)
-					draw(root, t.icon(), 460, 394+122*i);
-				writeWrapped(root, t.text() + ": " + t.description(), 512, 416 + 122*i, 432, fontS, Color.ANTIQUEWHITE);
+				draw(root, Loader.perkBoxSmall.image(), 440, 374 + 122*i);
+				if (t.image() != null)
+					draw(root, t.image(), 460, 394+122*i);
+				writeWrapped(root, t.text() + ": " + t.description(), 512, 416 + 122*i, 432, font18, Color.ANTIQUEWHITE);
 			}
 		if (c.abilities() != null)
 			for (int i = 0; i < c.abilities().size(); i++) {
 				int m = (i+c.tags().size());
 				Ability a = c.abilities().get(i);
-				draw(root, Loader.perkBoxSmall, 440, 374 + 122*m);
+				draw(root, Loader.perkBoxSmall.image(), 440, 374 + 122*m);
 				if (a.icon() != null)
 					draw(root, a.icon(), 460, 394+122*m);
-				writeWrapped(root, a.name() + ": " + a.description(), 512, 416 + 122*m, 432, fontS, Color.ANTIQUEWHITE);
+				writeWrapped(root, a.name() + ": " + a.description(), 512, 416 + 122*m, 432, font18, Color.ANTIQUEWHITE);
 			}
 		
 		stage.setScene(scene);
@@ -189,9 +184,9 @@ public class CharacterSelectionScreen extends Screen {
 	private boolean mouseOverSelect;
 	private void handleButtons() {
 		if (selection-1 >= 0) {
-			Image up = Loader.characterSelectionUpArrow;
+			Image up = Loader.characterSelectionUpArrow.image();
 			if (mouseOverUp)
-				up = Loader.characterSelectionUpArrowSelected;
+				up = Loader.characterSelectionUpArrowSelected.image();
 			draw(root, up, 136, 160, new EventHandler<MouseEvent>() {
 				public void handle(MouseEvent me) { 
 					selection--;
@@ -210,9 +205,9 @@ public class CharacterSelectionScreen extends Screen {
 			});
 		}
 		if (selection+1 < classes.size()){
-			Image down = Loader.characterSelectionDownArrow;
+			Image down = Loader.characterSelectionDownArrow.image();
 			if (mouseOverDown)
-				down = Loader.characterSelectionDownArrowSelected;
+				down = Loader.characterSelectionDownArrowSelected.image();
 			draw(root, down, 136, 604, new EventHandler<MouseEvent>() {
 				public void handle(MouseEvent me) { 
 					selection++;
@@ -230,9 +225,9 @@ public class CharacterSelectionScreen extends Screen {
 				}
 			});
 		}
-		Image select = Loader.characterSelectionSelectButton;
+		Image select = Loader.characterSelectionSelectButton.image();
 		if (mouseOverSelect)
-			select = Loader.characterSelectionSelectButtonSelected;
+			select = Loader.characterSelectionSelectButtonSelected.image();
 		draw(root, select, 38, 670, new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent me) { 
 				refreshScreen = new PlayScreen(classes.get(selection));

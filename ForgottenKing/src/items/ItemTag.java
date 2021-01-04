@@ -1,6 +1,7 @@
 package items;
 
 import javafx.scene.image.Image;
+import tools.Icon;
 
 public enum ItemTag {
 	//Weapon Tags + Images
@@ -30,15 +31,15 @@ public enum ItemTag {
 	private static final long serialVersionUID = 7769423305067121315L;
 	private String text;
 	public String text() { return text; }
-	private Image icon;
-	public Image icon() { return icon; }
+	private Icon icon;
+	public Image image() { return icon.image(); }
 	private String description;
 	public String description() { return description; }
 	
 	private ItemTag(String text, String description) {
 		this(text, description, null);
 	}
-	private ItemTag(String text, String description, Image icon) {
+	private ItemTag(String text, String description, Icon icon) {
 		this.text = text;
 		this.icon = icon;
 		this.description = description;

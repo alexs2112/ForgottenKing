@@ -7,7 +7,6 @@ import creatures.Ability;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class SelectAbilityScreen extends Screen {
@@ -33,15 +32,13 @@ public class SelectAbilityScreen extends Screen {
     
     public void displayOutput(Stage stage) {
     	root = new Group();
-    	Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
-    	Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 20);
-    	draw(root, Loader.screenBorder, 0, 0);
+    	draw(root, Loader.screenBorder.image(), 0, 0);
 	    
         int x = 64;
         int y = 50;
-        write(root, "What would you like to activate?", 48, y, font,  Color.WHITE);
+        write(root, "What would you like to activate?", 48, y, font22,  Color.WHITE);
         if (abilities == null) {
-        	write(root, "You have learned no abilities!", x,y + 32, font, Color.ANTIQUEWHITE);
+        	write(root, "You have learned no abilities!", x,y + 32, font22, Color.ANTIQUEWHITE);
         	return;
         }
         y += 36;
@@ -57,26 +54,26 @@ public class SelectAbilityScreen extends Screen {
         		line += " [" + a.time() + "]";
         	}
         	draw(root, a.icon(), x, 34*(i-top) + y - 26);
-        	write(root, line, x+48, 34*(i-top) + y, font, c);
+        	write(root, line, x+48, 34*(i-top) + y, font22, c);
         	if (i == select)
-        		draw(root, Loader.arrowRight, x-44, 32*(i-top)+y-26);
+        		draw(root, Loader.arrowRight.image(), x-44, 32*(i-top)+y-26);
         }
         
         y=396;
-        draw(root, Loader.screenSeparator, 0, y);
+        draw(root, Loader.screenSeparator.image(), 0, y);
         
         if (abilities.size() > 0) {
         	x = 96;
         	y += 32;
         	Ability a = abilities.get(select);
-        	write(root, a.name(), x, y+=32, font, Color.WHITE);
-        	write(root, "Cooldown: " + a.cooldown(), 920, y+32, fontS, Color.WHITE);
+        	write(root, a.name(), x, y+=32, font22, Color.WHITE);
+        	write(root, "Cooldown: " + a.cooldown(), 920, y+32, font20, Color.WHITE);
         	String string = a.description();
-        	writeWrapped(root, string, x, y+=32, 800, fontS, Color.ANTIQUEWHITE);
+        	writeWrapped(root, string, x, y+=32, 800, font20, Color.ANTIQUEWHITE);
         	Color c = Color.WHITE;
         	if (a.time()>0)
         		c = Color.LIGHTGREY;
-        	writeCentered(root, "[enter] to activate " + a.name(), 640, 764, fontS, c);
+        	writeCentered(root, "[enter] to activate " + a.name(), 640, 764, font20, c);
         }
         constructCloseButton();
     }

@@ -1,32 +1,29 @@
 package items;
 
-import javafx.scene.image.Image;
-import tools.ImageCrop;
+import tools.Icon;
 
 public final class Loader {
-	private static Image weaponIconsFull = new Image(Item.class.getResourceAsStream("resources/weapon_icons_full.png"));
-	public static Image daggerIconGold = ImageCrop.cropImage(weaponIconsFull, 0, 64, 32, 32);
-	public static Image swordIconGold = ImageCrop.cropImage(weaponIconsFull, 32, 64, 32, 32);
-	public static Image axeIconGold = ImageCrop.cropImage(weaponIconsFull, 64, 64, 32, 32);
-	public static Image maceIconGold = ImageCrop.cropImage(weaponIconsFull, 96, 64, 32, 32);
-	public static Image polearmIconGold = ImageCrop.cropImage(weaponIconsFull, 0, 96, 32, 32);
-	public static Image bowIconGold = ImageCrop.cropImage(weaponIconsFull, 32, 96, 32, 32);
-	public static Image crossbowIconGold = ImageCrop.cropImage(weaponIconsFull, 64, 96, 32, 32);
-	public static Image slingIconGold = ImageCrop.cropImage(weaponIconsFull, 96, 96, 32, 32);
-	public static Image gunIconGold = ImageCrop.cropImage(weaponIconsFull, 128, 64, 32, 32);
+	public static Icon daggerIconGold = new Icon("icons/weapon-icons-full.png", 0, 64);
+	public static Icon swordIconGold = new Icon("icons/weapon-icons-full.png", 32, 64);
+	public static Icon axeIconGold = new Icon("icons/weapon-icons-full.png", 64, 64);
+	public static Icon maceIconGold = new Icon("icons/weapon-icons-full.png", 96, 64);
+	public static Icon polearmIconGold = new Icon("icons/weapon-icons-full.png", 0, 96);
+	public static Icon bowIconGold = new Icon("icons/weapon-icons-full.png", 32, 96);
+	public static Icon crossbowIconGold = new Icon("icons/weapon-icons-full.png", 64, 96);
+	public static Icon slingIconGold = new Icon("icons/weapon-icons-full.png", 96, 96);
+	public static Icon gunIconGold = new Icon("icons/weapon-icons-full.png", 128, 64);
 	
-	private static Image itemTagsFull = new Image(Item.class.getResourceAsStream("resources/item_tags_full.png"));
-	public static Image lightArmorTag = ImageCrop.cropImage(itemTagsFull, 0,0, 32, 32);
-	public static Image mediumArmorTag = ImageCrop.cropImage(itemTagsFull, 32,0, 32, 32);
-	public static Image heavyArmorTag = ImageCrop.cropImage(itemTagsFull, 64,0, 32, 32);
-	public static Image throwingTag = ImageCrop.cropImage(itemTagsFull, 96,0, 32, 32);
-	public static Image cleavingTag = ImageCrop.cropImage(itemTagsFull, 128,0, 32, 32);
-	public static Image lightWeaponTag = ImageCrop.cropImage(itemTagsFull, 160,0, 32, 32);
-	public static Image highCritTag = ImageCrop.cropImage(itemTagsFull, 192,0, 32, 32);
-	public static Image shieldTag = ImageCrop.cropImage(itemTagsFull, 224,0, 32, 32);
-	public static Image twoHandedTag = ImageCrop.cropImage(itemTagsFull, 0,32, 32, 32);
-	public static Image versatileTag = ImageCrop.cropImage(itemTagsFull, 32,32, 32, 32);
-	public static Image victoryItemTag = ImageCrop.cropImage(itemTagsFull, 64,32, 32, 32);
-	public static Image loadingTag = ImageCrop.cropImage(itemTagsFull, 96,32, 32, 32);
-	public static Image blackPowderTag = ImageCrop.cropImage(itemTagsFull, 128,32, 32, 32);
+	public static Icon lightArmorTag = new Icon("icons/item-tags-full.png", 0,0);
+	public static Icon mediumArmorTag = new Icon("icons/item-tags-full.png", 32,0);
+	public static Icon heavyArmorTag = new Icon("icons/item-tags-full.png", 64,0);
+	public static Icon throwingTag = new Icon("icons/item-tags-full.png", 96,0);
+	public static Icon cleavingTag = new Icon("icons/item-tags-full.png", 128,0);
+	public static Icon lightWeaponTag = new Icon("icons/item-tags-full.png", 160,0);
+	public static Icon highCritTag = new Icon("icons/item-tags-full.png", 192,0);
+	public static Icon shieldTag = new Icon("icons/item-tags-full.png", 224,0);
+	public static Icon twoHandedTag = new Icon("icons/item-tags-full.png", 0,32);
+	public static Icon versatileTag = new Icon("icons/item-tags-full.png", 32,32);
+	public static Icon victoryItemTag = new Icon("icons/item-tags-full.png", 64,32);
+	public static Icon loadingTag = new Icon("icons/item-tags-full.png", 96,32);
+	public static Icon blackPowderTag = new Icon("icons/item-tags-full.png", 128,32);
 }

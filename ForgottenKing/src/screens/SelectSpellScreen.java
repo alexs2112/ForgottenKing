@@ -6,7 +6,6 @@ import creatures.Player;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import spells.Spell;
 
@@ -32,17 +31,16 @@ public class SelectSpellScreen extends Screen {
     
     public void displayOutput(Stage stage) {
     	root = new Group();
-    	Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
-    	draw(root, Loader.screenBorder, 0, 0);
+    	draw(root, Loader.screenBorder.image(), 0, 0);
 	    
 	    ArrayList<Spell> spells = player.spells();
 	    
         int x = 64;
         int y = 50;
-        write(root, "What would you like to cast?", 48, y, font,  Color.WHITE);
-        write(root, "MP: " + player.mana() + "/" + player.maxMana(), 700, y, font, Color.BLUE);
+        write(root, "What would you like to cast?", 48, y, font22,  Color.WHITE);
+        write(root, "MP: " + player.mana() + "/" + player.maxMana(), 700, y, font22, Color.BLUE);
         if (spells == null) {
-        	write(root, "You have no spells memorized!", x,y + 32, font, Color.ANTIQUEWHITE);
+        	write(root, "You have no spells memorized!", x,y + 32, font22, Color.ANTIQUEWHITE);
         	return;
         }
         x += 32;
@@ -59,10 +57,10 @@ public class SelectSpellScreen extends Screen {
         		c = Color.DARKGREY;
         	
         	
-        	draw(root, spell.icon(), x, 32*(i-top) + y - 26);
-        	write(root, line, x+48, 32*(i-top) + y, font, c);
+        	draw(root, spell.image(), x, 32*(i-top) + y - 26);
+        	write(root, line, x+48, 32*(i-top) + y, font22, c);
         	if (i == select)
-        		draw(root, Loader.arrowRight, x-44, 32*(i-top)+y-26);
+        		draw(root, Loader.arrowRight.image(), x-44, 32*(i-top)+y-26);
         }
         y = 396;
         if (spells.size() > 0) {
@@ -71,7 +69,7 @@ public class SelectSpellScreen extends Screen {
         	Color c = Color.WHITE;
         	if (player.magic().get(s.type()) < s.level() || player.mana() < s.cost())
         		c = Color.DARKGREY;
-        	writeCentered(root, "[enter] to cast " + s.name(), 640, 764, font, c);
+        	writeCentered(root, "[enter] to cast " + s.name(), 640, 764, font22, c);
         }
         constructCloseButton();
     }

@@ -1,11 +1,11 @@
 package tools;
 
-import javafx.scene.image.Image;
 import world.World;
 import world.Tile;
+import tools.Icon;
 
 public final class GetTileDirection {
-	public static Image handleFloor(World world, Tile tile, int x, int y, int z) {
+	public static Icon handleFloor(World world, Tile tile, int x, int y, int z) {
 			if (getAllDirections(world, tile, x,y,z,0,1,1,1))
 				return tile.N;
 			if (getAllDirections(world, tile, x,y,z,1,0,1,1))
@@ -39,7 +39,7 @@ public final class GetTileDirection {
 			return tile.ALL;
 	}
 	
-	public static Image handleWall(World world, Tile tile, int x, int y, int z) {
+	public static Icon handleWall(World world, Tile tile, int x, int y, int z) {
 		if (getAllDirections(world, tile, x,y,z,0,-1,1,-1,1,-1,0,-1) ||
 			getAllDirections(world, tile, x,y,z,1,1,1,0,1,1,1,1))
     			return tile.ES;
@@ -89,7 +89,7 @@ public final class GetTileDirection {
 		return tile.ALL;
 	}
 	
-	public static Image handlePit(World world, Tile tile, int x, int y, int z) {
+	public static Icon handlePit(World world, Tile tile, int x, int y, int z) {
 		if (getAllDirectionsPit(world, tile, x,y,z,0,1,1,1))
 			return tile.N;
 		if (getAllDirectionsPit(world, tile, x,y,z,1,0,1,1))

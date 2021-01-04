@@ -9,9 +9,8 @@ import creatures.Player;
 import creatures.Type;
 import creatures.Tag;
 import creatures.ai.*;
-import javafx.scene.image.Image;
+import tools.Icon;
 import tools.FieldOfView;
-import tools.ImageCrop;
 import tools.Message;
 import world.World;
 
@@ -21,39 +20,37 @@ public class CreatureFactory implements java.io.Serializable {
 	private ItemFactory itemFactory;
 	private Player player;
 	
-	private Image plantIconsFull = new Image(this.getClass().getResourceAsStream("resources/creatures/plants_full.png"));
-	private Image goblinIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/goblin.gif"));
-	private Image fungusIcon = ImageCrop.cropImage(plantIconsFull, 0, 224, 32, 32);
-	private Image batIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/bat.gif"));
-	private Image zombieIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/zombie.gif"));
-	private Image ratIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/rat.gif"));
-	private Image soldierAntIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/giant_ant.gif"));
-	private Image homunculusIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/homunculus.gif"));
-	private Image lizardGruntIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_grunt.gif"));
-	private Image lizardFighterIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_fighter.gif"));
-	private Image lizardHunterIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_hunter.gif"));
-	private Image lizardHexerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_hexer.gif"));
-	private Image lizardShadowbladeIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_shadowblade.gif"));
-	private Image lizardGuardianIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_guardian.gif"));
-	private Image lizardPriestIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/lizard_priest.gif"));
-	private Image grisstokIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/yamzuushk.gif"));
+	private Icon goblinIcon = new Icon("creatures/goblin.gif");
+	private Icon batIcon = new Icon("creatures/bat.gif");
+	private Icon zombieIcon = new Icon("creatures/zombie.gif");
+	private Icon ratIcon = new Icon("creatures/rat.gif");
+	private Icon soldierAntIcon = new Icon("creatures/giant_ant.gif");
+	private Icon homunculusIcon = new Icon("creatures/homunculus.gif");
+	private Icon lizardGruntIcon = new Icon("creatures/lizard_grunt.gif");
+	private Icon lizardFighterIcon = new Icon("creatures/lizard_fighter.gif");
+	private Icon lizardHunterIcon = new Icon("creatures/lizard_hunter.gif");
+	private Icon lizardHexerIcon = new Icon("creatures/lizard_hexer.gif");
+	private Icon lizardShadowbladeIcon = new Icon("creatures/lizard_shadowblade.gif");
+	private Icon lizardGuardianIcon = new Icon("creatures/lizard_guardian.gif");
+	private Icon lizardPriestIcon = new Icon("creatures/lizard_priest.gif");
+	private Icon grisstokIcon = new Icon("creatures/yamzuushk.gif");
 	
-	private Image orcThugIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_thug.gif"));
-	private Image deepAntIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/deep_ant.gif"));
-	private Image snappingTurtleIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/snapping_turtle.gif"));
-	private Image orcBrawlerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_brawler.gif"));
-	private Image orcPrivateerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_privateer.gif"));
-	private Image alligatorIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/alligator.gif"));
-	private Image orcSwashbucklerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_swashbuckler.gif"));
-	private Image orcGunnerIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_gunner.gif"));
-	private Image orcCaptainIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_captain.gif"));
-	private Image orcWarcasterIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_warcaster.gif"));
-	private Image parrotIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/parrot.gif"));
-	private Image harpyIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/harpy.gif"));
-	private Image orcBossIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/orc_boss.gif"));
+	private Icon orcThugIcon = new Icon("creatures/orc_thug.gif");
+	private Icon deepAntIcon = new Icon("creatures/deep_ant.gif");
+	private Icon snappingTurtleIcon = new Icon("creatures/snapping_turtle.gif");
+	private Icon orcBrawlerIcon = new Icon("creatures/orc_brawler.gif");
+	private Icon orcPrivateerIcon = new Icon("creatures/orc_privateer.gif");
+	private Icon alligatorIcon = new Icon("creatures/alligator.gif");
+	private Icon orcSwashbucklerIcon = new Icon("creatures/orc_swashbuckler.gif");
+	private Icon orcGunnerIcon = new Icon("creatures/orc_gunner.gif");
+	private Icon orcCaptainIcon = new Icon("creatures/orc_captain.gif");
+	private Icon orcWarcasterIcon = new Icon("creatures/orc_warcaster.gif");
+	private Icon parrotIcon = new Icon("creatures/parrot.gif");
+	private Icon harpyIcon = new Icon("creatures/harpy.gif");
+	private Icon orcBossIcon = new Icon("creatures/orc_boss.gif");
 	
-	private Image simulacrumIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/simulacrum.gif"));
-	private Image impIcon = new Image(this.getClass().getResourceAsStream("resources/creatures/imp.gif"));
+	private Icon simulacrumIcon = new Icon("creatures/simulacrum.gif");
+	private Icon impIcon = new Icon("creatures/imp.gif");
 	
 	public CreatureFactory(World world, ItemFactory itemFactory) {
 		this.world = world;
@@ -147,13 +144,6 @@ public class CreatureFactory implements java.io.Serializable {
 	    return player;
 	}
 	
-	public Creature newFungus(int z, int spreadCount){
-	    Creature fungus = new Creature(world, "Fungus",0,0, 8, 0, 0, 0, 0, 0, fungusIcon);
-	    world.addAtEmptyLocation(fungus, z);
-	    new FungusAI(fungus, this, spreadCount);
-	    return fungus;
-	}
-	
 	public Creature newBat(int z) {
 		Creature bat = new Creature(world, "Bat",1,25, 9, 8, 0, 1, 1, 3, batIcon);
 		bat.setAttributes(0,2,1);
@@ -189,7 +179,7 @@ public class CreatureFactory implements java.io.Serializable {
 		for (int i = 0; i < (int)(Math.random()*10)+1; i++)
 			goblin.addItemToInventory(itemFactory.ammo().newRock(-1));
 		if (z > 0 && Math.random()*100 < 20*z)
-	    	goblin.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 1));
+	    	goblin.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(z));
 		return goblin;
 	}
 
@@ -218,7 +208,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    	for (int i = 0; i < 3 + (int)(Math.random()*2); i++)
 	    		lizardGrunt.addItemToInventory(itemFactory.ammo().newDart(-1));
 	    } if (z > 0 && Math.random()*100 < 25*z)
-	    		lizardGrunt.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 1));
+	    		lizardGrunt.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(z));
 	    return lizardGrunt;
 	}
 	public Creature newSoldierAnt(int z) {
@@ -253,7 +243,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    lizard.setStats(3,3,2,2,2,1);
 	    lizard.setDescription("A common foot soldier of the Lizardfolk. What they lose in intelligence they make up for with their strength and willingness to follow orders.");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 1));
+	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(z));
 	    return lizard;
 	}
 	public Creature newLizardHunter(int z) {
@@ -263,7 +253,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    lizard.setStats(2,2,3,3,2,2);
 	    lizard.setDescription("A lizardfolk armed and trained with a bow. Quite deadly at a range, however noticably weaker when they are forced to fight hand to hand.");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.weapon().newShortbow(-1));
+	    lizard.addEquipment(itemFactory.weapon().newShortbow());
 	    for (int i = 0; i < 5 + (int)(Math.random()*3); i++)
 	    	lizard.addItemToInventory(itemFactory.ammo().newArrow(-1));
 	    return lizard;
@@ -281,11 +271,11 @@ public class CreatureFactory implements java.io.Serializable {
 	    lizard.addSpell(Spells.blind());
 	    lizard.addSpell(Spells.soulSiphon());
 	    if (Math.random()*100 < 25)
-	    	lizard.addItemToInventory(itemFactory.book().newBookOfMaledictions(-1));
+	    	lizard.addItemToInventory(itemFactory.book().newBookOfMaledictions());
 	    return lizard;
 	}
 	public Creature newLizardShadowblade(int z) {
-		Creature lizard = new Creature(world, "Lizard Shadowblade",4,140, 24,10,2,4,1,3, lizardShadowbladeIcon);
+		Creature lizard = new Creature(world, "Lizard Shadowblade",4,140, 21,10,2,4,1,3, lizardShadowbladeIcon);
 		new SpellcastingAI(lizard, player, 40);
 		lizard.setAttributes(1,2,2);
 	    lizard.setStats(1,2,3,3,2,3);
@@ -293,8 +283,8 @@ public class CreatureFactory implements java.io.Serializable {
 	    lizard.modifyMovementDelay(-1);
 	    lizard.setDescription("Trained as an elite lizardfolk, the shadowblades are an order of lizard assassins armed with deadly daggers and hexing spells.");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.weapon().newDagger(-1));
-	    lizard.addEquipment(itemFactory.armor().newLeatherArmor(-1));
+	    lizard.addEquipment(itemFactory.weapon().newDagger());
+	    lizard.addEquipment(itemFactory.armor().newLeatherArmor());
 	    lizard.addTag(Tag.SPELLCASTER);
 	    lizard.setMana(12, 12);
 	    lizard.addSpell(Spells.slow(3, 5, 5));
@@ -308,8 +298,8 @@ public class CreatureFactory implements java.io.Serializable {
 	    lizard.setStats(3,3,1,2,3,2);
 	    lizard.setDescription("A powerful and high ranking lizardfolk trained in the use of an impressive arsenal of arms and armour, they serve to guard the most important of their people. Why are they in the dungeon?");
 	    world.addAtEmptyLocation(lizard, z);
-	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 1));
-	    lizard.addEquipment(itemFactory.armor().newStuddedLeatherArmor(-1));
+	    lizard.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(z));
+	    lizard.addEquipment(itemFactory.armor().newStuddedLeatherArmor());
 	    return lizard;
 	}
 	public Creature newLizardPriest(int z) {
@@ -325,7 +315,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    lizard.addSpell(Spells.darksmite());
 	    lizard.addSpell(Spells.minorStun());
 	    if (Math.random()*100 < 25)
-	    	lizard.addItemToInventory(itemFactory.book().newBookOfLizardRituals(-1));
+	    	lizard.addItemToInventory(itemFactory.book().newBookOfLizardRituals());
 	    return lizard;
 	}
 	public Creature newGrisstok(int z) {
@@ -354,7 +344,7 @@ public class CreatureFactory implements java.io.Serializable {
 	    orc.setStats(2,3,2,1,2,3);
 	    orc.setDescription("What amounts to hired help on the high seas, they are more than capable of killing unfortunate stragglers.");
 	    world.addAtEmptyLocation(orc, z);
-	    orc.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(-1, 2));
+	    orc.addEquipment(itemFactory.weapon().newRandomMeleeWeapon(z));
 	    return orc;
 	}
 	public Creature newDeepAnt(int z) {
@@ -423,7 +413,7 @@ public class CreatureFactory implements java.io.Serializable {
 		orc.setAttributes(2,4,3);
 	    orc.setStats(3,3,4,4,3,1);
 	    orc.setDescription("Skilled with blades, privateers are adept at taking out important targets, both on land and at sea.");
-	    orc.addEquipment(itemFactory.weapon().newOrcishDagger(-1));
+	    orc.addEquipment(itemFactory.weapon().newOrcishDagger());
 	    orc.addAbility(Abilities.teleportNextTo());
 	    world.addAtEmptyLocation(orc, z);
 	    return orc;
@@ -446,9 +436,9 @@ public class CreatureFactory implements java.io.Serializable {
 	    orc.setStats(3,3,4,4,3,3);
 	    orc.setDescription("An experienced seafarer, able to man (or rather, orc) all positions on deck.");
 	    if (Math.random() < 0.5)
-	    	orc.addEquipment(itemFactory.newRandomWeapon(-1, 2));
+	    	orc.addEquipment(itemFactory.newRandomWeapon(z));
 	    else {
-	    	orc.addEquipment(itemFactory.weapon().newFlintlock(-1));
+	    	orc.addEquipment(itemFactory.weapon().newFlintlock());
 	    	for (int i = 0; i < 6; i++)
 	    		orc.addItemToInventory(itemFactory.ammo().newShot(-1));
 	    }
@@ -462,7 +452,7 @@ public class CreatureFactory implements java.io.Serializable {
 		orc.setAttributes(3,4,3);
 	    orc.setStats(3,2,4,4,4,3);
 	    orc.setDescription("It takes a skilled marksman to hit moving targets on opposing vessels.");
-	    orc.addEquipment(itemFactory.weapon().newFlintlock(-1));
+	    orc.addEquipment(itemFactory.weapon().newFlintlock());
 	    for (int i = 0; i < 5; i++)
 	    	orc.addItemToInventory(itemFactory.ammo().newShot(-1));
 	    world.addAtEmptyLocation(orc, z);

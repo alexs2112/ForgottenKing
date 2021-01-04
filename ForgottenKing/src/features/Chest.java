@@ -3,7 +3,7 @@ package features;
 import creatures.Creature;
 import items.Inventory;
 import items.Item;
-import javafx.scene.image.Image;
+import tools.Icon;
 import world.World;
 
 //A chest includes other objects that contain items and break when bumped into, such as barrels and pots
@@ -17,13 +17,14 @@ public class Chest extends Feature {
 		items.add(i);
 	}
 	private boolean open;
-	private Image openImage;
+	private Icon openIcon;
 	public enum ChestType {
 		CHEST,
 		BARREL,
 		POT;
 	}
 	private ChestType chestType;
+	public ChestType chestType() { return chestType; }
 
 	public Chest(ChestType chestType) {
 		super("", "", null);
@@ -31,13 +32,13 @@ public class Chest extends Feature {
 		open = false;
 		setType(Type.BUMP);
 		if (chestType == ChestType.BARREL) {
-			image = Loader.closedBarrel;
-			openImage = Loader.brokenBarrel;
+			icon = Loader.closedBarrel;
+			openIcon = Loader.brokenBarrel;
 			name = "Barrel";
 			desc = "A barrel";
 		} else { //if (chestType == ChestType.CHEST) {
-			image = Loader.closedChest;
-			openImage = Loader.openChest;
+			icon = Loader.closedChest;
+			openIcon = Loader.openChest;
 			name = "Chest";
 			desc = "A chest";
 		} 
@@ -61,7 +62,7 @@ public class Chest extends Feature {
 			creature.doAction("open the " + name);
 		setType(null);
 		open = true;
-		this.image = openImage;
+		this.icon = openIcon;
 		if (items != null)
 			for (Item i : items.getItems())
 				world.addItem(i, x, y, z);

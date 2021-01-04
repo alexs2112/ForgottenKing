@@ -2,163 +2,146 @@ package assembly;
 
 import items.Item;
 import items.ItemType;
-import javafx.scene.image.Image;
-import world.World;
+import tools.Icon;
 
 public class BookFactory implements java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;
-	private World world;
 	private CreatureFactory creatureFactory;
 	public void setCreatureFactory(CreatureFactory f) { creatureFactory = f; }
 	
-	private Image booksFull = new Image(this.getClass().getResourceAsStream("resources/items/books_full.png"));
-	private Image kindlingIcon = tools.ImageCrop.cropImage(booksFull, 0, 0, 32, 32);
-	private Image flamesIcon = tools.ImageCrop.cropImage(booksFull, 64, 0, 32, 32);
-	private Image chillsIcon = tools.ImageCrop.cropImage(booksFull, 32, 0, 32, 32);
-	private Image frostIcon = tools.ImageCrop.cropImage(booksFull, 0, 32, 32, 32);
-	private Image staticIcon = tools.ImageCrop.cropImage(booksFull, 96, 64, 32, 32);
-	private Image electricityIcon = tools.ImageCrop.cropImage(booksFull, 96, 128, 32, 32);
-	private Image debilitationIcon = tools.ImageCrop.cropImage(booksFull, 224, 32, 32, 32);
-	private Image vitalityIcon = tools.ImageCrop.cropImage(booksFull, 64, 32, 32, 32);
-	private Image maledictionsIcon = tools.ImageCrop.cropImage(booksFull, 128, 96, 32, 32);
-	private Image lizardRitualsIcon = tools.ImageCrop.cropImage(booksFull, 160, 0, 32, 32);
-
-	public BookFactory(World world) {
-		this.world = world;
-	}
+	private Icon kindlingIcon = new Icon("items/books-full.png", 0, 0);
+	private Icon flamesIcon = new Icon("items/books-full.png", 64, 0);
+	private Icon chillsIcon = new Icon("items/books-full.png", 32, 0);
+	private Icon frostIcon = new Icon("items/books-full.png", 0, 32);
+	private Icon staticIcon = new Icon("items/books-full.png", 96, 64);
+	private Icon electricityIcon = new Icon("items/books-full.png", 96, 128);
+	private Icon debilitationIcon = new Icon("items/books-full.png", 224, 32);
+	private Icon vitalityIcon = new Icon("items/books-full.png", 64, 32);
+	private Icon maledictionsIcon = new Icon("items/books-full.png", 128, 96);
+	private Icon lizardRitualsIcon = new Icon("items/books-full.png", 160, 0);
 	
 	public Item newRandomBook(int z) {
 		if (z < 3) {
 			switch( (int)(Math.random()*5) ) {
-			case 0: return newBookOfKindling(z);
-			case 1: return newBookOfChills(z);
-			case 2: return newBookOfStatic(z);
-			case 3: return newBookOfVitality(z);
-			case 4: return newBookOfDebilitation(z);
+			case 0: return newBookOfKindling();
+			case 1: return newBookOfChills();
+			case 2: return newBookOfStatic();
+			case 3: return newBookOfVitality();
+			case 4: return newBookOfDebilitation();
 			}
 		} else if (z < 7) {
 			switch((int)(Math.random()*4)) {
-			case 0: return newBookOfFlames(z);
-			case 1: return newBookOfFrost(z);
-			case 2: return newBookOfElectricity(z);
-			case 3: return newBookOfMaledictions(z);
+			case 0: return newBookOfFlames();
+			case 1: return newBookOfFrost();
+			case 2: return newBookOfElectricity();
+			case 3: return newBookOfMaledictions();
 			}
 		}
-		return newBookOfKindling(z);
+		return newBookOfKindling();
 	}
 	
 	/**
 	 * FIRE
 	 */
-	public Item newBookOfKindling(int z) {
+	public Item newBookOfKindling() {
 		Item item = new Item("Book of Kindling", ItemType.BOOK, kindlingIcon);
 		item.addSpell(Spells.embers());
 		item.addSpell(Spells.flameWave());
 		item.addSpell(Spells.moltenFire());
 		item.setDescription("A thin dark book, the cover is coated in ash and the pages feel brittle to the touch.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
-	public Item newBookOfFlames(int z) {
+	public Item newBookOfFlames() {
 		Item item = new Item("Book of Flames", ItemType.BOOK, flamesIcon);
 		item.addSpell(Spells.summonImp(creatureFactory));
 		item.addSpell(Spells.heatbeam());
 		item.addSpell(Spells.fireball());
 		item.setDescription("A large, charred tome. This book seems to give off an inner heat and burns your fingers to the touch.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
 	
 	/**
 	 * COLD
 	 */
-	public Item newBookOfChills(int z) {
+	public Item newBookOfChills() {
 		Item item = new Item("Book of Chills", ItemType.BOOK, chillsIcon);
 		item.addSpell(Spells.chill());
 		item.addSpell(Spells.iceShard());
 		item.addSpell(Spells.summonSimulacrum(creatureFactory));
 		item.setDescription("A thin tome of knowledge, the pages are cold to the touch and the cover seems slightly wet.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
-	public Item newBookOfFrost(int z) {
+	public Item newBookOfFrost() {
 		Item item = new Item("Book of Frost", ItemType.BOOK, frostIcon);
 		item.addSpell(Spells.armorOfFrost());
 		item.addSpell(Spells.icicle());
 		item.addSpell(Spells.massChill());
 		item.setDescription("A thick tome, the pages are frozen and brittle to the touch.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
 	
 	/**
 	 * AIR
 	 */
-	public Item newBookOfStatic(int z) {
+	public Item newBookOfStatic() {
 		Item item = new Item("Book of Static", ItemType.BOOK, staticIcon);
 		item.addSpell(Spells.shockingTouch());
 		item.addSpell(Spells.swiftness());
 		item.addSpell(Spells.minorStun());
 		item.setDescription("A thin sleeve of papers, seemingly held together by a force that shocks you when you touch it.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
-	public Item newBookOfElectricity(int z) {
+	public Item newBookOfElectricity() {
 		Item item = new Item("Book of Electricity", ItemType.BOOK, electricityIcon);
 		item.addSpell(Spells.blink());
 		item.addSpell(Spells.whirlwind());
 		item.addSpell(Spells.lightningBolt());
 		item.setDescription("A bound set of papers, electricity crackles between them and cause your fingers to tingle when you bring them close.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
 	
 	/**
 	 * POISON
 	 */
-	public Item newBookOfDebilitation(int z) {
+	public Item newBookOfDebilitation() {
 		Item item = new Item("Book of Debilitation", ItemType.BOOK, debilitationIcon);
 		item.addSpell(Spells.sting());
 		item.addSpell(Spells.toxicCloud());
 		item.addSpell(Spells.minorConfuse());
 		item.setDescription("A thin book consisting of few pages. The pages are sickly pale and the entire thing is brittle.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
 	
 	/**
 	 * LIGHT
 	 */
-	public Item newBookOfVitality(int z) {
+	public Item newBookOfVitality() {
 		Item item = new Item("Book of Vitality", ItemType.BOOK, vitalityIcon);
 		item.addSpell(Spells.curePoison());
 		item.addSpell(Spells.innerGlow());
 		item.addSpell(Spells.regenerateHealth());
 		item.addSpell(Spells.heroism());
 		item.setDescription("A plain, leather-bound book describing simple light spells of healing and strength.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
 	
 	/**
 	 * ENEMY DROPS
 	 */
-	public Item newBookOfMaledictions(int z) {
+	public Item newBookOfMaledictions() {
 		Item item = new Item("Book of Maledictions", ItemType.BOOK, maledictionsIcon);
 		item.addSpell(Spells.weaken());
 		item.addSpell(Spells.blind());
 		item.addSpell(Spells.soulSiphon());
 		item.setDescription("This book is quite plain, however it is chill to the touch and light seems to fade around it.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
-	public Item newBookOfLizardRituals(int z) {
+	public Item newBookOfLizardRituals() {
 		Item item = new Item("Book of Lizard Rituals", ItemType.BOOK, lizardRitualsIcon);
 		item.addSpell(Spells.vulnerability());
 		item.addSpell(Spells.minorStun());
 		item.addSpell(Spells.darksmite());
 		item.setDescription("An embellished book full of rituals devised and used by lizard priests.");
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
 

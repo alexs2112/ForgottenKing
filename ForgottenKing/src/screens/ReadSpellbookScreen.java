@@ -7,7 +7,6 @@ import items.Item;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import spells.Spell;
 
@@ -17,8 +16,6 @@ public class ReadSpellbookScreen extends Screen {
     private String letters;
     private Item item;
     private int select;
-    private Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
-	private Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 20);
     
     public ReadSpellbookScreen(Player player, Item item){
         this.player = player;
@@ -29,16 +26,16 @@ public class ReadSpellbookScreen extends Screen {
     
     public void displayOutput(Stage stage) {
     	root = new Group();
-    	draw(root, Loader.screenBorder, 0, 0);
+    	draw(root, Loader.screenBorder.image(), 0, 0);
 	    
 	    ArrayList<Spell> spells = getSpells();
 	    
         int x = 96;
         int y = 50;
         
-        write(root, "What would you like to memorize?", 48, y, font,  Color.WHITE);
-        write(root, "Spell Slots: ", 960, y, fontS, Color.WHITE);
-        write(root, (player.totalSpellSlots()-player.remainingSpellSlots()) + "/" + player.totalSpellSlots(), 1036, y+32, fontS, Color.WHITE);
+        write(root, "What would you like to memorize?", 48, y, font22,  Color.WHITE);
+        write(root, "Spell Slots: ", 960, y, font20, Color.WHITE);
+        write(root, (player.totalSpellSlots()-player.remainingSpellSlots()) + "/" + player.totalSpellSlots(), 1036, y+32, font20, Color.WHITE);
         for (int i = 0; i < spells.size(); i++) {
         	Spell spell = spells.get(i);
         	String line = letters.charAt(i) + " - " + spell.name();
@@ -46,14 +43,14 @@ public class ReadSpellbookScreen extends Screen {
         	Color c = Color.WHITE;
         	if (player.remainingSpellSlots() < spell.level())
         		c = Color.GREY;
-        	write(root, line, x, 32*i + y + 32, font, c);
-        	write(root, typeLine, 732, 32*i + y + 32, font, c);
+        	write(root, line, x, 32*i + y + 32, font22, c);
+        	write(root, typeLine, 732, 32*i + y + 32, font22, c);
         	if (i == select)
-        		draw(root, Loader.arrowRight, x-48, y + 4 + 32*i);
+        		draw(root, Loader.arrowRight.image(), x-48, y + 4 + 32*i);
         }
         
         if (spells.size() == 0) {
-        	write(root, "You know all the spells in this book already!", 48, y+=32, font, Color.ANTIQUEWHITE);
+        	write(root, "You know all the spells in this book already!", 48, y+=32, font22, Color.ANTIQUEWHITE);
         	return;
         }
         
@@ -63,7 +60,7 @@ public class ReadSpellbookScreen extends Screen {
         Color c = Color.WHITE;
     	if (player.remainingSpellSlots() < s.level())
     		c = Color.GREY;
-        writeCentered(root, "Press [enter] to learn " + s.name(), 640, 764, fontS, c);
+        writeCentered(root, "Press [enter] to learn " + s.name(), 640, 764, font20, c);
         constructCloseButton();
     }
     
@@ -98,17 +95,15 @@ public class ReadSpellbookScreen extends Screen {
     }
     
     public static void displaySpellInfo(Group root, Player player, Spell s, int y) {
-    	Font font = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 22);
-    	Font fontS = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 20);
-    	draw(root, Loader.screenSeparator, 0, y);
+    	draw(root, Loader.screenSeparator.image(), 0, y);
     	int x = 64;
     	y += 32;
-    	write(root, s.name(), x, y+=32, font, Color.WHITE);
+    	write(root, s.name(), x, y+=32, font22, Color.WHITE);
     	Color c = Color.WHITE;
     	if (player.magic().get(s.type()) < s.level())
     		c = Color.LIGHTGREY;
-    	write(root, s.type().text() + " : " + s.level(), 960, y, fontS, c);
-    	write(root, "Mana: " + s.cost(), 960, y+32, fontS, Color.WHITE);
+    	write(root, s.type().text() + " : " + s.level(), 960, y, font20, c);
+    	write(root, "Mana: " + s.cost(), 960, y+32, font20, Color.WHITE);
 
     	String string = s.description(player);
     	if (s.range() != 0)
@@ -126,7 +121,7 @@ public class ReadSpellbookScreen extends Screen {
     		else
     			string += "It is slightly loud";
     	}
-    	writeWrapped(root, string, x, y+=32, 800, fontS, Color.ANTIQUEWHITE);
+    	writeWrapped(root, string, x, y+=32, 800, font20, Color.ANTIQUEWHITE);
     }
 
 }

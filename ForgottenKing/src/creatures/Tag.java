@@ -7,6 +7,7 @@ import java.util.List;
 import assembly.Abilities;
 import javafx.scene.image.Image;
 import screens.Loader;
+import tools.Icon;
 
 public enum Tag {
 	//Player Character Types
@@ -91,10 +92,10 @@ public enum Tag {
 	public String text() { return text; }
 	private String description;
 	public String description() { return description; }
-	private Image icon;
-	public Image icon() { return icon; }
+	private Icon icon;
+	public Image image() { return icon.image(); }
 	
-	private Tag(String text, String description, Image icon) {
+	private Tag(String text, String description, Icon icon) {
 		this.text = text;
 		this.description = description;
 		this.icon = icon;

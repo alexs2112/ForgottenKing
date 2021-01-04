@@ -9,14 +9,15 @@ import items.Item;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import spells.Spell;
+import tools.Icon;
 import tools.Line;
 import tools.Point;
 import world.World;
 
 public class Player extends Creature {
 	private static final long serialVersionUID = 7769423305067121315L;
-    public Player(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Image image) {
-    	super(world,name,level,xp,hp,evasion,armorValue,baseAttackValue,baseDamageMin,baseDamageMax,image);
+    public Player(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Icon icon) {
+    	super(world,name,level,xp,hp,evasion,armorValue,baseAttackValue,baseDamageMin,baseDamageMax,icon);
     	spells = new ArrayList<Spell>();
     	abilities = new ArrayList<Ability>();
     	hotkeys = new Hotkey[10];
@@ -30,9 +31,9 @@ public class Player extends Creature {
     /**
      * FLAVOUR STUFF
      */
-    private Image largeIcon;
-    public Image largeIcon() { return largeIcon; }
-    public void setLargeIcon(Image x) { largeIcon = x; }
+    private Icon largeIcon;
+    public Icon largeIcon() { return largeIcon; }
+    public void setLargeIcon(Icon x) { largeIcon = x; }
     private String title;
     public String title() { return title; }
     public void setTitle(String s) { title = s; }

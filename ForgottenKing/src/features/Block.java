@@ -15,7 +15,7 @@ public class Block extends Feature {
 		if (t == Type.TREE) {
 			name = "Tree";
 			desc = "A tree";
-			image = Loader.treeNESW;
+			icon = Loader.treeImage;
 		}
 	}
 

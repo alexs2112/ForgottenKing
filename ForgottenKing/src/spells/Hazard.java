@@ -2,6 +2,7 @@ package spells;
 
 import creatures.Creature;
 import javafx.scene.image.Image;
+import tools.Icon;
 
 public class Hazard implements Cloneable, java.io.Serializable {
 	protected static final long serialVersionUID = 7769423305067121315L;
@@ -19,8 +20,8 @@ public class Hazard implements Cloneable, java.io.Serializable {
 	public void setVariance(int x) { variance = x; }
 	public int time() { return time; }
 	public void modifyTime(int x) { time += x; }
-	private Image image;
-	public Image image() { return image; }
+	private Icon icon;
+	public Image image() { return icon.image(); }
 	public void update() {
 		timer++;
 		if (timer >= 10) {
@@ -28,11 +29,11 @@ public class Hazard implements Cloneable, java.io.Serializable {
 			time--;
 		}
 	}
-	public Hazard(String name, int duration, Effect effect, Image image) {
+	public Hazard(String name, int duration, Effect effect, Icon icon) {
 		this.name = name;
 		this.time = duration;
 		this.effect = effect;
-		this.image = image;
+		this.icon = icon;
 	}
 	
 	public Hazard clone() {

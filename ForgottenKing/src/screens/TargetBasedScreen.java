@@ -10,12 +10,8 @@ import audio.Audio;
 import creatures.Creature;
 import creatures.Player;
 import javafx.scene.Group;
-//import javafx.event.EventHandler;
-//import javafx.scene.Scene;
-//import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import spells.TargetType;
 
@@ -35,7 +31,6 @@ public class TargetBasedScreen extends Screen {
 	protected int radius;
 	protected int range;
 	private String captionBase;
-	Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
 
 	public TargetBasedScreen(Group root, Player player, String caption, int sx, int sy){
         this.player = player;
@@ -59,7 +54,7 @@ public class TargetBasedScreen extends Screen {
 		else
 			handleTarget();
 	    displayTargets();
-	    writeWrapped(root, caption, 32, 72, 1000, font, Color.WHITE);
+	    writeWrapped(root, caption, 32, 72, 1000, font18, Color.WHITE);
 	}
 	
 	private void handleTarget() {
@@ -119,11 +114,11 @@ public class TargetBasedScreen extends Screen {
 	
 	private void displayTargets() {
 		for (Point p : targets) {
-			draw(root, Loader.targetBox, (p.x - sx)*32, (p.y - sy)*32);
+			draw(root, Loader.targetBox.image(), (p.x - sx)*32, (p.y - sy)*32);
 		}
-		draw(root, Loader.yellowSelection, (player.x - sx + x)*32, (player.y - sy + y) * 32);
+		draw(root, Loader.yellowSelection.image(), (player.x - sx + x)*32, (player.y - sy + y) * 32);
 		for (Creature c : creatures) {
-			draw(root, Loader.redSelection, (c.x-sx)*32, (c.y-sy)*32);
+			draw(root, Loader.redSelection.image(), (c.x-sx)*32, (c.y-sy)*32);
 		}
 		
 	}

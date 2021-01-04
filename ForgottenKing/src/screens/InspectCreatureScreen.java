@@ -3,6 +3,7 @@ package screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.Main;
 import creatures.Creature;
 import creatures.Tag;
 import items.Item;
@@ -25,20 +26,17 @@ public class InspectCreatureScreen extends Screen {
 
 	public void displayOutput(Stage stage) {
     	root = new Group();
-    	draw(root, Loader.screenBorder, 0, 0);
-    	Font titleFont = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 24);
-    	Font font = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 20);
-    	Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
+    	draw(root, Loader.screenBorder.image(), 0, 0);
     	
     	int y = 64;
-    	write(root, creature.name(), 96, y, titleFont, Color.WHITE);
-    	draw(root, new Image(this.getClass().getResourceAsStream("resources/icon_box.png")), 40, y-36);
+    	write(root, creature.name(), 96, y, font24, Color.WHITE);
+    	draw(root, new Image(Main.class.getResourceAsStream("resources/screens/icon_box.png")), 40, y-36);
     	draw(root, creature.image(), 48, y-28);
     	y += 48;
-    	writeWrapped(root, creature.description(), 48, y, 1184, font, Color.ANTIQUEWHITE);
+    	writeWrapped(root, creature.description(), 48, y, 1184, font20, Color.ANTIQUEWHITE);
     	y += 64;
     	for (String s : getDescriptionLines())
-    		write(root, s, 48, y+=20, fontS, Color.WHITE);
+    		write(root, s, 48, y+=20, font18, Color.WHITE);
     	
     	y += 48;
     	int x = 275;
@@ -46,17 +44,17 @@ public class InspectCreatureScreen extends Screen {
     		for (Tag t : creature.tags()) {
     			if (t.description().length() <= 1)
     				continue;
-    			draw(root, Loader.itemTagBox, 275, y);
-    			if (t.icon() != null)
-    				draw(root, t.icon(), x+20, y+20);
-    			Font f = fontS;
+    			draw(root, Loader.itemTagBox.image(), 275, y);
+    			if (t.image() != null)
+    				draw(root, t.image(), x+20, y+20);
+    			Font f = font18;
     			if (t.description().length() < 100)
-    				f = font;
+    				f = font20;
     			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42, 632, f, Color.ANTIQUEWHITE);
     			y+=122;
     		}
     	y+=48;
-    	write(root, "[esc] to exit", 48, y, font, Color.WHITE);
+    	write(root, "[esc] to exit", 48, y, font20, Color.WHITE);
     	constructCloseButton();
     }
 

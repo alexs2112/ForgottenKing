@@ -1,6 +1,6 @@
 package creatures;
 
-import javafx.scene.image.Image;
+import tools.Icon;
 import screens.Loader;
 
 public enum Type {
@@ -20,13 +20,13 @@ public enum Type {
 	private static final long serialVersionUID = 7769423305067121315L;
 	private String type;
 	public String text() { return type; }
-	private Image icon;
-	public Image icon() { return icon; }
-	private Image largeIcon;
-	public Image largeIcon() { return largeIcon; }
+	private Icon icon;
+	public Icon icon() { return icon; }
+	private Icon largeIcon;
+	public Icon largeIcon() { return largeIcon; }
 	public boolean physical() { return this == SLASHING || this == PIERCING || this == CRUSHING; }
 	
-	private Type(String type, Image icon, Image largeIcon) {
+	private Type(String type, Icon icon, Icon largeIcon) {
 		this.type = type;
 		this.icon = icon;
 		this.largeIcon = largeIcon;

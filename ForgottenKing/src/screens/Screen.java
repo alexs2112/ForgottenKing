@@ -1,4 +1,5 @@
 package screens;
+import application.Main;
 import audio.Audio;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -85,7 +86,7 @@ public abstract class Screen implements java.io.Serializable {
     }
     
     public static void write(Group root, String s, int x, int y, int fontSize, Color colour) {
-    	Font f = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), fontSize);
+    	Font f = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), fontSize);
     	write(root, s, x, y, f, colour);
     }
     public static void write(Group root, String s, int x, int y, String fontPath, int fontSize, Color colour) {
@@ -119,12 +120,28 @@ public abstract class Screen implements java.io.Serializable {
     	root.getChildren().add(text);
     }
     public static void writeCentered(Group root, String s, int x, int y, Font font, Color colour) {
+    	writeCentered(root, s, x, y, font, colour, null, null, null);
+    }
+    public static void writeCentered(Group root, String s, int x, int y, Font font, Color colour,
+    	EventHandler<MouseEvent> clickEvent, EventHandler<MouseEvent> enteredEvent, EventHandler<MouseEvent> exitEvent) {
     	int startX = x - (int)(s.length() * (font.getSize()+1))/2;
     	if (font.getName().contains("DejaVu"))
     		startX = x - (int)(s.length()/2*(font.getSize()/2));
-    	write(root, s, startX, y, font, colour);
+       	write(root, s, startX, y, font, colour, clickEvent, enteredEvent, exitEvent);
     }
     
+    /**
+     * All fonts as a static variable so they can be serialized
+     */
+    public static Font font12 = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), 12);
+    public static Font font14 = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), 14);
+    public static Font font16 = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), 16);
+    public static Font font18 = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), 18);
+    public static Font font20 = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), 20);
+    public static Font font22 = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), 22);
+    public static Font font24 = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), 24);
+    public static Font font26 = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), 26);
+    public static Font font36 = Font.loadFont(Main.class.getResourceAsStream("resources/fonts/SDS_8x8.ttf"), 36);
     
     /**
      * Close Button Stuff for Subscreens
@@ -146,9 +163,9 @@ public abstract class Screen implements java.io.Serializable {
     	};
     }
     protected void constructCloseButton() {
-    	Image closeIcon = Loader.closeMenuIcon;
+    	Image closeIcon = Loader.closeMenuIcon.image();
         if (closeMenu)
-        	closeIcon = Loader.closeMenuIconSelected;
+        	closeIcon = Loader.closeMenuIconSelected.image();
     	draw(root, closeIcon, 1222, 18, clickExit(), mouseOverExit(true), mouseOverExit(false));
     }
     

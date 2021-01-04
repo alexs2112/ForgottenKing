@@ -1,8 +1,9 @@
 package screens;
 
-//import java.io.FileOutputStream;
-//import java.io.IOException;
-//import java.io.ObjectOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ import creatures.Creature;
 import creatures.Player;
 import creatures.Tag;
 import creatures.Type;
-import features.Chest;
 import features.Feature;
 import features.Portal;
 import items.Item;
@@ -31,10 +31,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import spells.Effect;
+import tools.DrawMinimap;
 import tools.FieldOfView;
+import tools.Icon;
 import tools.KeyBoardCommand;
 import tools.Message;
 import tools.Point;
@@ -51,7 +52,7 @@ public class PlayScreen extends Screen {
     private CreatureFactory creatureFactory;
     private ItemFactory itemFactory;
     private FieldOfView fov;
-    private Screen subscreen;
+    transient private Screen subscreen;
     private boolean devMode = false;
     //private String hotkeyNumbers = "1234567890";
     public Audio audio() {
@@ -66,15 +67,15 @@ public class PlayScreen extends Screen {
         messages = new ArrayList<Message>();
         createWorld();
         fov = new FieldOfView(world);
-        itemFactory = new ItemFactory(world);
+        itemFactory = new ItemFactory();
         creatureFactory = new CreatureFactory(world, itemFactory);
         itemFactory.setCreatureFactory(creatureFactory);
         setUpPlayer(character);
-        populate();
+        world.populate(creatureFactory, itemFactory);
         prepareButtons();
     }
     private void createWorld(){
-        world = new WorldBuilder(90, 31, 10)
+        world = new WorldBuilder(82, 39, 10)
         		//new WorldBuilder(90,55,2)	//For screenshots of maps
         	  .makeDungeon()
               .build();
@@ -97,16 +98,8 @@ public class PlayScreen extends Screen {
         	player.addSpell(Spells.embers());
         }
         if (devMode) {
-        	player.addEquipment(itemFactory.weapon().newDevSword(-1));
-        	player.addEquipment(itemFactory.armor().newDevBreastplate(-1));
-        	player.addEquipment(itemFactory.weapon().newFlintlock(-1));
-        	player.addEquipment(itemFactory.weapon().newLongbow(-1));
-        	player.addEquipment(itemFactory.weapon().newHandCrossbow(-1));
-        	for (int i = 0; i < 100; i++) {
-        		player.addItemToInventory(itemFactory.ammo().newArrow(-1));
-        		player.addItemToInventory(itemFactory.ammo().newShot(-1));
-        		player.addItemToInventory(itemFactory.ammo().newBolt(-1));
-        	}
+        	player.addEquipment(itemFactory.weapon().newDevSword());
+        	player.addEquipment(itemFactory.armor().newDevBreastplate());
         }
         messages.clear();
         player.notify("Welcome to the Dungeon!");
@@ -122,6 +115,7 @@ public class PlayScreen extends Screen {
 	    displayHazards(left, top);
 		displayCreatures(left, top);
 		displayStats();
+		DrawMinimap.draw(root, player, 1030, 269);
 		displayMouse(left, top);
 		handleButtons();
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {public void handle(KeyEvent me) { messages.clear(); } });
@@ -158,7 +152,6 @@ public class PlayScreen extends Screen {
 	    return Math.max(0, Math.min(player.y - screenHeight / 2, world.height() - screenHeight));
 	}
 	
-	Font fontXS = Font.loadFont(this.getClass().getResourceAsStream("resources/DejaVuSansMono.ttf"), 14);
 	private void displayTiles(int left, int top) {
 		fov.update(player.x, player.y, player.z, player.visionRadius());
 	    for (int x = 0; x < screenWidth; x++){
@@ -173,10 +166,10 @@ public class PlayScreen extends Screen {
 	            		Item i = world.items(wx,wy,player.z).getFirstItem();
 	            		if (i != null) {
 	            			draw(root, i.image(), x*32, y*32);
-	            			if (i.effectImage() != null)
-	            	    		draw(root, i.effectImage(), x*32, y*32);
+	            			if (i.effectIcon() != null)
+	            	    		draw(root, i.effectIcon().image(), x*32, y*32);
 	            			if (world.items(wx,wy,player.z).numberOfItems() > 1)
-	            				draw(root, Loader.multi_item_icon, x*32, y*32);
+	            				draw(root, Loader.multi_item_icon.image(), x*32, y*32);
 	            		}
 	            	}
 	            } else {
@@ -188,10 +181,10 @@ public class PlayScreen extends Screen {
 	            			Item i = world.items(wx,wy,player.z).getFirstItem();
 	            			if (i != null) {
 	            				draw(root, i.image(), x*32, y*32, -0.7);
-	            				if (i.effectImage() != null)
-	            					draw(root, i.effectImage(), x*32, y*32, -0.7);
+	            				if (i.effectIcon() != null)
+	            					draw(root, i.effectIcon().image(), x*32, y*32, -0.7);
 	            				if (world.items(wx,wy,player.z).numberOfItems() > 1)
-	            					draw(root, Loader.multi_item_icon, x*32, y*32, -0.7);
+	            					draw(root, Loader.multi_item_icon.image(), x*32, y*32, -0.7);
 	            			}
 	            		}
 	            	}
@@ -215,15 +208,15 @@ public class PlayScreen extends Screen {
         		if (healthbar != null)
         			draw(root, healthbar, (c.x-left)*32, (c.y-top)*32);
         		if (c.weapon() != null && !c.is(Tag.PLAYER))
-        			draw(root, Loader.armedEnemyIcon, (c.x-left)*32 + 24, (c.y-top)*32);
+        			draw(root, Loader.armedEnemyIcon.image(), (c.x-left)*32 + 24, (c.y-top)*32);
         		if (c.isWandering())
-        			draw(root, Loader.wanderingEnemyIcon, (c.x-left)*32 + 16, (c.y-top)*32+16);
+        			draw(root, Loader.wanderingEnemyIcon.image(), (c.x-left)*32 + 16, (c.y-top)*32+16);
         		HashMap<String, Color> h = c.getStatements();
         		c.clearStatements();
         		if (h != null) {
         			int i = 0;
         			for (String s : h.keySet()) {
-        				writeCentered(root, s, (c.x-left)*32+12, (c.y-top)*32-2-(14*i), fontXS, h.get(s));
+        				writeCentered(root, s, (c.x-left)*32+12, (c.y-top)*32-2-(14*i), font14, h.get(s));
         				i++;
         			}
         		}
@@ -247,8 +240,10 @@ public class PlayScreen extends Screen {
 	@Override
 	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
 		//messages.clear();
-		if (player.hp() < 1)
+		if (player.hp() < 1) {
+			deleteSave();
 		    return new LoseScreen(root);
+		}
     	boolean endAfterUserInput = true;
     	if (subscreen != null) {
     		subscreen = subscreen.respondToUserInput(code, c, shift);
@@ -302,8 +297,10 @@ public class PlayScreen extends Screen {
     			playerRest();
     		} else if (c == 'r' && !shift)
     			subscreen = new ReadScreen(player);
-    		else if (c == 's')
+    		else if (c == 's' && !shift)
     			subscreen = new StatsScreen(player);
+    		else if (c == 's' && shift)
+    			serialize();
     		else if (c == 'm')
     			subscreen = new MagicScreen(player);
     		else if (c == 'p')
@@ -360,7 +357,8 @@ public class PlayScreen extends Screen {
     			} else {
     				//Wait 1 turn
     			}
-    		}
+    		} else if (code.equals(KeyCode.ESCAPE))
+    			subscreen = new PauseScreen(this);
 //    		else if (hotkeyNumbers.indexOf(c) != -1)
 //    			return player.hotkey(hotkeyNumbers.indexOf(c)).use(root, player, getScrollX(), getScrollY());
     		else if (c == '0' && devMode && shift)
@@ -371,6 +369,8 @@ public class PlayScreen extends Screen {
     			world.setFeature(new Portal(), player.x, player.y, player.z);
     		else if (c == '7' && devMode && shift)
     			subscreen = new DevMapScreen(world, player.z);
+    		else if (c == '6' && shift)
+    			serialize();
     		else
     			endAfterUserInput = false;
     	}
@@ -417,100 +417,87 @@ public class PlayScreen extends Screen {
     	}
     }
 	
-	Font statFontM = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 20);
-	Font statFontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 16);
-	Font statFontXS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
     private void displayStats() {
-    	draw(root, Loader.playerUIFull, 1040, 0);
-        writeCentered(root, "HP: " + player.hp() + "/" + player.maxHP(), 1160, 34, statFontM, Color.RED);
-        writeCentered(root, "MP: " + player.mana() + "/" + player.maxMana(), 1160, 82, statFontM, Color.BLUE);
-        writeCentered(root, "XP: " + player.xp() + "/" + player.nextLevelXP(), 1160, 115, statFontXS, Color.YELLOW);
+    	draw(root, Loader.playerUIFull.image(), 1024, 0);
+        writeCentered(root, "HP: " + player.hp() + "/" + player.maxHP(), 1146, 34, font20, Color.RED);
+        writeCentered(root, "MP: " + player.mana() + "/" + player.maxMana(), 1146, 82, font20, Color.BLUE);
+        writeCentered(root, "XP: " + player.xp() + "/" + player.nextLevelXP(), 1146, 115, font14, Color.YELLOW);
         int y = 154;
-        writeCentered(root, ""+player.movementDelay(), 1120, y, statFontS, Color.WHITE);
-        writeCentered(root, ""+player.attackDelay(), 1200, y, statFontS, Color.WHITE);
+        writeCentered(root, ""+player.movementDelay(), 1110, y, font16, Color.WHITE);
+        writeCentered(root, ""+player.attackDelay(), 1199, y, font16, Color.WHITE);
         y += 48;
-        writeCentered(root, ""+player.evasion(), 1114, y, statFontS, Color.WHITE);
-        writeCentered(root, ""+player.armorValue(), 1204, y, statFontS, Color.WHITE);
+        writeCentered(root, ""+player.evasion(), 1102, y, font16, Color.WHITE);
+        writeCentered(root, ""+player.armorValue(), 1201, y, font16, Color.WHITE);
         
         if (player.weapon() != null && player.weapon().isRanged())
         	writeCentered(root, "+" + player.getCurrentRangedAttackValue() + " [" + (player.getCurrentRangedDamage()[0]) + "-" + (player.getCurrentRangedDamage()[1]) + "]", 
-                	1178, y += 48, statFontS, Color.WHITE);
+                	1170, y += 48, font16, Color.WHITE);
         else
         	writeCentered(root, "+" + player.getCurrentAttackValue() + " [" + (player.getMinDamage()+player.getCurrentDamageMod()) + "-" + (player.getMaxDamage()+player.getCurrentDamageMod()) + "]", 
-        			1178, y += 48, statFontS, Color.WHITE);
+        			1170, y += 48, font16, Color.WHITE);
         
         if (player.weapon() != null)
         	for (ItemTag t : player.weapon().tags())
-        		if (t.isWeapon() && t.icon() != null)
-        			draw(root, t.icon(), 1049, 224);
-        	
-        y = 302;
-        int x = 1150;
-        int x2 = 1242;
-        writeCentered(root, "" + player.getToughness(), x, y, statFontS, Color.WHITE);
-        writeCentered(root, "" + player.getBrawn(), x2, y, statFontS, Color.WHITE);
-        writeCentered(root, "" + player.getAgility(), x, y+=44, statFontS, Color.WHITE);
-        writeCentered(root, "" + player.getAccuracy(), x2, y, statFontS, Color.WHITE);
-        writeCentered(root, "" + player.getWill(), x, y+=44, statFontS, Color.WHITE);
-        writeCentered(root, "" + player.getSpellcasting(), x2, y, statFontS, Color.WHITE);
+        		if (t.isWeapon() && t.image() != null)
+        			draw(root, t.image(), 1033, 224);
 
         int num = 0;
         for (Item i : player.equipment().values()) {
-        	draw(root, Loader.equipmentBox, 1040, 408 + 48*num);
-        	draw(root, i.image(), 1049, 417 + 48*num);
-			if (i.effectImage() != null)
-	    		draw(root, i.effectImage(), 1049, 417 + 48*num);
-        	write(root, i.shortDesc(player), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
+        	draw(root, Loader.equipmentBox.image(), 1024, 430 + 36*num);
+        	draw(root, i.image(), 1026, 432 + 36*num);
+			if (i.effectIcon() != null)
+	    		draw(root, i.effectIcon().image(), 1026, 432 + 36*num);
+        	write(root, i.shortDesc(player), 1066, 456 + 36*num, font14, Color.ANTIQUEWHITE);
         	num++;
         	if (player.quiver() != null && i.isRanged()) {
-        		draw(root, Loader.equipmentBoxBlue, 1040, 408 + 48*num);
-            	draw(root, player.quiver().image(), 1049, 417 + 48*num);
-    			if (i.effectImage() != null)
-    	    		draw(root, player.quiver().effectImage(), 1049, 417 + 48*num);
-            	write(root, "[" + player.inventory().quantityOf(player.quiver()) + "] " + player.quiver().shortDesc(player), 1090, 441 + 48*num, statFontXS, Color.ANTIQUEWHITE);
+        		draw(root, Loader.equipmentBoxBlue.image(), 1024, 430 + 36*num);
+            	draw(root, player.quiver().image(), 1026, 432 + 36*num);
+    			if (i.effectIcon() != null)
+    	    		draw(root, player.quiver().effectIcon().image(), 1026, 432 + 36*num);
+            	write(root, "[" + player.inventory().quantityOf(player.quiver()) + "] " + player.quiver().shortDesc(player), 1066, 456 + 36*num, font14, Color.ANTIQUEWHITE);
             	num++;
         	}
         }
         num = 0;
         for (Effect e : player.effects()) {
-        	draw(root, Loader.effectBox, 764, num * 48);
+        	draw(root, Loader.effectBox.image(), 748, num * 48);
         	if (e.image() != null)
-        		draw(root, e.image(), 774, num*48 + 9);
-        	write(root, e.name(), 814, num * 48 + 34, statFontS, Color.WHITE);
-        	writeCentered(root, "" + e.duration(), 1015, num*48 + 34, statFontS, Color.WHITE);
+        		draw(root, e.image(), 758, num*48 + 9);
+        	write(root, e.name(), 798, num * 48 + 34, font16, Color.WHITE);
+        	writeCentered(root, "" + e.duration(), 999, num*48 + 34, font16, Color.WHITE);
         	num++;
         }
         int notificationY = 0;
         if (player.magic().floatingPoints() < 0) {
         	String s = "[m]: Overloaded Spell Points!";
-        	write(root, s, 8, notificationY+=24, statFontS, Color.RED);
+        	write(root, s, 8, notificationY+=24, font16, Color.RED);
         }
         if (player.magic().floatingPoints() > 0) {
         	String s = "[m]: "+player.magic().floatingPoints()+" Free Spell Point";
         	if (player.magic().floatingPoints() > 1)
         		s += "s";
-        	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
+        	write(root, s, 8, notificationY+=24, font16, Color.AQUA);
         }
         if (player.perkPoints() > 0) {
         	String s = "[p]: "+player.perkPoints()+" Perk Point";
         	if (player.perkPoints() > 1)
         		s += "s";
         	s += " Available!";
-        	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
+        	write(root, s, 8, notificationY+=24, font16, Color.AQUA);
         }
         if (player.attributePoints() > 0) {
         	String s = "[s]: "+player.attributePoints()+" Attribute Point";
         	if (player.attributePoints() > 1)
         		s += "s";
         	s += " Available!";
-        	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
+        	write(root, s, 8, notificationY+=24, font16, Color.AQUA);
         }
         if (player.statPoints() > 0) {
         	String s = "[s]: "+player.statPoints()+" Stat Point";
         	if (player.attributePoints() > 1)
         		s += "s";
         	s += " Available!";
-        	write(root, s, 8, notificationY+=24, statFontS, Color.AQUA);
+        	write(root, s, 8, notificationY+=24, font16, Color.AQUA);
         }
     }
     
@@ -525,42 +512,42 @@ public class PlayScreen extends Screen {
     	}
     	if (creature.hp() == creature.maxHP()) {
     		if (poisoned)
-    			return Loader.poisonedHealthBarFull;
+    			return Loader.poisonedHealthBarFull.image();
     		else if (burning)
-    			return Loader.burningHealthBarFull;
+    			return Loader.burningHealthBarFull.image();
     		return null;
     	} if (creature.hp() > 4*creature.maxHP()/5) {
     		if (poisoned)
-    			return Loader.poisonedHealthBarFull;
+    			return Loader.poisonedHealthBarFull.image();
     		else if (burning)
-    			return Loader.burningHealthBarFull;
+    			return Loader.burningHealthBarFull.image();
     		if (creature.is(Tag.ALLY))
-    			return Loader.allyHealthBarFull;
-    		return Loader.healthBarFull;
+    			return Loader.allyHealthBarFull.image();
+    		return Loader.healthBarFull.image();
     	} else if (creature.hp() > 3 * (creature.maxHP()/5)) {
     		if (poisoned)
-    			return Loader.poisonedHealthBarThreeQuarter;
+    			return Loader.poisonedHealthBarThreeQuarter.image();
     		else if (burning)
-    			return Loader.burningHealthBarThreeQuarter;
+    			return Loader.burningHealthBarThreeQuarter.image();
     		if (creature.is(Tag.ALLY))
-    			return Loader.allyHealthBarThreeQuarter;
-    		return Loader.healthBarThreeQuarter;
+    			return Loader.allyHealthBarThreeQuarter.image();
+    		return Loader.healthBarThreeQuarter.image();
     	} else if (creature.hp() > 1*creature.maxHP()/4) {
     		if (poisoned)
-    			return Loader.poisonedHealthBarHalf;
+    			return Loader.poisonedHealthBarHalf.image();
     		else if (burning)
-    			return Loader.burningHealthBarHalf;
+    			return Loader.burningHealthBarHalf.image();
     		if (creature.is(Tag.ALLY))
-    			return Loader.allyHealthBarHalf;
-    		return Loader.healthBarHalf;
+    			return Loader.allyHealthBarHalf.image();
+    		return Loader.healthBarHalf.image();
     	} else {
     		if (poisoned)
-    			return Loader.poisonedHealthBarQuarter;
+    			return Loader.poisonedHealthBarQuarter.image();
     		else if (burning)
-    			return Loader.burningHealthBarQuarter;
+    			return Loader.burningHealthBarQuarter.image();
     		if (creature.is(Tag.ALLY))
-    			return Loader.allyHealthBarQuarter;
-    		return Loader.healthBarQuarter;
+    			return Loader.allyHealthBarQuarter.image();
+    		return Loader.healthBarQuarter.image();
     	}
     }
     
@@ -569,70 +556,14 @@ public class PlayScreen extends Screen {
     		return;
     	int messageHeight = 24;
     	int top = 760 - messages.size() * messageHeight;
-    	Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
     	int i = 0;
     	for (Message m : messages) {
-    		write(root, m.message(), 10, top+i*messageHeight, font, m.colour());
+    		write(root, m.message(), 10, top+i*messageHeight, font14, m.colour());
     		i++;
     	}
     }
 	
-	private void populate() {
-		for (int z = 0; z < world.depth(); z++) {
-			//Each level has 9 creatures of a lower level, 15 creatures of that level, and 6 creatures of a higher level
-			if (z % 5 == 0) {
-				for (int i = 0; i < 10; i++)
-					creatureFactory.newRandomCreature(z, z+1);
-				for (int i = 0; i < 20; i++)
-					creatureFactory.newRandomCreature(z, z);
-			} else if ((z+1) % 5 == 0) {
-				for (int i = 0; i < 15; i++) {
-					creatureFactory.newRandomCreature(z, z-1);
-					creatureFactory.newRandomCreature(z, z);
-				}
-			} else {
-				for (int i = 0; i < 9; i++)
-					creatureFactory.newRandomCreature(z, z-1);
-				for (int i = 0; i < 15; i++)
-					creatureFactory.newRandomCreature(z, z);
-				for (int i = 0; i < 6; i++)
-					creatureFactory.newRandomCreature(z, z+1);
-			}
-			for (int i = 0; i < 8; i++){
-	            itemFactory.ammo().newRock(z);
-	        }
-			for (int i = 0; i < 5; i++){
-				itemFactory.newRandomArmor(z);
-				itemFactory.newRandomWeapon(z, (z/5) + 1);
-			}
-			for (int i = 0; i < 3; i++) {
-				itemFactory.newRandomPotion(z);
-			}
-			for (int i = 0; i < 2; i++) {
-				itemFactory.book().newRandomBook(z);
-			}
-			for (int i = 0; i < 3; i++) {
-				itemFactory.ammo().newArrow(z);
-			}
-			for (int i = 0; i < 3; i++) {
-				itemFactory.trinket().newRandomRing(z);
-			}
-//			for (int i = 0; i < 3; i++) {
-//				Point p = world.getEmptyLocation(z);
-//				Chest c = new Chest(Chest.ChestType.CHEST);
-//				world.setFeature(c, p.x, p.y, z);
-//			}
-			for (int i = 0; i < 6; i++) {
-				Point p = world.getEmptyLocation(z);
-				Chest c = new Chest(Chest.ChestType.BARREL);
-				world.setFeature(c, p.x, p.y, z);
-			}
-		}
-		if (world.depth() > 4)
-			creatureFactory.newGrisstok(4);
-	}
-	
-	//A method that repeats the last key press (5) until the player is done resting
+	//A method that repeats the last key press until the player is done resting
 	private void playerRest() {
 		if (player.resting() && !player.creatureInSight() && (player.hp() < player.maxHP()||player.mana() < player.maxMana()))
 			nextCommand = new KeyBoardCommand(KeyCode.R, 'r', true);
@@ -682,35 +613,34 @@ public class PlayScreen extends Screen {
 	
 	
 	//Button Handling can go all the way down here
-	Font tooltipFont = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 14);
 	private boolean[] mouseOverButtons = new boolean[12];
-	private List<Image> buttonIcons;
-	private List<Image> buttonIconsSelected;
+	private List<Icon> buttonIcons;
+	private List<Icon> buttonIconsSelected;
 	private List<String> tooltips;
 	private void handleButtons() {
-		draw(root, Loader.buttonBar, 0, 756);
+		draw(root, Loader.buttonBar.image(), 0, 756);
 		for (int i = 0; i < 11; i++) {
-			Image image = buttonIcons.get(i);
+			Image image = buttonIcons.get(i).image();
 			if (mouseOverButtons[i])
-				image = buttonIconsSelected.get(i);
+				image = buttonIconsSelected.get(i).image();
 			draw(root, image, 40*i, 760, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false));
 		}
 		//A special case for swapping weapons
 		int i = 11;
-		Image image = buttonIcons.get(i);
+		Image image = buttonIcons.get(i).image();
 		if (mouseOverButtons[i])
-			image = buttonIconsSelected.get(i);
+			image = buttonIconsSelected.get(i).image();
 		draw(root, image, 40*i, 760, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false)); 
 		if (player.lastWielded() != null) {
 			for (ItemTag t : player.lastWielded().tags())
-				if (t.isWeapon() && t.icon() != null) {
-					draw(root, t.icon(), 40*i+4, 764, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false));
+				if (t.isWeapon() && t.image() != null) {
+					draw(root, t.image(), 40*i+4, 764, setMouseClick(i), setMouseOver(i, true), setMouseOver(i, false));
 					break;
 				}
 		}
 	}
 	private void prepareButtons() {
-		buttonIcons = new ArrayList<Image>();
+		buttonIcons = new ArrayList<Icon>();
 		buttonIcons.add(Loader.inventoryIcon);
 		buttonIcons.add(Loader.wearIcon);
 		buttonIcons.add(Loader.quaffIcon);
@@ -723,7 +653,7 @@ public class PlayScreen extends Screen {
 		buttonIcons.add(Loader.fireWeaponIcon);
 		buttonIcons.add(Loader.castIcon);
 		buttonIcons.add(Loader.swapWeaponIcon);
-		buttonIconsSelected = new ArrayList<Image>();
+		buttonIconsSelected = new ArrayList<Icon>();
 		buttonIconsSelected.add(Loader.inventoryIconSelected);
 		buttonIconsSelected.add(Loader.wearIconSelected);
 		buttonIconsSelected.add(Loader.quaffIconSelected);
@@ -864,12 +794,12 @@ public class PlayScreen extends Screen {
 	private String tooltip;
 	private void displayMouse(int left, int top) {
 		if (tooltip != null)
-			writeCentered(root, tooltip, mouseSX, mouseSY-32, tooltipFont, Color.WHITE);
+			writeCentered(root, tooltip, mouseSX, mouseSY-32, font14, Color.WHITE);
 		if (mouseX == -1 || mouseY == -1)
 			return;
-		Image i = Loader.yellowSelection;
+		Image i = Loader.yellowSelection.image();
 		if (player.creature(left+mouseX, top+mouseY, player.z) != null && player.creature(left+mouseX, top+mouseY, player.z) != player)
-			i = Loader.redSelection;
+			i = Loader.redSelection.image();
 		draw(root, i, mouseX*32, mouseY*32);
 	}
 //	private EventHandler<MouseEvent> getTooltip(String s, boolean enter) {
@@ -935,5 +865,29 @@ public class PlayScreen extends Screen {
 		};
 	}
 	
+	
+	
+	//Saving the game!
+	public void serialize() {
+		try {
+			FileOutputStream fileOut = new FileOutputStream("savegame.ser");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(this);
+			out.close();
+			fileOut.close();
+			System.out.println("Serialized data is saved in savegame.ser");
+			player.notify("Game Saved!", Color.GOLD);
+		} catch (IOException i) {
+			i.printStackTrace();
+			player.notify("Error: Game Failed to Save!", Color.RED);
+		}
+	}
+	public static void deleteSave() {
+		File f = new File("savegame.ser");
+		if (f.delete())
+			System.out.println("Savegame deleted!");
+		else
+			System.out.println("Savegame failed to delete");
+	}
 	
 }

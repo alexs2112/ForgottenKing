@@ -3,13 +3,13 @@ package creatures;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.image.Image;
+import tools.Icon;
 
 //A really clunky way to do it, really only calls it once, hence all the public variables
 public class ClassSelection implements java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;
-	public Image largeIcon;
-	public Image icon;
+	public Icon icon;
+	public Icon largeIcon;
 	public Tag title;
     public int hp;
     public int evasion;
@@ -47,7 +47,7 @@ public class ClassSelection implements java.io.Serializable {
      * All that this is used for is to transition all of the starting stats from character selection to playscreen
      * Starting equipment is handled in playscreen by tag
      */
-    public ClassSelection(Tag title, Image largeIcon, Image icon, int hp, int ev, int armor, int attack, int damageMin, int damageMax) {
+    public ClassSelection(Tag title, Icon largeIcon, Icon icon, int hp, int ev, int armor, int attack, int damageMin, int damageMax) {
     	this.title = title;
     	this.largeIcon = largeIcon;
     	this.icon = icon;

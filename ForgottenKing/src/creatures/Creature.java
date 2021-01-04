@@ -1,5 +1,6 @@
 package creatures;
 
+import tools.Icon;
 import tools.Point;
 
 import java.util.ArrayList;
@@ -41,8 +42,8 @@ public class Creature implements java.io.Serializable {
      */
     private String name;
     public String name() { return name; }
-    private Image image;
-    public Image image() { return image; }
+    private Icon icon;
+    public Image image() { return icon.image(); }
     private CreatureAI ai;
     public void setCreatureAI(CreatureAI ai) { this.ai = ai; }
     private String description;
@@ -369,11 +370,11 @@ public class Creature implements java.io.Serializable {
 	/**
 	 * Constructor
 	 */
-    public Creature(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Image image) {
+    public Creature(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Icon icon) {
     	this.level = level;
     	this.xp = xp;
         this.world = world;
-        this.image = image;
+        this.icon = icon;
         this.name = name;
         this.hp = hp;
         this.maxHP = hp;
@@ -470,7 +471,7 @@ public class Creature implements java.io.Serializable {
     	return world.tile(wx, wy, wz);
     }
     public Feature feature(int wx, int wy, int wz) {
-    	if (canSee(wx,wy,wz) && ai.rememberedTile(wx, wy, wz) != Tile.UNKNOWN)
+    	if (canSee(wx,wy,wz) || (ai.rememberedTile(wx, wy, wz) != Tile.UNKNOWN))
     		return world.feature(wx, wy, wz);
     	else
     		return null;
@@ -911,7 +912,7 @@ public class Creature implements java.io.Serializable {
     	}
     	return false;
     }
-    private HashMap<String, Color> statements;
+    private transient HashMap<String, Color> statements;
     public void addStatement(String s, Color c) {
     	int r = 9;
     	for (int ox = -r; ox < r+1; ox++){

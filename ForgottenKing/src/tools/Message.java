@@ -6,8 +6,13 @@ public class Message implements java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;
 	private String message;
 	public String message() { return message; }
-	private Color colour;
-	public Color colour() { return colour; }
+	transient private Color colour;
+	public Color colour() {
+		if (colour != null)
+			return colour;
+		else
+			return Color.WHITE;
+	}
 	
 	public Message(String message, Color colour) {
 		this.message = message;
@@ -15,7 +20,6 @@ public class Message implements java.io.Serializable {
 	}
 	public Message(String message) {
 		this.message = message;
-		this.colour = Color.WHITE;
 	}
 
 }

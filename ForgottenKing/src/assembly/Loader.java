@@ -1,37 +1,33 @@
 package assembly;
 
-import javafx.scene.image.Image;
-import tools.ImageCrop;
+import tools.Icon;
 
 public final class Loader {
-	private static Image effectsFull = new Image(ItemFactory.class.getResourceAsStream("resources/icons/effects_full.png"));
 	
-	public static Image healingIcon = ImageCrop.cropImage(effectsFull, 0, 0, 32, 32);
-	public static Image poisonedIcon = ImageCrop.cropImage(effectsFull, 32, 0, 32, 32);
-	public static Image burningIcon = ImageCrop.cropImage(effectsFull, 64, 0, 32, 32);
-	public static Image strongIcon = ImageCrop.cropImage(effectsFull, 96, 0, 32, 32);
-	public static Image slowedIcon = ImageCrop.cropImage(effectsFull, 128, 0, 32, 32);
-	public static Image glowingIcon = ImageCrop.cropImage(effectsFull, 160, 0, 32, 32);
-	public static Image weakIcon = ImageCrop.cropImage(effectsFull, 192, 0, 32, 32);
-	public static Image blindIcon = ImageCrop.cropImage(effectsFull, 224, 0, 32, 32);
-	public static Image vulnerableIcon = ImageCrop.cropImage(effectsFull, 256, 0, 32, 32);
-	public static Image ragingIcon = ImageCrop.cropImage(effectsFull, 288, 0, 32, 32);
+	public static Icon healingIcon = new Icon("icons/effects-full.png", 0, 0);
+	public static Icon poisonedIcon = new Icon("icons/effects-full.png", 32, 0);
+	public static Icon burningIcon = new Icon("icons/effects-full.png", 64, 0);
+	public static Icon strongIcon = new Icon("icons/effects-full.png", 96, 0);
+	public static Icon slowedIcon = new Icon("icons/effects-full.png", 128, 0);
+	public static Icon glowingIcon = new Icon("icons/effects-full.png", 160, 0);
+	public static Icon weakIcon = new Icon("icons/effects-full.png", 192, 0);
+	public static Icon blindIcon = new Icon("icons/effects-full.png", 224, 0);
+	public static Icon vulnerableIcon = new Icon("icons/effects-full.png", 256, 0);
+	public static Icon ragingIcon = new Icon("icons/effects-full.png", 288, 0);
 	
-	public static Image armorOfFrostIcon = ImageCrop.cropImage(effectsFull, 0, 32, 32, 32);
-	public static Image shockedIcon = ImageCrop.cropImage(effectsFull, 32, 32, 32, 32);
-	public static Image swiftIcon = ImageCrop.cropImage(effectsFull, 64, 32, 32, 32);
-	public static Image stunnedIcon = ImageCrop.cropImage(effectsFull, 96, 32, 32, 32);
-	public static Image confusedIcon = ImageCrop.cropImage(effectsFull, 128, 32, 32, 32);
-	public static Image drainedIcon = ImageCrop.cropImage(effectsFull, 160, 32, 32, 32);
+	public static Icon armorOfFrostIcon = new Icon("icons/effects-full.png", 0, 32);
+	public static Icon shockedIcon = new Icon("icons/effects-full.png", 32, 32);
+	public static Icon swiftIcon = new Icon("icons/effects-full.png", 64, 32);
+	public static Icon stunnedIcon = new Icon("icons/effects-full.png", 96, 32);
+	public static Icon confusedIcon = new Icon("icons/effects-full.png", 128, 32);
+	public static Icon drainedIcon = new Icon("icons/effects-full.png", 160, 32);
 	
-	private static Image abilitiesFull = new Image(ItemFactory.class.getResourceAsStream("resources/icons/abilities_full.png"));
-	public static Image rageIcon = ImageCrop.cropImage(abilitiesFull, 0, 0, 32, 32);
-	public static Image reachAttackIcon = ImageCrop.cropImage(abilitiesFull, 32, 0, 32, 32);
-	public static Image knockbackAllIcon = ImageCrop.cropImage(abilitiesFull, 64, 0, 32, 32);
+	public static Icon rageIcon = new Icon("icons/abilities-full.png", 0, 0);
+	public static Icon reachAttackIcon = new Icon("icons/abilities-full.png", 32, 0);
+	public static Icon knockbackAllIcon = new Icon("icons/abilities-full.png", 64, 0);
 	
-	private static Image runestonesFull = new Image(ItemFactory.class.getResourceAsStream("resources/items/rune_stones_full.png"));
-	public static Image victoryItemIcon = ImageCrop.cropImage(runestonesFull, 0, 0, 32, 32);
+	public static Icon victoryItemIcon = new Icon("items/rune_stones_full.png", 0, 0);
 	
-	public static Image fire = new Image(ItemFactory.class.getResourceAsStream("resources/hazards/fire.gif"));
-	public static Image poisonCloud = new Image(ItemFactory.class.getResourceAsStream("resources/hazards/poisonCloud.gif"));
+	public static Icon fire = new Icon("hazards/fire.gif");
+	public static Icon poisonCloud = new Icon("hazards/poison-cloud.gif");
 }

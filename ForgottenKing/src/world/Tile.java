@@ -2,10 +2,9 @@ package world;
 
 import creatures.Creature;
 import creatures.Tag;
-//import algorithms.GetTileDirection;
 import javafx.scene.image.Image;
+import tools.Icon;
 import tools.GetTileDirection;
-import tools.ImageCrop;
 
 /**
 Direction of different tile
@@ -31,11 +30,11 @@ public enum Tile {
 	BOUNDS("resources/default/bounds.png", null, null, "This doesn't exist"),
 	CAVE_WALL(TileType.WALL, Group.CAVE, "The wall", 0, 576),
 	DIRT_FLOOR(TileType.FLOOR, Group.CAVE, "The floor", 0, 576),
-	DIRT_FLOOR_CENTER(ImageCrop.cropImage(new Image(Tile.class.getResourceAsStream("resources/floor_full.png")), 32, 608,32,32), TileType.FLOOR, Group.CAVE, "The floor"),
+	DIRT_FLOOR_CENTER(new Icon("tiles/floor-full.png", 32,608), TileType.FLOOR, Group.CAVE, "The floor"),
 	WOOD_FLOOR(TileType.FLOOR, Group.WOOD, "The floor", 224, 576),
 	DUNGEON_WALL(TileType.WALL, Group.DUNGEON, "The wall", 0, 192),
 	DUNGEON_FLOOR(TileType.FLOOR, Group.DUNGEON, "The floor", 0, 192),
-	DUNGEON_FLOOR_CENTER(ImageCrop.cropImage(new Image(Tile.class.getResourceAsStream("resources/floor_full.png")), 32, 224,32,32), TileType.FLOOR, Group.DUNGEON, "The floor"),
+	DUNGEON_FLOOR_CENTER(new Icon("tiles/floor-full.png", 32, 224), TileType.FLOOR, Group.DUNGEON, "The floor"),
 	DUNGEON_PIT(TileType.PIT, Group.DUNGEON, "A pit leading to nothing", 0, 64),
 	WOOD_WALL(TileType.WALL, Group.WOOD, "The wall", 224, 192),
 	GRASS_FLOOR(TileType.FLOOR, Group.MISC, "The floor", 224, 192),
@@ -43,9 +42,9 @@ public enum Tile {
 	STONE_PIT(TileType.PIT, Group.CAVE, "A pit", 0, 128),
 	CAVE_POND(TileType.WATER, Group.CAVE, "A pool of water", 0, 320),
 	
-	UNKNOWN("resources/unknown.png", null, null, "Anything could be out there"),
-	FLOOR_DEFAULT("resources/default/floor.png", TileType.FLOOR, Group.MISC, "The floor"),
-	WALL_DEFAULT("resources/default/wall.png", TileType.WALL, Group.MISC, "The wall");
+	UNKNOWN("tiles/unknown.png", null, null, "Anything could be out there"),
+	FLOOR_DEFAULT("tiles/default/floor.png", TileType.FLOOR, Group.MISC, "The floor"),
+	WALL_DEFAULT("tiles/default/wall.png", TileType.WALL, Group.MISC, "The wall");
 	
 	private static final long serialVersionUID = 7769423305067121315L;
 	private TileType type;
@@ -54,12 +53,10 @@ public enum Tile {
 	public Group group() { return group; }
 	private String description;
 	public String desc() { return description; }
-	private Image icon;
-	public Image icon() { return icon; }
-	private Image image;
-	private Image floorImage = new Image(Tile.class.getResourceAsStream("resources/floor_full.png"));
-	private Image wallImage = new Image(Tile.class.getResourceAsStream("resources/wall_full.png"));
-	private Image pitImage = new Image(Tile.class.getResourceAsStream("resources/pits_full.png"));
+	private Icon icon;
+	public Icon icon() { return icon; }
+	private Image image() { return icon.image(); }
+	private boolean staticImage;
 	
 	private enum TileType {
 		UNKNOWN,
@@ -77,95 +74,96 @@ public enum Tile {
 	}
 	
 	//The direction specified is the direction where the tile art "ends" (ie, adjacent to different tile)
-	public Image ALL;
-	public Image N;
-	public Image E;
-	public Image NE;
-	public Image S;
-	public Image NS;
-	public Image ES;
-	public Image NES;
-	public Image W;
-	public Image NW;
-	public Image EW;
-	public Image NEW;
-	public Image SW;
-	public Image NSW;
-	public Image ESW;
-	public Image NESW;
+	public Icon ALL;
+	public Icon N;
+	public Icon E;
+	public Icon NE;
+	public Icon S;
+	public Icon NS;
+	public Icon ES;
+	public Icon NES;
+	public Icon W;
+	public Icon NW;
+	public Icon EW;
+	public Icon NEW;
+	public Icon SW;
+	public Icon NSW;
+	public Icon ESW;
+	public Icon NESW;
 	
 	//Three additional directions for pits
-	public Image XNE;
-	public Image XNW;
-	public Image XNEW;
+	public Icon XNE;
+	public Icon XNW;
+	public Icon XNEW;
 	
 	Tile(String path, TileType type, Group group, String description) {
-		this(new Image(Tile.class.getResourceAsStream(path)), type, group, description);
+		this(new Icon(path), type, group, description);
+		this.staticImage = true;
 	}
-	Tile(Image image, TileType type, Group group, String description) {
+	Tile(Icon image, TileType type, Group group, String description) {
 		this.type = type;
 		this.description = description;
 		icon = image;
-		this.image = image;
 		this.group = group;
+		this.staticImage = true;
 	}
 	Tile (TileType type, Group group, String description, int x, int y) {
 		this.type = type;
 		this.description = description;
 		this.group = group;
 		if (type == TileType.WALL) {
-			this.ALL = ImageCrop.cropImage(wallImage, x+96, y+0, 32, 32);
-			this.N = ImageCrop.cropImage(wallImage, x+32, y+32, 32, 32);
-			this.NE = ImageCrop.cropImage(wallImage, x+0, y+64, 32, 32);
-			this.NS = ImageCrop.cropImage(wallImage, x+0, y+32, 32, 32);
-			this.ES = ImageCrop.cropImage(wallImage, x+0, y+0, 32, 32);
-			this.NES = ImageCrop.cropImage(wallImage, x+96, y+32, 32, 32);
-			this.NW = ImageCrop.cropImage(wallImage, x+64, y+64, 32, 32);
-			this.EW = ImageCrop.cropImage(wallImage, x+32, y+0, 32, 32);
-			this.NEW = ImageCrop.cropImage(wallImage, x+128, y+64, 32, 32);
-			this.SW = ImageCrop.cropImage(wallImage, x+64, y+0, 32, 32);
-			this.NSW = ImageCrop.cropImage(wallImage, x+160, y+32, 32, 32);
-			this.ESW = ImageCrop.cropImage(wallImage, x+128, y+0, 32, 32);
-			this.NESW = ImageCrop.cropImage(wallImage, x+128, y+32, 32, 32);
+			this.ALL = new Icon("tiles/wall-full.png", x+96, y+0);
+			this.N = new Icon("tiles/wall-full.png", x+32, y+32);
+			this.NE = new Icon("tiles/wall-full.png", x+0, y+64);
+			this.NS = new Icon("tiles/wall-full.png", x+0, y+32);
+			this.ES = new Icon("tiles/wall-full.png", x+0, y+0);
+			this.NES = new Icon("tiles/wall-full.png", x+96, y+32);
+			this.NW = new Icon("tiles/wall-full.png", x+64, y+64);
+			this.EW = new Icon("tiles/wall-full.png", x+32, y+0);
+			this.NEW = new Icon("tiles/wall-full.png", x+128, y+64);
+			this.SW = new Icon("tiles/wall-full.png", x+64, y+0);
+			this.NSW = new Icon("tiles/wall-full.png", x+160, y+32);
+			this.ESW = new Icon("tiles/wall-full.png", x+128, y+0);
+			this.NESW = new Icon("tiles/wall-full.png", x+128, y+32);
 		}
 		if (type == TileType.FLOOR) {
-			this.ALL = ImageCrop.cropImage(floorImage, x+32, y+32, 32, 32);
-			this.N = ImageCrop.cropImage(floorImage, x+32, y+0, 32, 32);
-			this.E = ImageCrop.cropImage(floorImage, x+64, y+32, 32, 32);
-			this.NE = ImageCrop.cropImage(floorImage, x+64, y+0, 32, 32);
-			this.S = ImageCrop.cropImage(floorImage, x+32, y+64, 32, 32);
-			this.NS = ImageCrop.cropImage(floorImage, x+160, y+32, 32, 32);
-			this.ES = ImageCrop.cropImage(floorImage, x+64, y+64, 32, 32);
-			this.NES = ImageCrop.cropImage(floorImage, x+192, y+32, 32, 32);
-			this.W = ImageCrop.cropImage(floorImage, x+0, y+32, 32, 32);
-			this.NW = ImageCrop.cropImage(floorImage, x+0, y+0, 32, 32);
-			this.EW = ImageCrop.cropImage(floorImage,x+96,y+32,32,32);
-			this.NEW = ImageCrop.cropImage(floorImage,x+96, y+0, 32, 32);
-			this.SW = ImageCrop.cropImage(floorImage, x+0, y+64, 32, 32);
-			this.NSW = ImageCrop.cropImage(floorImage, x+128, y+32, 32, 32);
-			this.ESW = ImageCrop.cropImage(floorImage, x+96, y+64, 32, 32);
-			this.NESW = ImageCrop.cropImage(floorImage, x+160, y+0, 32, 32);
+			this.ALL = new Icon("tiles/floor-full.png", x+32, y+32);
+			this.N = new Icon("tiles/floor-full.png", x+32, y+0);
+			this.E = new Icon("tiles/floor-full.png", x+64, y+32);
+			this.NE = new Icon("tiles/floor-full.png", x+64, y+0);
+			this.S = new Icon("tiles/floor-full.png", x+32, y+64);
+			this.NS = new Icon("tiles/floor-full.png", x+160, y+32);
+			this.ES = new Icon("tiles/floor-full.png", x+64, y+64);
+			this.NES = new Icon("tiles/floor-full.png", x+192, y+32);
+			this.W = new Icon("tiles/floor-full.png", x+0, y+32);
+			this.NW = new Icon("tiles/floor-full.png", x+0, y+0);
+			this.EW = new Icon("tiles/floor-full.png",x+96,y+32,32,32);
+			this.NEW = new Icon("tiles/floor-full.png",x+96, y+0);
+			this.SW = new Icon("tiles/floor-full.png", x+0, y+64);
+			this.NSW = new Icon("tiles/floor-full.png", x+128, y+32);
+			this.ESW = new Icon("tiles/floor-full.png", x+96, y+64);
+			this.NESW = new Icon("tiles/floor-full.png", x+160, y+0);
 		}
 		if (type == TileType.PIT || type == TileType.WATER) {
-			this.ALL = ImageCrop.cropImage(pitImage, x+32, y+32, 32, 32);
-			this.N = ImageCrop.cropImage(pitImage, x+32, y+0, 32, 32);
-			this.E = ImageCrop.cropImage(pitImage, x+64, y+32, 32, 32);
-			this.NE = ImageCrop.cropImage(pitImage, x+64, y+0, 32, 32);
+			this.ALL = new Icon("tiles/pits-full.png", x+32, y+32);
+			this.N = new Icon("tiles/pits-full.png", x+32, y+0);
+			this.E = new Icon("tiles/pits-full.png", x+64, y+32);
+			this.NE = new Icon("tiles/pits-full.png", x+64, y+0);
 			this.S = ALL;
 			this.NS = N;
 			this.ES = E;
 			this.NES = NE;
-			this.W = ImageCrop.cropImage(pitImage, x+0, y+32, 32, 32);
-			this.NW = ImageCrop.cropImage(pitImage, x+0, y+0, 32, 32);
-			this.EW = ImageCrop.cropImage(pitImage,x+128,y+32,32,32);
-			this.NEW = ImageCrop.cropImage(pitImage,x+128, y+0, 32, 32);
+			this.W = new Icon("tiles/pits-full.png", x+0, y+32);
+			this.NW = new Icon("tiles/pits-full.png", x+0, y+0);
+			this.EW = new Icon("tiles/pits-full.png",x+128,y+32,32,32);
+			this.NEW = new Icon("tiles/pits-full.png",x+128, y+0);
 			this.SW = W;
 			this.NSW = NW;
 			this.ESW = EW;
 			this.NESW = NEW;
-			this.XNE = ImageCrop.cropImage(pitImage, x+160, y+0, 32, 32);
-			this.XNEW = ImageCrop.cropImage(pitImage, x+192, y+0, 32, 32);
-			this.XNW = ImageCrop.cropImage(pitImage, x+224, y+0, 32, 32);
+			this.XNE = new Icon("tiles/pits-full.png", x+160, y+0);
+			this.XNEW = new Icon("tiles/pits-full.png", x+192, y+0);
+			this.XNW = new Icon("tiles/pits-full.png", x+224, y+0);
 		}
 		this.icon = ALL;
 	}
@@ -189,14 +187,14 @@ public enum Tile {
 	}
 	
 	public Image getImage(World world, int x, int y, int z) {
-		if (image != null)
-			return icon;
+		if (staticImage)
+			return image();
 		if (type == TileType.FLOOR)
-			return GetTileDirection.handleFloor(world, this, x, y, z);
+			return GetTileDirection.handleFloor(world, this, x, y, z).image();
 		else if (type == TileType.PIT || type == TileType.WATER)
-			return GetTileDirection.handlePit(world, this, x, y, z);
+			return GetTileDirection.handlePit(world, this, x, y, z).image();
 		else
-			return GetTileDirection.handleWall(world, this, x, y, z);
+			return GetTileDirection.handleWall(world, this, x, y, z).image();
 			
 	}
 	

@@ -62,14 +62,14 @@ public class Door extends Feature {
 	public Image getImage() {
 		if (world.tile(x+1, y, z).isWall() && world.tile(x-1, y, z).isWall()) {
 			if (closed)
-				return Loader.closedDoorUp;
+				return Loader.closedDoorUp.image();
 			else
-				return Loader.openDoorUp;
+				return Loader.openDoorUp.image();
 		} else {
 			if (closed)
-				return Loader.closedDoorSide;
+				return Loader.closedDoorSide.image();
 			else
-				return Loader.openDoorSide;
+				return Loader.openDoorSide.image();
 		}
 	}
 

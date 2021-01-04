@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import screens.PlayScreen;
 import screens.Screen;
 import screens.StartScreen;
 import tools.KeyBoardCommand;
@@ -20,9 +21,8 @@ public class Main extends Application {
 		try {
 			this.primaryStage = primaryStage;
 			primaryStage.setTitle("Forgotten King");
-
 			primaryStage.setResizable(false); 
-			primaryStage.getIcons().add(new Image(Screen.class.getResourceAsStream("resources/icon.png")));
+			primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("resources/screens/icon.png")));
 			screen = new StartScreen();
 			screen.displayOutput(primaryStage);
 			addKeyHandler(screen);
@@ -30,6 +30,17 @@ public class Main extends Application {
 			audio.begin();
 		} catch(Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void stop() {
+		if (screen instanceof PlayScreen) {
+			try {
+			((PlayScreen)screen).serialize();
+			} catch (Exception e) {
+				System.out.println("Failed to save on application close");
+			}
 		}
 	}
 	

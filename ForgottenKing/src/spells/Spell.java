@@ -4,6 +4,7 @@ import creatures.Creature;
 import creatures.Tag;
 import creatures.Type;
 import javafx.scene.image.Image;
+import tools.Icon;
 
 public class Spell implements java.io.Serializable {
 	protected static final long serialVersionUID = 7769423305067121315L;
@@ -21,8 +22,8 @@ public class Spell implements java.io.Serializable {
 		}
 	public void setDescription(String s) { description = s; }
 	
-	private Image icon;
-	public Image icon() { return icon; }
+	private Icon icon;
+	public Image image() { return icon.image(); }
 	
 	private int level;
 	public int level() { return level; }
@@ -105,7 +106,7 @@ public class Spell implements java.io.Serializable {
 	
 	public void casterEffect(Creature caster) { }	//To be overridden
 
-	public Spell(String name, int cost, int level, Image icon) {
+	public Spell(String name, int cost, int level, Icon icon) {
 		this.name = name;
 		this.cost = cost;
 		this.level = level;

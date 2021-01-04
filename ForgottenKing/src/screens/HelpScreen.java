@@ -3,16 +3,15 @@ package screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.Main;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class HelpScreen extends Screen {
 	private static final long serialVersionUID = 7769423305067121315L;
-	private Font font = Font.loadFont(Screen.class.getResourceAsStream("resources/SDS_8x8.ttf"), 20);
 	private int currentScreen;
 	private int top;
 	private int height = 23;
@@ -25,27 +24,27 @@ public class HelpScreen extends Screen {
 		root = new Group();
 		if (currentScreen == 0) {
 			//Main
-			draw(root, new Image(Screen.class.getResourceAsStream("resources/full-screens/help-main.png")), 0, 0);
+			draw(root, new Image(Main.class.getResourceAsStream("resources/screens/full-screens/help-main.png")), 0, 0);
 		} else if (currentScreen == 1) {
 			//Controls
-			draw(root, Loader.screenBorder, 0, 0);
+			draw(root, Loader.screenBorder.image(), 0, 0);
 			int x = 64;
 			int y = 64;
 			for (int i = 0; i < height; i++) {
-				write(root, strings.get(top+i), x, y + i*32, font, Color.WHITE);
+				write(root, strings.get(top+i), x, y + i*32, font20, Color.WHITE);
 			}
 			if (top + height < strings.size())
-				draw(root, Loader.arrowDown, 20, 704);
+				draw(root, Loader.arrowDown.image(), 20, 704);
 			if (top > 0)
-				draw(root, Loader.arrowUp, 20, 64);
+				draw(root, Loader.arrowUp.image(), 20, 64);
 		} else if (currentScreen == 2) {
-			draw(root, new Image(Screen.class.getResourceAsStream("resources/full-screens/help-stats.png")), 0, 0);
+			draw(root, new Image(Main.class.getResourceAsStream("resources/screens/full-screens/help-stats.png")), 0, 0);
 		} else if (currentScreen == 3) {
-			draw(root, new Image(Screen.class.getResourceAsStream("resources/full-screens/help-combat.png")), 0, 0);
+			draw(root, new Image(Main.class.getResourceAsStream("resources/screens/full-screens/help-combat.png")), 0, 0);
 		} else if (currentScreen == 4) {
-			draw(root, new Image(Screen.class.getResourceAsStream("resources/full-screens/help-magic.png")), 0, 0);
+			draw(root, new Image(Main.class.getResourceAsStream("resources/screens/full-screens/help-magic.png")), 0, 0);
 		} else if (currentScreen == 5) {
-			draw(root, new Image(Screen.class.getResourceAsStream("resources/full-screens/help-perks.png")), 0, 0);
+			draw(root, new Image(Main.class.getResourceAsStream("resources/screens/full-screens/help-perks.png")), 0, 0);
 		}
 	}
 	
@@ -111,6 +110,7 @@ public class HelpScreen extends Screen {
 		strings.add("[s] to view your (very basic) character Stats");
 		strings.add("[x] to eXamine your surroundings");
 		strings.add("[p] to open the Perk menu");
+		strings.add("[S] to save the game");
 	}
 
 }

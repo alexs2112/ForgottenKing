@@ -1,6 +1,6 @@
 package screens;
 
-import creatures.Creature;
+import application.Main;
 import creatures.Player;
 import items.Item;
 import items.ItemTag;
@@ -20,7 +20,7 @@ public class LeaveScreen extends Screen {
 	public void displayOutput(Stage stage) {
 		Group root = new Group();
 		String s = getWinOrLose(player);
-		Screen.draw(root, new Image(this.getClass().getResourceAsStream(s)), 0, 0);
+		Screen.draw(root, new Image(Main.class.getResourceAsStream("resources/screens/full-screens/" + s)), 0, 0);
 		scene = new Scene(root,1280,800);
 		stage.setScene(scene);
 		stage.show();
@@ -28,18 +28,20 @@ public class LeaveScreen extends Screen {
 
 	@Override
 	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
-		if (code.equals(KeyCode.ENTER))
+		if (code.equals(KeyCode.ENTER)) {
+			PlayScreen.deleteSave();
 			return new StartScreen();
+		}
     	return this;
     }
 	
 	private String getWinOrLose(Player player) {
 		for (Item i : player.inventory().getUniqueItems())
 			if (i.is(ItemTag.VICTORYITEM)) {
-				return "resources/win_screen.png";
+				return "win_screen.png";
 			}
 		if (player.hasWon)
-			return "resources/win_screen.png";
-		return "resources/lose_screen.png";
+			return "win_screen.png";
+		return "lose_screen.png";
 	}
 }

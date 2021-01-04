@@ -3,10 +3,9 @@ package assembly;
 import creatures.Creature;
 import creatures.Tag;
 import creatures.Type;
-import javafx.scene.image.Image;
+import tools.Icon;
 import spells.Spell;
 import spells.TargetType;
-import tools.ImageCrop;
 
 @SuppressWarnings("serial")
 public final class Spells {
@@ -16,43 +15,42 @@ public final class Spells {
 	private static int poisonStartY = 96;
 	private static int lightStartY = 128;
 	private static int darkStartY = 160;
-	private static Image spellsFull = new Image(ItemFactory.class.getResourceAsStream("resources/icons/spells-full.png"));
-	private static Image embersIcon = ImageCrop.cropImage(spellsFull, 0, fireStartY, 32, 32);
-	private static Image moltenFireIcon = ImageCrop.cropImage(spellsFull, 32, fireStartY, 32, 32);
-	private static Image flameWaveIcon = ImageCrop.cropImage(spellsFull, 64, fireStartY, 32, 32);
-	private static Image heatbeamIcon = ImageCrop.cropImage(spellsFull, 96, fireStartY, 32, 32);
-	private static Image summonImpIcon = ImageCrop.cropImage(spellsFull, 128, fireStartY, 32, 32);
-	private static Image fireballIcon = ImageCrop.cropImage(spellsFull, 160, fireStartY, 32, 32);
+	private static Icon embersIcon = new Icon("icons/spells-full.png", 0, fireStartY);
+	private static Icon moltenFireIcon = new Icon("icons/spells-full.png", 32, fireStartY);
+	private static Icon flameWaveIcon = new Icon("icons/spells-full.png", 64, fireStartY);
+	private static Icon heatbeamIcon = new Icon("icons/spells-full.png", 96, fireStartY);
+	private static Icon summonImpIcon = new Icon("icons/spells-full.png", 128, fireStartY);
+	private static Icon fireballIcon = new Icon("icons/spells-full.png", 160, fireStartY);
 	
-	private static Image chillIcon = ImageCrop.cropImage(spellsFull, 0, coldStartY, 32, 32);
-	private static Image iceShardIcon = ImageCrop.cropImage(spellsFull, 32, coldStartY, 32, 32);
-	private static Image summonSimulacrumIcon = ImageCrop.cropImage(spellsFull, 64, coldStartY, 32, 32);
-	private static Image armorOfFrostIcon = ImageCrop.cropImage(spellsFull, 96, coldStartY, 32, 32);
-	private static Image icicleIcon = ImageCrop.cropImage(spellsFull, 128, coldStartY, 32, 32);
-	private static Image massChillIcon = ImageCrop.cropImage(spellsFull, 160, coldStartY, 32, 32);
+	private static Icon chillIcon = new Icon("icons/spells-full.png", 0, coldStartY);
+	private static Icon iceShardIcon = new Icon("icons/spells-full.png", 32, coldStartY);
+	private static Icon summonSimulacrumIcon = new Icon("icons/spells-full.png", 64, coldStartY);
+	private static Icon armorOfFrostIcon = new Icon("icons/spells-full.png", 96, coldStartY);
+	private static Icon icicleIcon = new Icon("icons/spells-full.png", 128, coldStartY);
+	private static Icon massChillIcon = new Icon("icons/spells-full.png", 160, coldStartY);
 	
-	private static Image shockingTouchIcon = ImageCrop.cropImage(spellsFull, 0, airStartY, 32, 32);
-	private static Image swiftnessIcon = ImageCrop.cropImage(spellsFull, 32, airStartY, 32, 32);
-	private static Image minorStunIcon = ImageCrop.cropImage(spellsFull, 64, airStartY, 32, 32);
-	private static Image blinkIcon = ImageCrop.cropImage(spellsFull, 96, airStartY, 32, 32);
-	private static Image whirlwindIcon = ImageCrop.cropImage(spellsFull, 128, airStartY, 32, 32);
-	private static Image lightningBoltIcon = ImageCrop.cropImage(spellsFull, 160, airStartY, 32, 32);
+	private static Icon shockingTouchIcon = new Icon("icons/spells-full.png", 0, airStartY);
+	private static Icon swiftnessIcon = new Icon("icons/spells-full.png", 32, airStartY);
+	private static Icon minorStunIcon = new Icon("icons/spells-full.png", 64, airStartY);
+	private static Icon blinkIcon = new Icon("icons/spells-full.png", 96, airStartY);
+	private static Icon whirlwindIcon = new Icon("icons/spells-full.png", 128, airStartY);
+	private static Icon lightningBoltIcon = new Icon("icons/spells-full.png", 160, airStartY);
 
-	private static Image stingIcon = ImageCrop.cropImage(spellsFull, 0, poisonStartY, 32, 32);
-	private static Image toxicCloudIcon = ImageCrop.cropImage(spellsFull, 32, poisonStartY, 32, 32);
-	private static Image minorConfuseIcon = ImageCrop.cropImage(spellsFull, 64, poisonStartY, 32, 32);
+	private static Icon stingIcon = new Icon("icons/spells-full.png", 0, poisonStartY);
+	private static Icon toxicCloudIcon = new Icon("icons/spells-full.png", 32, poisonStartY);
+	private static Icon minorConfuseIcon = new Icon("icons/spells-full.png", 64, poisonStartY);
 	
-	private static Image curePoisonIcon = ImageCrop.cropImage(spellsFull, 0, lightStartY, 32, 32);
-	private static Image innerGlowIcon = ImageCrop.cropImage(spellsFull, 32, lightStartY, 32, 32);
-	private static Image regenerateIcon = ImageCrop.cropImage(spellsFull, 64, lightStartY, 32, 32);
-	private static Image heroismIcon = ImageCrop.cropImage(spellsFull, 96, lightStartY, 32, 32);
+	private static Icon curePoisonIcon = new Icon("icons/spells-full.png", 0, lightStartY);
+	private static Icon innerGlowIcon = new Icon("icons/spells-full.png", 32, lightStartY);
+	private static Icon regenerateIcon = new Icon("icons/spells-full.png", 64, lightStartY);
+	private static Icon heroismIcon = new Icon("icons/spells-full.png", 96, lightStartY);
 
-	private static Image slowIcon = ImageCrop.cropImage(spellsFull, 0, darkStartY, 32, 32);
-	private static Image weakenIcon = ImageCrop.cropImage(spellsFull, 32, darkStartY, 32, 32);
-	private static Image blindIcon = ImageCrop.cropImage(spellsFull, 64, darkStartY, 32, 32);
-	private static Image vulnerabilityIcon = ImageCrop.cropImage(spellsFull, 96, darkStartY, 32, 32);
-	private static Image darksmiteIcon = ImageCrop.cropImage(spellsFull, 128, darkStartY, 32, 32);
-	private static Image soulSiphonIcon = ImageCrop.cropImage(spellsFull, 160, darkStartY, 32, 32);
+	private static Icon slowIcon = new Icon("icons/spells-full.png", 0, darkStartY);
+	private static Icon weakenIcon = new Icon("icons/spells-full.png", 32, darkStartY);
+	private static Icon blindIcon = new Icon("icons/spells-full.png", 64, darkStartY);
+	private static Icon vulnerabilityIcon = new Icon("icons/spells-full.png", 96, darkStartY);
+	private static Icon darksmiteIcon = new Icon("icons/spells-full.png", 128, darkStartY);
+	private static Icon soulSiphonIcon = new Icon("icons/spells-full.png", 160, darkStartY);
 	
 	/**
 	 * FIRE SPELLS
@@ -364,7 +362,7 @@ public final class Spells {
 		return s;
 	}
 	public static Spell weaken() {
-		Spell s = new Spell("Weaken", 3, 2, weakenIcon);
+		Spell s = new Spell("Weaken", 2, 1, weakenIcon);
 		s.setType(Type.DARK);
 		s.setEffect(Effects.weak(6, 4), 70);
 		s.setTargetType(TargetType.TARGET);

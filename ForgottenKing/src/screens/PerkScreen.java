@@ -8,7 +8,6 @@ import creatures.Tag;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class PerkScreen extends Screen {
@@ -44,35 +43,33 @@ public class PerkScreen extends Screen {
 	
 	public void displayOutput(Stage stage) {
 		root = new Group();
-		Font font = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
-		Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
-		draw(root, Loader.screenBorder, 0, 0);
+		draw(root, Loader.screenBorder.image(), 0, 0);
 
 		int x = 64;
 		int y = 50;
-		write(root, "Available Perk Points: [" + player.perkPoints() + "]               Prerequisites:", 48, y, font,  Color.WHITE);
+		write(root, "Available Perk Points: [" + player.perkPoints() + "]               Prerequisites:", 48, y, font22,  Color.WHITE);
 		y+=12;
 		int top = Math.min(Math.max(0, select-2), perks.size()-5);
 		for (int i = top; i < top+5; i++) {
 			Tag t = perks.get(i);
 			if (player.tags().contains(t))
-				draw(root, Loader.perkBoxBlue, x, y + 124*(i-top));
+				draw(root, Loader.perkBoxBlue.image(), x, y + 124*(i-top));
 			else
-				draw(root, Loader.perkBox, x, y + 124*(i-top));
+				draw(root, Loader.perkBox.image(), x, y + 124*(i-top));
 			if (select == i)
-				draw(root, Loader.perkBoxSelection, x, y + 124*(i-top));
-			if (t.icon() != null)
-				draw(root, t.icon(), x+20, y+124*(i-top)+20);
+				draw(root, Loader.perkBoxSelection.image(), x, y + 124*(i-top));
+			if (t.image() != null)
+				draw(root, t.image(), x+20, y+124*(i-top)+20);
 			Color textColour = Color.ANTIQUEWHITE;
 			if (!t.canUnlock(player))
 				textColour = Color.DARKGREY;
-			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42 + 124*(i-top), 632, fontS, textColour);
-			writeWrapped(root, t.prerequisites(), 832, y+44+123*(i-top), 400, fontS, Color.WHITE);
+			writeWrapped(root, t.text() + ": " + t.description(), x+72, y+42 + 124*(i-top), 632, font18, textColour);
+			writeWrapped(root, t.prerequisites(), 832, y+44+123*(i-top), 400, font18, Color.WHITE);
 		}
 		if (top + 5 < perks.size())
-			draw(root, Loader.arrowDown, 20, y+662);
+			draw(root, Loader.arrowDown.image(), 20, y+662);
 		if (top > 0)
-			draw(root, Loader.arrowUp, 20, 62);
+			draw(root, Loader.arrowUp.image(), 20, 62);
 		constructCloseButton();
 	}
 	

@@ -1,5 +1,6 @@
 package screens;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,53 +14,51 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class StartScreen extends Screen {
 	private static final long serialVersionUID = 7769423305067121315L;
 	private int select = 0;
-	private Font fontS = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 20);
 	public Audio audio() { return Audio.INTRO; }
+	private Stage stage;
+	private int min = 0;
+	
+	public StartScreen() {
+		if (new File("savegame.ser").isFile())
+			min = 0;
+		else
+			min = 1;
+		select = min;
+	}
+	
 	public void displayOutput(Stage stage) {
 		Group root = new Group();
+		this.stage = stage;
 		scene = new Scene(root,1280,800);
-		draw(root, Loader.startScreenFull, 0, 0);
-		int y = 514;
-		Image start = Loader.startScreenNewGame;
-		Image quit = Loader.startScreenQuitGame;
-		if (select == 0)
-			start = Loader.startScreenNewGameGold;
+		draw(root, Loader.startScreenFull.image(), 0, 0);
+		int y = 320;
+		
+		if (min == 0) {
+			Image load = Loader.darkButton.image();
+			if (select == 0)
+				load = Loader.lightButton.image();
+			draw(root, load, 480, y+=68, clickLoadGame, mouseOver(0), null);
+			writeCentered(root, "Continue", 640, y+44, font22, Color.WHITE, clickLoadGame, mouseOver(0), null);
+		}
+		
+		Image start = Loader.darkButton.image();
 		if (select == 1)
-			quit = Loader.startScreenQuitGameGold;
-		
-		draw(root, start, 340, y, new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent me) { 
-				refreshScreen = new CharacterSelectionScreen();
-			}
-		}, new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent me) { 
-				if (select != 0) {
-					select = 0;
-					refreshScreen = returnThis();
-				}
-			}
-		}, null);
+			start = Loader.lightButton.image();
+		draw(root, start, 480, y+=68, clickNewGame, mouseOver(1), null);
+		writeCentered(root, "New Game", 640, y+44, font22, Color.WHITE, clickNewGame, mouseOver(1), null);
 
-		draw(root, quit, 340, y + 84, new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent me) { 
-				stage.close();
-			}
-		}, new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent me) { 
-				if (select != 1) {
-					select = 1;
-					refreshScreen = returnThis();
-				}
-			}
-		}, null);
+		Image quit = Loader.darkButton.image();
+		if (select == 2)
+			quit = Loader.lightButton.image();
+		draw(root, quit, 480, y += 68, clickQuit, mouseOver(2), null);
+		writeCentered(root, "Quit", 640, y+44, font22, Color.WHITE, clickQuit, mouseOver(2), null);
 		
-		writeCentered(root, "[?] in game for help", 640, 740, fontS, Color.WHITE);
+		writeCentered(root, "[?] in game for help", 640, 740, font20, Color.WHITE);
 		stage.setScene(scene);
 	    stage.show();
 	}
@@ -67,9 +66,9 @@ public class StartScreen extends Screen {
 	@Override
 	public Screen respondToUserInput(KeyCode code, char c, boolean shift) {
 		if (code.equals(KeyCode.ENTER)) {
-			if (select == 0)
+			if (select == 1)
 				return new CharacterSelectionScreen();
-			else if (select == 1) {
+			else if (select == 2) {
 				Platform.exit();
 				return null;
 			} else {
@@ -85,15 +84,47 @@ public class StartScreen extends Screen {
 		if (code.equals(KeyCode.DOWN))
 			select = Math.min(select+1, 2);
 		if (code.equals(KeyCode.UP))
-			select = Math.max(select-1,  0);
+			select = Math.max(select-1,  min);
     	return this;
     }
 	
 	private static PlayScreen deserialize() throws java.io.IOException, ClassNotFoundException {
 		try (FileInputStream file = new FileInputStream("savegame.ser");
-				ObjectInputStream o = new ObjectInputStream(file))
+			ObjectInputStream o = new ObjectInputStream(file))
 		{
 			return (PlayScreen)o.readObject();
 		}
+	}
+	
+	private EventHandler<MouseEvent> clickQuit = new EventHandler<MouseEvent>() {
+		public void handle(MouseEvent me) { 
+			stage.close();
+		}
+	};
+	private EventHandler<MouseEvent> clickNewGame = new EventHandler<MouseEvent>() {
+		public void handle(MouseEvent me) { 
+			refreshScreen = new CharacterSelectionScreen();
+		}
+	};
+	private EventHandler<MouseEvent> clickLoadGame = new EventHandler<MouseEvent>() {
+		public void handle(MouseEvent me) { 
+			try {
+				refreshScreen = deserialize();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private EventHandler<MouseEvent> mouseOver(int index) {
+		return new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) { 
+				if (select != index) {
+					select = index;
+					refreshScreen = returnThis();
+				}
+			}
+		};
 	}
 }

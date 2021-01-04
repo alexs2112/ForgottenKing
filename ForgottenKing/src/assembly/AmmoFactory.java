@@ -4,26 +4,16 @@ import creatures.Type;
 import items.Item;
 import items.ItemTag;
 import items.ItemType;
-import javafx.scene.image.Image;
-import tools.ImageCrop;
-import world.World;
+import tools.Icon;
 
 public class AmmoFactory implements java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;
-	private World world;
 	
-	private Image rocksIconFull = new Image(this.getClass().getResourceAsStream("resources/items/rocks_full.png"));
-	private Image rockIcon = tools.ImageCrop.cropImage(rocksIconFull, 96, 0, 32, 32);
-		
-	private Image rangedFull = new Image(this.getClass().getResourceAsStream("resources/items/ranged_full.png"));
-	private Image arrowImage = ImageCrop.cropImage(rangedFull, 0, 64, 32, 32);
-	private Image dartImage = ImageCrop.cropImage(rangedFull, 0, 96, 32, 32);
-	private Image boltImage = ImageCrop.cropImage(rangedFull, 96, 64, 32, 32);
-	private Image shotImage = ImageCrop.cropImage(rangedFull, 64, 0, 32, 32);
-	
-	public AmmoFactory(World world) {
-		this.world = world;
-	}
+	private Icon rockIcon = new Icon("items/rocks-full.png", 96, 0);
+	private Icon arrowImage = new Icon("items/ranged-full.png", 0, 64);
+	private Icon dartImage = new Icon("items/ranged-full.png", 0, 96);
+	private Icon boltImage = new Icon("items/ranged-full.png", 96, 64);
+	private Icon shotImage = new Icon("items/ranged-full.png", 64, 0);
 	
 	public Item newRandomAmmo(int z) {
 		int n = (int)(Math.random()*5);
@@ -48,7 +38,6 @@ public class AmmoFactory implements java.io.Serializable {
 		rock.addTag(ItemTag.THROWING);
 		rock.setWeight(0.2);
 		rock.setDescription("A solid stone dredged from the earth. Fits perfectly in the palm of your hand, or perhaps a sling.");
-		world.addAtEmptyLocation(rock,z);
 		return rock;
 	}
 
@@ -58,8 +47,7 @@ public class AmmoFactory implements java.io.Serializable {
 		item.setRangedDamage(2, 2);
 		item.setWeight(0);
 		item.setDescription("A long shafted projectile intended to be shot with a shortbow or longbow, fletched with feathers at one end and a point at the other.");
-		int amount = (int)(Math.random()*5 + 2);
-		world.addAtEmptyLocation(item, z, amount);
+		item.setSpawnQuantity((int)(Math.random()*5 + 2));
 		return item;
 	}
 	public Item newDart(int z) {
@@ -69,8 +57,7 @@ public class AmmoFactory implements java.io.Serializable {
 		item.setThrownDamage(1, 3);
 		item.setWeight(0);
 		item.setDescription("A thin, razor sharp piece of metal. With skill it can be thrown with deadly accuracy. If coated with a harmful substance it can deliver poison directly into the bloodstream of its intended target.");
-		int amount = (int)(Math.random()*5 + 2);
-		world.addAtEmptyLocation(item, z, amount);
+		item.setSpawnQuantity((int)(Math.random()*5 + 2));
 		return item;
 	}
 	public Item newBolt(int z) {
@@ -79,8 +66,7 @@ public class AmmoFactory implements java.io.Serializable {
 		item.setRangedDamage(2, 3);
 		item.setWeight(0);
 		item.setDescription("A metal projectile, shorter than an arrow, intended to be shot from a crossbow.");
-		int amount = (int)(Math.random()*5 + 2);
-		world.addAtEmptyLocation(item, z, amount);
+		item.setSpawnQuantity((int)(Math.random()*5 + 2));
 		return item;
 	}
 	public Item newShot(int z) {
@@ -89,8 +75,7 @@ public class AmmoFactory implements java.io.Serializable {
 		item.setRangedDamage(3, 4);
 		item.setWeight(0);
 		item.setDescription("Small round metal shots to be fired from a black powder weapon.");
-		int amount = (int)(Math.random()*5 + 2);
-		world.addAtEmptyLocation(item, z, amount);
+		item.setSpawnQuantity((int)(Math.random()*5 + 2));
 		return item;
 	}
 	

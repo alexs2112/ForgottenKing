@@ -1,7 +1,7 @@
 package creatures;
 
 import assembly.Effects;
-import javafx.scene.image.Image;
+import tools.Icon;
 import world.World;
 
 public class Ally extends Creature {
@@ -14,8 +14,8 @@ public class Ally extends Creature {
 			player.modifyXP(x * 3 / 4); 
 	}	//Things that your summon kills grants you 3/4 of the XP
 	
-	public Ally(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Image image) {
-    	super(world,name,level,xp,hp,evasion,armorValue,baseAttackValue,baseDamageMin,baseDamageMax,image);
+	public Ally(World world, String name, int level, int xp, int hp, int evasion, int armorValue, int baseAttackValue, int baseDamageMin, int baseDamageMax, Icon icon) {
+    	super(world,name,level,xp,hp,evasion,armorValue,baseAttackValue,baseDamageMin,baseDamageMax,icon);
     }
 	
 	public void setTemporary(int duration) {

@@ -1,5 +1,6 @@
 package screens;
 
+import application.Main;
 import creatures.Attribute;
 import creatures.Player;
 import creatures.Stat;
@@ -7,7 +8,6 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class LevelUpScreen extends Screen {
@@ -22,34 +22,32 @@ public class LevelUpScreen extends Screen {
 	
 	public void displayOutput(Stage stage) {
 		root = new Group();
-		Font f = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 22);
-		Font s = Font.loadFont(this.getClass().getResourceAsStream("resources/SDS_8x8.ttf"), 18);
-		draw(root, new Image(Screen.class.getResourceAsStream("resources/full-screens/level-up-screen.png")), 0, 0);
+		draw(root, new Image(Main.class.getResourceAsStream("resources/screens/full-screens/level-up-screen.png")), 0, 0);
 		
-		writeCentered(root, ""+player.attributePoints(), 396, 64, f, Color.WHITE);
-		writeCentered(root, ""+player.statPoints(), 468, 412, f, Color.WHITE);
+		writeCentered(root, ""+player.attributePoints(), 396, 64, font22, Color.WHITE);
+		writeCentered(root, ""+player.statPoints(), 468, 412, font22, Color.WHITE);
 		
 		int x = 374;
-		writeCentered(root, ""+player.strength(), x, 130, s, Color.WHITE);
-		writeCentered(root, ""+player.dexterity(), x, 230, s, Color.WHITE);
-		writeCentered(root, ""+player.intelligence(), x, 328, s, Color.WHITE);
+		writeCentered(root, ""+player.strength(), x, 130, font18, Color.WHITE);
+		writeCentered(root, ""+player.dexterity(), x, 230, font18, Color.WHITE);
+		writeCentered(root, ""+player.intelligence(), x, 328, font18, Color.WHITE);
 		
 		x = 376;
 		int y = 474;
-		writeCentered(root, ""+player.toughness(), x, y, s, Color.WHITE);
-		writeCentered(root, ""+player.brawn(), x, y+=52, s, Color.WHITE);
-		writeCentered(root, ""+player.agility(), x, y+=55, s, Color.WHITE);
-		writeCentered(root, ""+player.accuracy(), x, y+=56, s, Color.WHITE);
-		writeCentered(root, ""+player.will(), x, y+=55, s, Color.WHITE);
-		writeCentered(root, ""+player.spellcasting(), x, y+=52, s, Color.WHITE);
+		writeCentered(root, ""+player.toughness(), x, y, font18, Color.WHITE);
+		writeCentered(root, ""+player.brawn(), x, y+=52, font18, Color.WHITE);
+		writeCentered(root, ""+player.agility(), x, y+=55, font18, Color.WHITE);
+		writeCentered(root, ""+player.accuracy(), x, y+=56, font18, Color.WHITE);
+		writeCentered(root, ""+player.will(), x, y+=55, font18, Color.WHITE);
+		writeCentered(root, ""+player.spellcasting(), x, y+=52, font18, Color.WHITE);
 		x = 454;
 		y = 474;
-		writeCentered(root, ""+player.getToughness(), x, y, s, Color.WHITE);
-		writeCentered(root, ""+player.getBrawn(), x, y+=52, s, Color.WHITE);
-		writeCentered(root, ""+player.getAgility(), x, y+=55, s, Color.WHITE);
-		writeCentered(root, ""+player.getAccuracy(), x, y+=56, s, Color.WHITE);
-		writeCentered(root, ""+player.getWill(), x, y+=55, s, Color.WHITE);
-		writeCentered(root, ""+player.getSpellcasting(), x, y+=52, s, Color.WHITE);
+		writeCentered(root, ""+player.getToughness(), x, y, font18, Color.WHITE);
+		writeCentered(root, ""+player.getBrawn(), x, y+=52, font18, Color.WHITE);
+		writeCentered(root, ""+player.getAgility(), x, y+=55, font18, Color.WHITE);
+		writeCentered(root, ""+player.getAccuracy(), x, y+=56, font18, Color.WHITE);
+		writeCentered(root, ""+player.getWill(), x, y+=55, font18, Color.WHITE);
+		writeCentered(root, ""+player.getSpellcasting(), x, y+=52, font18, Color.WHITE);
 		
 		//A really clunky way to handle where the selection arrow is
 		if (select == -1)
@@ -65,7 +63,7 @@ public class LevelUpScreen extends Screen {
 		case 7: x=108; y=666; break;
 		case 8: x=108; y=718; break;
 		}
-		draw(root, Loader.arrowRight, x, y);
+		draw(root, Loader.arrowRight.image(), x, y);
 		constructCloseButton();
 	}
 

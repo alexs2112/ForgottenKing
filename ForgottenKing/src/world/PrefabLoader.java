@@ -40,7 +40,7 @@ public class PrefabLoader {
 	 * and selected from during dungeon generation
 	 */
 	private boolean load() {
-		InputStream stream = Prefab.class.getResourceAsStream("resources/" + type.name() + ".prefab");
+		InputStream stream = Prefab.class.getResourceAsStream(type.name() + ".prefab");
 		if (stream == null) {
 			System.out.println(type.name() + ".prefab not located.");
 			return false;

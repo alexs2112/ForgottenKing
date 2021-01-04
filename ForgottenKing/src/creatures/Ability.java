@@ -1,5 +1,6 @@
 package creatures;
 
+import tools.Icon;
 import javafx.scene.image.Image;
 import spells.TargetType;
 
@@ -7,8 +8,8 @@ public class Ability implements java.io.Serializable {
 	protected static final long serialVersionUID = 7769423305067121315L;
 	private String name;
 	public String name() { return name; }
-	private Image icon;
-	public Image icon() { return icon; }
+	private Icon icon;
+	public Image icon() { return icon.image(); }
 	private String description;
 	public String description() { return description; }
 	public void setDescription(String desc) { description = desc; }
@@ -41,7 +42,7 @@ public class Ability implements java.io.Serializable {
 	public Tag prerequisiteTag() { return prerequisiteTag; }
 	public void setUpgrade(Ability ability, Tag prerequisite) { upgradedAbility = ability; prerequisiteTag = prerequisite; }
 	
-	public Ability(String name, Image icon, int cooldown) {
+	public Ability(String name, Icon icon, int cooldown) {
 		this.name = name;
 		this.icon = icon;
 		this.cooldown = cooldown;

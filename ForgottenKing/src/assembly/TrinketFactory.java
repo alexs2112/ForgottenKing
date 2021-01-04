@@ -11,21 +11,16 @@ import creatures.Stat;
 import creatures.Type;
 import items.Item;
 import items.ItemType;
-import javafx.scene.image.Image;
-import world.World;
+import tools.Icon;
 
+@SuppressWarnings("serial")
 public class TrinketFactory implements java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;	
-	private World world;
 	
-	private Image ringFull = new Image(this.getClass().getResourceAsStream("resources/items/ring_full.png"));
-	private HashMap<Image, String> descriptions;
-	private List<Image> images;
+	private HashMap<Icon, String> descriptions;
+	private List<Icon> images;
 	
-	private Image devRingIcon = tools.ImageCrop.cropImage(ringFull, 32, 32, 32, 32);
-	
-	public TrinketFactory(World world) {
-		this.world = world;
+	public TrinketFactory() {
 		initialize();
 	}
 	public Item newRandomRing(int z) {
@@ -43,7 +38,7 @@ public class TrinketFactory implements java.io.Serializable {
 	}
 	
 	public Item newRingOfPoisonResistance(int z) {
-		Image i = images.get(0);
+		Icon i = images.get(0);
 		Item item = new Item("Ring of Poison Resistance", ItemType.RING, i) {
 			public String shortDesc(Player player) {
 				return "resist poison";
@@ -52,11 +47,10 @@ public class TrinketFactory implements java.io.Serializable {
 		item.addResistance(Type.POISON, 1);
 		item.setDescription(descriptions.get(i) + ", it is etched with a serpentine design and glows a slight green.");
 		item.setWeight(0.2);
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
 	public Item newRingOfAttribute(int z) {
-		Image i;
+		Icon i;
 		Attribute a;
 		int strength = z/5 + 1;
 		String descText = "";
@@ -69,11 +63,10 @@ public class TrinketFactory implements java.io.Serializable {
 		item.setDescription(descriptions.get(i) + ", you feel " + descText + " when you put it on.");
 		item.setAttribute(a, strength);
 		item.setWeight(0.2);
-		world.addAtEmptyLocation(item, z);
 		return item;
 	}
 	public Item newRingOfStat(int z) {
-		Image i;
+		Icon i;
 		Stat a;
 		int strength = z/3 + 1;
 		String descText = "";
@@ -89,34 +82,25 @@ public class TrinketFactory implements java.io.Serializable {
 		item.setDescription(descriptions.get(i) + ", you feel " + descText + " when you put it on.");
 		item.setStat(a, strength);
 		item.setWeight(0.2);
-		world.addAtEmptyLocation(item, z);
 		return item;
-	}
-	
-	public Item newDevRing(int z) {
-		Item ring = new Item("Ring of the Dev", ItemType.RING, devRingIcon);
-		ring.modifyAttackValue(10);
-		ring.modifyArmorValue(10);
-		world.addAtEmptyLocation(ring, z);
-		return ring;
 	}
 	
 	/**
 	 * Set up new images and descriptions for every trinket every game
 	 */
 	private void initialize() {
-		descriptions = new HashMap<Image, String>();
-		images = new ArrayList<Image>();
-		Image brassRing  = tools.ImageCrop.cropImage(ringFull, 0, 0, 32, 32);
-		Image steelRing  = tools.ImageCrop.cropImage(ringFull, 32, 0, 32, 32);
-		Image goldDiamondRing  = tools.ImageCrop.cropImage(ringFull, 64, 0, 32, 32);
-		Image cobaltRing  = tools.ImageCrop.cropImage(ringFull, 96, 0, 32, 32);
-		Image glassRing  = tools.ImageCrop.cropImage(ringFull, 128, 0, 32, 32);
-		Image darkRing  = tools.ImageCrop.cropImage(ringFull, 160, 0, 32, 32);
-		Image bronzeRing  = tools.ImageCrop.cropImage(ringFull, 192, 0, 32, 32);
-		Image ivoryRing  = tools.ImageCrop.cropImage(ringFull, 224, 0, 32, 32);
-		Image silverOnyxRing  = tools.ImageCrop.cropImage(ringFull, 0, 32, 32, 32);
-		Image goldMoonRing  = tools.ImageCrop.cropImage(ringFull, 32, 32, 32, 32);
+		descriptions = new HashMap<Icon, String>();
+		images = new ArrayList<Icon>();
+		Icon brassRing  = new Icon("items/ring-full.png", 0, 0);
+		Icon steelRing  = new Icon("items/ring-full.png", 32, 0);
+		Icon goldDiamondRing  = new Icon("items/ring-full.png", 64, 0);
+		Icon cobaltRing  = new Icon("items/ring-full.png", 96, 0);
+		Icon glassRing  = new Icon("items/ring-full.png", 128, 0);
+		Icon darkRing  = new Icon("items/ring-full.png", 160, 0);
+		Icon bronzeRing  = new Icon("items/ring-full.png", 192, 0);
+		Icon ivoryRing  = new Icon("items/ring-full.png", 224, 0);
+		Icon silverOnyxRing  = new Icon("items/ring-full.png", 0, 32);
+		Icon goldMoonRing  = new Icon("items/ring-full.png", 32, 32);
 		descriptions.put(brassRing, "A small brass ring");
 		descriptions.put(steelRing, "A small steel ring");
 		descriptions.put(goldDiamondRing, "A golden ring encrusted with a diamond");
@@ -127,7 +111,7 @@ public class TrinketFactory implements java.io.Serializable {
 		descriptions.put(ivoryRing, "A ring made of polished ivory");
 		descriptions.put(silverOnyxRing, "A silver ring encrusted with a large black onyx");
 		descriptions.put(goldMoonRing, "A golden ring encrusted with a shard of moonstone");
-		for (Image i : descriptions.keySet())
+		for (Icon i : descriptions.keySet())
 			images.add(i);
 		Collections.shuffle(images);
 	}

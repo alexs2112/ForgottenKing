@@ -14,12 +14,14 @@ import creatures.Type;
 import javafx.scene.image.Image;
 import spells.Effect;
 import spells.Spell;
+import tools.Icon;
 
 public class Item implements java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;
-	private Image image;
-	public Image image() { return image; }
-	public void setImage(Image newImage) { image = newImage; }
+	private Icon icon;
+	public Icon icon() { return icon; }
+	public Image image() { return icon.image(); }
+	public void setIcon(Icon newImage) { icon = newImage; }
 	private String name;
 	public String name() { return name; }
 	public void setName(String newName) { name = newName; }
@@ -46,15 +48,22 @@ public class Item implements java.io.Serializable {
 				type == ItemType.WEAPON;
 	}
 	
-	public Item(String name, ItemType type, Image image) {
+	public Item(String name, ItemType type, Icon icon) {
 		this.name = name;
-		this.image = image;
+		this.icon = icon;
 		this.type = type;
 		damage = new int[2];
 		weight = 1;
 		if (type == ItemType.BOOK)
 			newSpellList();
 	}
+	
+	/**
+	 * An amount the item can spawn with in world generation
+	 */
+	private int spawnQuantity;
+	public int spawnQuantity() { return spawnQuantity; }
+	public void setSpawnQuantity(int x) { spawnQuantity = x; }
 	
 	/**
 	 * Equipment Methods
@@ -148,9 +157,9 @@ public class Item implements java.io.Serializable {
 		triggers.add(t);
 	}
 	public void trigger(Creature owner, Creature other) { }
-	private Image effectImage;
-	public Image effectImage() { return effectImage; }
-	public void setEffectImage(Image i) { effectImage = i; }
+	private Icon effectIcon;
+	public Icon effectIcon() { return effectIcon; }
+	public void setEffectIcon(Icon i) { effectIcon = i; }
 	
 	/**
 	 * Spell Methods

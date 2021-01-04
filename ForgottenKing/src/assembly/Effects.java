@@ -45,7 +45,7 @@ public final class Effects {
 				creature.doAction("stop healing");
 			}
 		};
-		e.setImage(Loader.healingIcon);
+		e.setIcon(Loader.healingIcon);
 		e.setStrength(amount);
 		e.setDescription("Heals for " + amount + " health every turn, for " + duration + " turns.");
 		e.setColour(Color.RED);
@@ -88,7 +88,7 @@ public final class Effects {
 				creature.doAction("look better");
 			}
 		};
-		e.setImage(Loader.poisonedIcon);
+		e.setIcon(Loader.poisonedIcon);
 		e.setStrength(strength);
 		e.setColour(Color.GREEN);
 		e.setDescription("Poisoned creatures have a chance to resist based on their toughness. Poisoned creatures take " + strength + " poison damage per turn, for " + duration + " turns.");
@@ -113,7 +113,7 @@ public final class Effects {
 				creature.doAction("put the fire out");
 			}
 		};
-		e.setImage(Loader.burningIcon);
+		e.setIcon(Loader.burningIcon);
 		e.setStrength(strength);
 		e.setColour(Color.ORANGE);
 		e.setDescription("Burning creatures catch fire, taking " + strength + " fire damage per turn for " + duration + " turns.");
@@ -130,7 +130,7 @@ public final class Effects {
 				creature.doAction("look less strong");
 			}
 		};
-		e.setImage(Loader.strongIcon);
+		e.setIcon(Loader.strongIcon);
 		e.setStrength(amount);
 		e.setColour(Color.RED);
 		e.setDescription("Strong creatures have increased strength by " + amount + " for " + duration + " turns.");
@@ -147,7 +147,7 @@ public final class Effects {
 				creature.doAction("look stronger");
 			}
 		};
-		e.setImage(Loader.weakIcon);
+		e.setIcon(Loader.weakIcon);
 		e.setStrength(amount);
 		e.setColour(Color.DARKBLUE);
 		e.setDescription("Weakened creatures have decreased Brawn by " + amount + " for " + duration + " turns.");
@@ -166,7 +166,7 @@ public final class Effects {
 				creature.doAction("move faster");
 			}
 		};
-		e.setImage(Loader.slowedIcon);
+		e.setIcon(Loader.slowedIcon);
 		e.setStrength(amount);
 		e.setColour(Color.DARKBLUE);
 		e.setDescription("Slowed creatures have increased movement and attack delay by " + amount + " for " + duration + " turns.");
@@ -184,7 +184,7 @@ public final class Effects {
 				creature.modifyAttackDelay(-10);
 			}
 		};
-		e.setImage(Loader.shockedIcon);
+		e.setIcon(Loader.shockedIcon);
 		e.setColour(Color.BLUE);
 		e.setDescription("The next action of a shocked creature takes an additional 10 ticks.");
 		return e;
@@ -200,7 +200,7 @@ public final class Effects {
 				creature.doAction("move slower");
 			}
 		};
-		e.setImage(Loader.swiftIcon);
+		e.setIcon(Loader.swiftIcon);
 		e.setStrength(amount);
 		e.setColour(Color.BLUE);
 		e.setDescription("Swift creatures have decreased movement delay by " + amount + " for " + duration + " turns.");
@@ -210,7 +210,7 @@ public final class Effects {
 		Effect e = new Effect("Stunned", duration) {
 			public void start(Creature creature) {
 				if (!creature.is(Tag.PLAYER))
-					modifyDuration(1);
+					modifyDuration(-1);
 				creature.addTag(Tag.STUNNED);
 				creature.doAction("become stunned");
 			}
@@ -219,7 +219,7 @@ public final class Effects {
 				creature.doAction("shake off the stun");
 			}
 		};
-		e.setImage(Loader.stunnedIcon);
+		e.setIcon(Loader.stunnedIcon);
 		e.setColour(Color.BLUE);
 		e.setDescription("Stunned creatures can take no options until it wears off.");
 		return e;
@@ -228,7 +228,7 @@ public final class Effects {
 		Effect e = new Effect("Confused", duration) {
 			public void start(Creature creature) {
 				if (!creature.is(Tag.PLAYER))
-					modifyDuration(1);
+					modifyDuration(-1);
 				creature.addTag(Tag.CONFUSED);
 				creature.doAction("become confused");
 			}
@@ -237,7 +237,7 @@ public final class Effects {
 				creature.doAction("shake off the confusion");
 			}
 		};
-		e.setImage(Loader.confusedIcon);
+		e.setIcon(Loader.confusedIcon);
 		e.setColour(Color.DARKBLUE);
 		e.setDescription("Confused creatures can only move in random directions every turn.");
 		return e;
@@ -255,7 +255,7 @@ public final class Effects {
 				creature.doAction("restore sight");
 			}
 		};
-		e.setImage(Loader.blindIcon);
+		e.setIcon(Loader.blindIcon);
 		e.setColour(Color.DARKBLUE);
 		e.setDescription("Blind creatures have their sight reduced to 0 for " + duration + " turns.");
 		return e;
@@ -271,7 +271,7 @@ public final class Effects {
 				creature.doAction("look less vulnerable");
 			}
 		};
-		e.setImage(Loader.vulnerableIcon);
+		e.setIcon(Loader.vulnerableIcon);
 		e.setStrength(strength);
 		e.setColour(Color.DARKORANGE);
 		e.setDescription("Vulnerable creatures have their Armor reduced by " + strength + " for " + duration + " turns.");
@@ -292,7 +292,7 @@ public final class Effects {
 				creature.doAction("look better");
 			}
 		};
-		e.setImage(Loader.drainedIcon);
+		e.setIcon(Loader.drainedIcon);
 		e.setStrength(strength);
 		e.setColour(Color.DARKORANGE);
 		e.setDescription("Drained creatures have their offensive stats reduced by " + strength + " for " + duration + " turns.");
@@ -310,7 +310,7 @@ public final class Effects {
 				creature.modifyEvasion(amount);
 			}
 		};
-		e.setImage(Loader.glowingIcon);
+		e.setIcon(Loader.glowingIcon);
 		e.setStrength(amount);
 		e.setColour(Color.YELLOW);
 		e.setDescription("Glowing creatures are easier to hit, reducing their evasion by " + amount + " for " + duration + " turns.");
@@ -355,7 +355,7 @@ public final class Effects {
 				creature.addDelayedEffect(slowed(10, 5));
 			}
 		};
-		e.setImage(Loader.ragingIcon);
+		e.setIcon(Loader.ragingIcon);
 		e.setColour(Color.DARKRED);
 		e.setDescription("Raging creatures have increased strength and attack faster, while being unable to cast spells or quaff potions. When the rage ends, the creature is slowed and weakened.");
 		return e;
@@ -375,7 +375,7 @@ public final class Effects {
 				creature.doAction("lose the icy shell");
 			}
 		};
-		e.setImage(Loader.armorOfFrostIcon);
+		e.setIcon(Loader.armorOfFrostIcon);
 		e.setColour(Color.BLUE);
 		e.setDescription("Creatures with an armor of frost have increased armor, however they are slightly slowed by the weight of it.");
 		return e;
