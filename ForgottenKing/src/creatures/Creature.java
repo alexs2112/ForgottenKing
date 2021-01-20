@@ -419,7 +419,7 @@ public class Creature implements java.io.Serializable {
         Creature other = world.creature(mx, my, mz);
         if (other == null) {
             ai.onEnter(mx, my, mz, world.tile(mx, my, mz));
-            seeItemsOnGround();
+            //seeItemsOnGround();
         } else if (other != null && is(Tag.PLAYER) && other.is(Tag.ALLY)) {
         	//If the player bumps into an ally, swap places
         	int sx = x;
@@ -1198,6 +1198,8 @@ public class Creature implements java.io.Serializable {
 	public void removeTag(Tag t) {
 		if (tags == null)
 			return;
+		if (!tags.contains(t))
+			System.out.println("Does not contain tag [" + t.name() + "]!");
 		tags.remove(t);
 	}
 	
@@ -1220,12 +1222,12 @@ public class Creature implements java.io.Serializable {
 		return 50;
 	}
 	private void regenerate() {
-		healthRegenTimer += healthTimePerTurn();
+		//healthRegenTimer += healthTimePerTurn();
 		manaRegenTimer += manaTimePerTurn();
-		if (healthRegenTimer >= 1000) {
-			modifyHP(1);
-			healthRegenTimer -= 1000;
-		}
+//		if (healthRegenTimer >= 1000) {
+//			modifyHP(1);
+//			healthRegenTimer -= 1000;
+//		}
 		if (manaRegenTimer >= 1000) {
 			modifyMana(1);
 			manaRegenTimer -= 1000;

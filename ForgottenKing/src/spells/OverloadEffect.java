@@ -9,8 +9,16 @@ import javafx.scene.paint.Color;
 public final class OverloadEffect {
 	
 	public static void overload(Spell s, Creature c) {
+		if (Math.random() < 0.25) {
+			c.notify("Your spell fizzles!", Color.CRIMSON);
+			return;
+		}
 		if (s.type() == Type.FIRE)
 			fire(s,c);
+		else {
+			c.notify("Your spell fizzles!", Color.CRIMSON);
+			return;
+		}
 	}
 
 	private static void fire(Spell s, Creature c) {

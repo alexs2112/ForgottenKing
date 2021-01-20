@@ -83,7 +83,7 @@ public class Enchantment implements java.io.Serializable {
 			break;
 		case 2:
 			s = "Electric";
-			item.addTrigger(Triggers.applyEffect(Effects.shocked(1), 55));
+			item.addTrigger(Triggers.applyEffect(Effects.shocked(2), 55));
 			item.setDamageType(Type.AIR);
 			tempEffect = Type.AIR;
 			break;
@@ -157,7 +157,7 @@ public class Enchantment implements java.io.Serializable {
 		Trigger t = null;
 		switch((int)(Math.random()*2)) {
 		case 0: t = Triggers.createPoisonCloud(tier, 55); break;
-		default: t = Triggers.confuse(tier, 15); break;
+		default: t = Triggers.confuse(tier+1, 15); break;
 		}
 		item.addTrigger(t);
 		return poisonBaseStrings.get((int)(Math.random()*poisonBaseStrings.size()));

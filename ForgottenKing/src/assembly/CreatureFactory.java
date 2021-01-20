@@ -51,6 +51,7 @@ public class CreatureFactory implements java.io.Serializable {
 	
 	private Icon simulacrumIcon = new Icon("creatures/simulacrum.gif");
 	private Icon impIcon = new Icon("creatures/imp.gif");
+	private Icon bloodApparitionIcon = new Icon("creatures/blood_apparition.gif");
 	
 	public CreatureFactory(World world, ItemFactory itemFactory) {
 		this.world = world;
@@ -546,5 +547,20 @@ public class CreatureFactory implements java.io.Serializable {
 		imp.addEffect(Effects.temporarySummon(30));
 		world.addAtEmptyLocation(imp, z);
 		return imp;
+	}
+	
+	/**
+	 * Bloodstone Enemies
+	 * Spawned with z = player.z + 1, so world needs to create them at z-1
+	 */
+	public Creature newBloodApparition(int z) {
+		Creature c = new Creature(world, "Blood Apparition", z, 0, 10*z, 11+z/2,2+z/3,3+z,4+z,6+z, bloodApparitionIcon);
+		new BasicAI(c, player);
+		c.setAttributes(1+z/3, 1+z/3, 1+z/3);
+		c.setStats(2+z/5, 2+z/4, 2+z/5, 2+z/4, 2+z/3, 2+z/4);
+		c.setDescription("An apparition drawn forth from a ripple in power due to the bloodstone.");
+		c.fillHP();
+		world.addAtEmptyLocation(c, z-1);
+		return c;
 	}
 }

@@ -1,6 +1,8 @@
 package features;
 
 import creatures.Creature;
+import creatures.Player;
+import javafx.scene.paint.Color;
 import world.World;
 
 public class DownStair extends Feature {
@@ -39,6 +41,15 @@ public class DownStair extends Feature {
 	@Override
 	public void interact(Creature creature, World world, int x, int y, int z) {
 		creature.moveTo(other.x(), other.y(), other.z());
+		if (creature instanceof Player) {
+			if (world.hasEntered[other.z()] == false) {
+				((Player)creature).fillBloodstone();
+				world.hasEntered[other.z()] = true;
+				creature.notify("You take a moment to rest while descending!", Color.WHITE);
+				creature.notify("Bloodstone has regenerated!", Color.AQUAMARINE);
+				creature.fillHP();
+			}
+		}
 	}
 	
 

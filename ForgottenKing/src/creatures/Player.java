@@ -6,7 +6,6 @@ import java.util.List;
 import assembly.Abilities;
 import audio.Audio;
 import items.Item;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import spells.Spell;
 import tools.Icon;
@@ -169,9 +168,15 @@ public class Player extends Creature {
 	/**
 	 * AUTOPILOT
 	 */
-	private boolean resting;
-    public boolean resting() { return resting; }
-    public void setResting(boolean x) { resting = x; }
+	public int resting;
+    private int bloodstone;
+    public int bloodstone() { return bloodstone; }
+    public void modifyBloodstone(int x) { bloodstone += x; }
+    private int maxBloodstone;
+    public int maxBloodstone() { return maxBloodstone; }
+    public void modifyMaxBloodstone(int x) { maxBloodstone += x; }
+    public void setBloodstone(int current, int max) { bloodstone = current; maxBloodstone = max; }
+    public void fillBloodstone() { bloodstone = maxBloodstone; }
     
     public boolean creatureInSight() {
     	for (int x = this.x - visionRadius(); x <= this.x + visionRadius(); x++) {

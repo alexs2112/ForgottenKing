@@ -33,6 +33,16 @@ public class GetWeaponImages implements java.io.Serializable {
 		items.put(BaseItem.HANDAXE, 96);
 		items.put(BaseItem.MACE, 128);
 		items.put(BaseItem.SHORTBOW, 160);
+		items.put(BaseItem.HANDCROSSBOW, 192);
+		items.put(BaseItem.ORCISHDAGGER, 224);
+		items.put(BaseItem.CUTLASS, 256);
+		//items.put(BaseItem.BONESWORD, 288);
+		items.put(BaseItem.BOARDINGAXE, 320);
+		items.put(BaseItem.ORCWARAXE, 352);
+		//items.put(BaseItem.MUSKET, 384);
+		items.put(BaseItem.FLINTLOCK, 416);
+		//items.put(BaseItem.CROSSBOW, 448);
+		items.put(BaseItem.LONGBOW, 480);
 	}
 	
 	public void setWeaponImageAndEffect(Item item, int bonus, Type base, Type effect) {

@@ -13,14 +13,16 @@ public class ConsumableFactory implements java.io.Serializable {
 	private Icon poisonPotionIcon = new Icon("items/potions-full.png", 160, 0);
 	private Icon potionOfStrengthIcon = new Icon("items/potions-full.png", 64, 0);
 	private Icon potionOfCuringIcon = new Icon("items/potions-full.png", 32, 0);
+	private Icon potionOfBloodIcon = new Icon("items/potions-full.png", 32, 32);
 	
 	public Item newRandomPotion(){
-		switch ((int)(Math.random() * 5)){
+		switch ((int)(Math.random() * 6)){
 		case 0: return newPotionOfHealing();
 		case 1: return newPotionOfMana();
 		case 2: return newPotionOfPoison();
 		case 3: return newPotionOfStrength();
-		default: return newPotionOfCuring();
+		case 4: return newPotionOfCuring();
+		default: return newPotionOfBlood();
 		}
 	}
 	
@@ -60,6 +62,13 @@ public class ConsumableFactory implements java.io.Serializable {
 	    Item item = new Item("Potion of Curing", ItemType.POTION, potionOfCuringIcon);
 	    item.setEffect(Effects.curePoison());
 	    item.setDescription("Quaffing this potion cures all toxic poisons currently effecting you.");
+	    item.setWeight(0.5);
+	    return item;
+	}
+	public Item newPotionOfBlood(){
+	    Item item = new Item("Potion of Blood", ItemType.POTION, potionOfBloodIcon);
+	    item.setEffect(Effects.addBloodstone(1));
+	    item.setDescription("Quaffing this potion will charge your bloodstone by 1.");
 	    item.setWeight(0.5);
 	    return item;
 	}

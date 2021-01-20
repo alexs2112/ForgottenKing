@@ -7,6 +7,7 @@ import assembly.CreatureFactory;
 import assembly.ItemFactory;
 import tools.Point;
 import creatures.Creature;
+import creatures.Player;
 import creatures.Tag;
 import features.Chest;
 import features.Entrance;
@@ -18,6 +19,7 @@ import spells.Hazard;
 
 public class World implements java.io.Serializable {
 	private static final long serialVersionUID = 7769423305067121315L;
+	public boolean[] hasEntered;
 	private Tile[][][] tiles;
 	private int width;
 	public int width() { return width; }
@@ -105,6 +107,8 @@ public class World implements java.io.Serializable {
 		this.creatures = new ArrayList<Creature>();
 		this.items = new Inventory[width][height][depth];
 		this.hazards = new Hazard[width][height][depth];
+		this.hasEntered = new boolean[depth];
+		hasEntered[0] = true;
 	}
 	public void setTiles(Tile[][][] tiles) {
 		this.tiles = tiles;
@@ -350,6 +354,15 @@ public class World implements java.io.Serializable {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * When the player rests without enough bloodstone, it spawns a bunch of bloodstone enemies to fight them
+	 * @param amount: The number of times this method has been called, spawns 3x bloodstone enemies each time
+	 */
+	public void createBloodstoneEnemies(Player p, CreatureFactory creatureFactory) {
+		for (int i = 0; i < p.bloodstone()*(-3); i++)
+			creatureFactory.newBloodApparition(p.z+1);
 	}
 	
 }

@@ -83,6 +83,7 @@ public class PlayScreen extends Screen {
     
 	private void setUpPlayer(ClassSelection character) {
 		player = creatureFactory.newPlayer(messages, 0, fov, character);
+		player.setBloodstone(5, 5);
 		creatureFactory.setPlayer(player);
 		world.setEntrance(player.x, player.y);
 		player.setMagic();
@@ -115,6 +116,7 @@ public class PlayScreen extends Screen {
 	    displayHazards(left, top);
 		displayCreatures(left, top);
 		displayStats();
+		displaySpaceText();
 		DrawMinimap.draw(root, player, 1030, 269);
 		displayMouse(left, top);
 		handleButtons();
@@ -292,10 +294,9 @@ public class PlayScreen extends Screen {
     			if (player.lastWielded() != null && player.inventory().contains(player.lastWielded()))
     				player.equip(player.lastWielded());
     		}
-    		else if (c == 'r' && shift) {
-    			player.setResting(true);
+    		else if (c == 'r' && shift)
     			playerRest();
-    		} else if (c == 'r' && !shift)
+    		else if (c == 'r' && !shift)
     			subscreen = new ReadScreen(player);
     		else if (c == 's' && !shift)
     			subscreen = new StatsScreen(player);
@@ -354,6 +355,8 @@ public class PlayScreen extends Screen {
     				if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
     					return new LeaveScreen(player);
     				f.interact(player, world, player.x, player.y, player.z);
+    			} else if (nearbyDoors()) {
+    				closeDoor();
     			} else {
     				//Wait 1 turn
     			}
@@ -389,7 +392,7 @@ public class PlayScreen extends Screen {
 				world.update(player.z);
 				player.modifyTime(-1);
 			}
-			if (player.hp() < player.maxHP()/4 && !player.resting())
+			if (player.hp() < player.maxHP()/4 && player.resting <= 0)
 				player.notify("Low Health!", Color.ORANGERED);
 		}
 		//If the player is dead, hit a command to jumpstart to the next screen.
@@ -416,12 +419,31 @@ public class PlayScreen extends Screen {
     		}
     	}
     }
+	private boolean nearbyDoors() {
+		for (int wx = -1; wx < 2; wx++)
+    		for (int wy = -1; wy < 2; wy++) {
+    			if (wx == 0 && wy == 0)
+    				 continue;
+    			Feature feat = world.feature(player.x - wx, player.y - wy, player.z);
+    			if (feat != null && feat.type() == Feature.Type.CANCLOSE) {
+    				//A potential bug here if there are two doors, one with a dude and one without
+    				if (world.creature(player.x-wx, player.y-wy, player.z) != null)
+   					 	return false;
+    				return true;
+    			}
+    		}
+		return false;
+	}
 	
     private void displayStats() {
     	draw(root, Loader.playerUIFull.image(), 1024, 0);
-        writeCentered(root, "HP: " + player.hp() + "/" + player.maxHP(), 1146, 34, font20, Color.RED);
-        writeCentered(root, "MP: " + player.mana() + "/" + player.maxMana(), 1146, 82, font20, Color.BLUE);
-        writeCentered(root, "XP: " + player.xp() + "/" + player.nextLevelXP(), 1146, 115, font14, Color.YELLOW);
+        writeCentered(root, "HP: " + player.hp() + "/" + player.maxHP(), 1150, 33, font18, Color.RED);
+        writeCentered(root, "MP: " + player.mana() + "/" + player.maxMana(), 1118, 76, font18, Color.BLUE);
+        if (player.bloodstone() > 0)
+        	writeCentered(root, "" + player.bloodstone(), 1236, 76, font16, Color.ORANGE);
+        else
+        	writeCentered(root, "0", 1236, 76, font16, Color.ORANGERED);
+        writeCentered(root, "XP: " + player.xp() + "/" + player.nextLevelXP(), 1150, 113, font14, Color.YELLOW);
         int y = 154;
         writeCentered(root, ""+player.movementDelay(), 1110, y, font16, Color.WHITE);
         writeCentered(root, ""+player.attackDelay(), 1199, y, font16, Color.WHITE);
@@ -557,6 +579,8 @@ public class PlayScreen extends Screen {
     	int messageHeight = 24;
     	int top = 760 - messages.size() * messageHeight;
     	int i = 0;
+    	if (spaceText() != null)
+    		top -= messageHeight;
     	for (Message m : messages) {
     		write(root, m.message(), 10, top+i*messageHeight, font14, m.colour());
     		i++;
@@ -565,17 +589,39 @@ public class PlayScreen extends Screen {
 	
 	//A method that repeats the last key press until the player is done resting
 	private void playerRest() {
-		if (player.resting() && !player.creatureInSight() && (player.hp() < player.maxHP()||player.mana() < player.maxMana()))
-			nextCommand = new KeyBoardCommand(KeyCode.R, 'r', true);
-    	else if (player.resting()) {
-    		player.setResting(false);
-    		if (player.creatureInSight())
-    			player.notify("There are creatures in view");
-    		else {
-    			player.notify("Finished resting!");
-    		}
-    	}
+		if (player.hp() >= player.maxHP()) {
+			player.notify("You are already at full health!");
+			return;
+		}
+		
+		if (player.creatureInSight()) {
+			if (player.resting == 0)
+				player.notify("You can't rest now, there are enemies in view!");
+			else {
+				player.notify("Enemies interrupt your rest!");
+				player.resting = 0;
+			}
+			return;
+		}
+
+		if (player.resting == 0)
+			player.resting = 10;
+		if (player.resting > 0) {
+			player.resting--;
+			if (player.resting > 0)
+				nextCommand = new KeyBoardCommand(KeyCode.R, 'r', true);
+		}
+		if (player.resting <= 0) {
+			player.modifyBloodstone(-1);
+			if (player.bloodstone() < 0) {
+				world.createBloodstoneEnemies(player, creatureFactory);
+				player.notify("The power of the bloodstone has drawn enemies to you.");
+			}
+			player.modifyHP(player.maxHP() * 3 / 4);
+			player.notify("Finished Resting!");
+		}
 	}
+	
 	private void meditatePlayer() {
 		if (!player.creatureInSight() && player.meditating() > 0) {
 			player.modifyMeditating(-1);
@@ -597,19 +643,40 @@ public class PlayScreen extends Screen {
 		player.modifyTime(5);
 	}
 	
-	//Display the correct [space] text if the player has actions
-//	private String spaceText() {
-//		items.Inventory i = world.items(player.x,player.y, player.z);
-//		if (i != null)
-//			return "[space]: pick up items.";
-//		Feature f = world.feature(player.x, player.y, player.z);
-//		if (f != null && (f.type() == Feature.Type.DOWNSTAIR || f.type() == Feature.Type.UPSTAIR)) {
-//			if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
-//				return "[space]: exit the dungeon.";
-//			return "[space]: traverse the staircase";
-//		}
-//		return null;
-//	}
+	//Display the correct [space] text under current messages if the player has actions
+	private String spaceText() {
+		if (player.hp() <= 0)
+			return null;
+		//Handle picking up items
+		items.Inventory i = world.items(player.x,player.y, player.z);
+		if (i != null) {
+			if (i.getUniqueItems().size() > 1)
+				return "[g/space]: pick up items.";
+			else if (i.getFirstItem() != null)
+				return "[g/space]: pick up " + i.getFirstItem().name() + ".";
+		}
+		
+		//Handle traversing staircases
+		Feature f = world.feature(player.x, player.y, player.z);
+		if (f != null && f.type() == Feature.Type.DOWNSTAIR) {
+			if (world.feature(player.x, player.y, player.z).name().equals("Entrance"))
+				return "[</space]: exit the dungeon.";
+			return "[</space]: go up the staircase.";
+		} else if (f != null && f.type() == Feature.Type.DOWNSTAIR)
+			return "[>/space]: go down the staircase.";
+		
+		//Handle closing nearby doors
+		if (nearbyDoors())
+    		return "[space]: close nearby doors.";
+		
+		return null;
+	}
+	private void displaySpaceText() {
+		String s = spaceText();
+		if (s == null)
+			return;
+		write(root, s, 10, 732, font14, Color.WHITE);
+	}
 	
 	
 	//Button Handling can go all the way down here

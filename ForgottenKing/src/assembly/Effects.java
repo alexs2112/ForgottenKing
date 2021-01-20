@@ -2,6 +2,7 @@ package assembly;
 
 import creatures.Attribute;
 import creatures.Creature;
+import creatures.Player;
 import creatures.Stat;
 import creatures.Tag;
 import creatures.Type;
@@ -29,6 +30,21 @@ public final class Effects {
 			}
 		};
 		e.setDescription("Deals " + amount + " " + type.name() + " damage.");
+		e.setColour(Color.RED);
+		return e;
+	}
+	public static Effect addBloodstone(int amount) {
+		Effect e = new Effect("Charging", 1){
+			public void start(Creature creature){
+				if (creature instanceof Player) {
+					((Player)creature).modifyBloodstone(amount);
+					creature.notify("Your bloodstone charges with a brilliant glow.");
+				} else {
+					creature.world().notify(creature.x, creature.y, creature.z, "The potion has no effect!");
+				}
+			}
+		};
+		e.setDescription("Charges your bloodstone by 1.");
 		e.setColour(Color.RED);
 		return e;
 	}
